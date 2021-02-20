@@ -14,6 +14,7 @@ import com.tarripoha.android.di.component.DaggerMainActivityComponent
 import com.tarripoha.android.di.component.MainActivityComponent
 import com.tarripoha.android.di.module.MainActivityModule
 import com.tarripoha.android.ui.add.WordActivity
+import com.tarripoha.android.ui.add.WordActivity.Companion
 import com.tarripoha.android.util.ItemClickListener
 import com.tarripoha.android.util.ViewModelFactory
 import kotlinx.android.synthetic.main.activity_main.*
@@ -55,12 +56,14 @@ class MainActivity : AppCompatActivity() {
     )
     with_swipe_rv.layoutManager = linearLayoutManager
     with_swipe_rv.isNestedScrollingEnabled = false
-    wordAdapter = WordAdapter(ArrayList(),object: ItemClickListener<Word>{
+    wordAdapter = WordAdapter(ArrayList(), object : ItemClickListener<Word> {
       override fun onClick(
         position: Int,
         data: Word
       ) {
-
+        val intent = Intent(this@MainActivity, WordActivity::class.java)
+        intent.putExtra(WordActivity.KEY_WORD, data)
+        startActivityForResult(intent, REQUEST_CODE_WORD)
       }
     })
     with_swipe_rv.adapter = wordAdapter

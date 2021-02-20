@@ -14,6 +14,18 @@ class WordActivity : AppCompatActivity() {
     setContentView(R.layout.activity_word)
 
     setUpListeners()
+    checkForPreFilledData()
+  }
+
+  private fun checkForPreFilledData() {
+
+    if (intent.hasExtra(KEY_WORD)) {
+      val word = intent?.getParcelableExtra<Word>(KEY_WORD)
+      et_name.setText(word?.name)
+      et_name.isEnabled = false
+      et_meaning.setText(word?.meaning)
+      et_sentence.setText(word?.sentence)
+    }
   }
 
   private fun setUpListeners() {
