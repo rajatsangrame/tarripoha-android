@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tarripoha.android.App
@@ -77,6 +78,9 @@ class MainActivity : AppCompatActivity() {
         swipe_refresh_layout.isEnabled = position <= 0
       }
     })
+    val callback = Callback()
+    val itemTouchHelper = ItemTouchHelper(callback)
+    //itemTouchHelper.attachToRecyclerView(with_swipe_rv)
   }
 
   private fun setupObservers() {
@@ -127,6 +131,30 @@ class MainActivity : AppCompatActivity() {
       }
     }
     super.onActivityResult(requestCode, resultCode, data)
+  }
+
+  inner class Callback : ItemTouchHelper.Callback() {
+
+    override fun getMovementFlags(
+      recyclerView: RecyclerView,
+      viewHolder: RecyclerView.ViewHolder
+    ): Int {
+      return makeMovementFlags(0, ItemTouchHelper.RIGHT)
+    }
+
+    override fun onMove(
+      recyclerView: RecyclerView,
+      viewHolder: RecyclerView.ViewHolder,
+      target: RecyclerView.ViewHolder
+    ): Boolean {
+      return false
+    }
+
+    override fun onSwiped(
+      viewHolder: RecyclerView.ViewHolder,
+      direction: Int
+    ) {
+    }
   }
 
   companion object {

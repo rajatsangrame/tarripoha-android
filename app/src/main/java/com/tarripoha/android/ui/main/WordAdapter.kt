@@ -44,12 +44,15 @@ class WordAdapter(
 
   inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     val nameTv: TextView = itemView.name_tv
+    private lateinit var word: Word
 
     init {
       itemView.setOnClickListener {
         itemClickListener.onClick(adapterPosition, words[adapterPosition])
       }
     }
+
+    fun getTea(): Word = word
   }
 
 }
