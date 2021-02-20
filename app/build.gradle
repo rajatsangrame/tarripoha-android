@@ -63,6 +63,7 @@ ext {
   rx_java = "2.2.10"
   rx_android = "2.1.1"
   firebase_version = "26.3.0"
+  swiperefreshlayout = "1.1.0"
 }
 dependencies {
   implementation fileTree(dir: "libs", include: ["*.jar"])
@@ -125,4 +126,7 @@ dependencies {
   implementation 'com.google.firebase:firebase-crashlytics-ktx'
   implementation 'com.google.firebase:firebase-config-ktx'
   implementation 'com.google.firebase:firebase-database-ktx'
+
+  implementation "androidx.swiperefreshlayout:swiperefreshlayout:$swiperefreshlayout"
+
 }

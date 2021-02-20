@@ -19,9 +19,11 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 @Entity(tableName = "word")
-class Word(
-    @PrimaryKey
-    var name: String,
-    var meaning: String,
-    var sentence: String
-) : Parcelable
+data class Word(
+  @PrimaryKey
+  val name: String,
+  val meaning: String,
+  val sentence: String,
+) : Parcelable {
+  constructor() : this("", "", "")
+}
