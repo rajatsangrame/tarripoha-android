@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun getDependency() {
         val component: MainActivityComponent = DaggerMainActivityComponent
-            .builder().applicationComponent(App.get(this)?.getComponent())
+            .builder().applicationComponent(App.get(this).getComponent())
             .mainActivityModule(MainActivityModule(this))
             .build()
         component.injectMainActivity(this)

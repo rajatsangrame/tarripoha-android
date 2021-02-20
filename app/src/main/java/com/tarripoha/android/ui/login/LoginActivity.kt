@@ -31,7 +31,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun getDependency() {
         val component: LoginActivityComponent = DaggerLoginActivityComponent
-            .builder().applicationComponent(App.get(this)?.getComponent())
+            .builder().applicationComponent(App.get(this).getComponent())
             .loginActivityModule(LoginActivityModule(this))
             .build()
         component.injectLoginActivity(this)

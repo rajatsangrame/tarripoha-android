@@ -29,7 +29,7 @@ class App : Application() {
 
     companion object {
         @JvmStatic
-        fun get(context: Context): App? {
+        fun get(context: Context): App {
             return context.applicationContext as App
         }
     }

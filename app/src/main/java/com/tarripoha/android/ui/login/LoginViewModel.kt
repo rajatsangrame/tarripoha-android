@@ -10,7 +10,7 @@ import javax.inject.Inject
  * http://github.com/rajatsangrame
  */
 
-class LoginViewModel @Inject constructor(var repository: Repository?) : ViewModel() {
+class LoginViewModel @Inject constructor(var repository: Repository) : ViewModel() {
 
     init {
         Log.d(TAG, ": init called")
