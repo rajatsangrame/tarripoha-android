@@ -11,14 +11,14 @@ import java.sql.Date;
  */
 public class DbTypeConverter implements Serializable {
 
-    @TypeConverter
-    public static Date toDate(Long dateLong) {
-        return dateLong == null ? null : new Date(dateLong);
-    }
+  @TypeConverter
+  public static Date toDate(Long dateLong) {
+    return dateLong == null ? null : new Date(dateLong);
+  }
 
-    @TypeConverter
-    public static Long fromDate(Date date) {
-        return date == null ? null : date.getTime();
-    }
+  @TypeConverter
+  public static Long fromDate(Date date) {
+    return date == null ? null : date.getTime();
+  }
 }
 

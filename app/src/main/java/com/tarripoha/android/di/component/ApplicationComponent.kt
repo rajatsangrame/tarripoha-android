@@ -14,8 +14,8 @@ import dagger.Component
 @Component(modules = [ApplicationModule::class])
 interface ApplicationComponent {
 
-    fun getRepository(): Repository
+  fun getRepository(): Repository
 
-    fun getViewModelFactory(): ViewModelFactory
+  fun getViewModelFactory(): ViewModelFactory
 
 }

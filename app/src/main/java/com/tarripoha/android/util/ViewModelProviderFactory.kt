@@ -11,10 +11,10 @@ import com.tarripoha.android.ui.main.MainViewModel
  */
 class ViewModelProviderFactory(private val repository: Repository) : ViewModelProvider.Factory {
 
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
-            return MainViewModel(repository) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
+  override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
+      return MainViewModel(repository) as T
     }
+    throw IllegalArgumentException("Unknown ViewModel class")
+  }
 }

@@ -12,11 +12,11 @@ import javax.inject.Inject
 
 class LoginViewModel @Inject constructor(var repository: Repository) : ViewModel() {
 
-    init {
-        Log.d(TAG, ": init called")
-    }
+  init {
+    Log.d(TAG, ": init called")
+  }
 
-    companion object {
-        private const val TAG = "MainViewModel"
-    }
+  companion object {
+    private const val TAG = "MainViewModel"
+  }
 }

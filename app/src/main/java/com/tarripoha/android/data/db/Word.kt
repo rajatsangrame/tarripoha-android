@@ -1,8 +1,11 @@
 package com.tarripoha.android.data.db
 
+import android.os.Parcel
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parceler
+import kotlinx.android.parcel.Parcelize
 
 /**
  * Created by Rajat Sangrame
@@ -14,9 +17,11 @@ import com.google.gson.annotations.SerializedName
  * Ref: https://developer.android.com/topic/libraries/architecture/room
  */
 
-@Entity(tableName = "model")
-class Model(
-    @PrimaryKey(autoGenerate = true)
-    @field:SerializedName("id")
-    var id: Int = 0
-)
+@Parcelize
+@Entity(tableName = "word")
+class Word(
+    @PrimaryKey
+    var name: String,
+    var meaning: String,
+    var sentence: String
+) : Parcelable

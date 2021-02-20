@@ -5,7 +5,6 @@ import com.tarripoha.android.di.module.MainActivityModule
 import com.tarripoha.android.ui.main.MainActivity
 import dagger.Component
 
-
 /**
  * Created by Rajat Sangrame
  * http://github.com/rajatsangrame
@@ -13,5 +12,5 @@ import dagger.Component
 @Component(modules = [MainActivityModule::class], dependencies = [ApplicationComponent::class])
 @MainActivityScope
 interface MainActivityComponent {
-    fun injectMainActivity(mainActivity: MainActivity)
+  fun injectMainActivity(mainActivity: MainActivity)
 }

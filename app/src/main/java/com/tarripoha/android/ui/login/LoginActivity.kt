@@ -16,24 +16,28 @@ import javax.inject.Inject
 
 class LoginActivity : AppCompatActivity() {
 
-    @Inject
-    lateinit var factory: ViewModelFactory
+  @Inject
+  lateinit var factory: ViewModelFactory
 
-    private lateinit var binding: ActivityMainBinding
-    private lateinit var viewModel: LoginViewModel
+  private lateinit var binding: ActivityMainBinding
+  private lateinit var viewModel: LoginViewModel
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        getDependency()
-        viewModel = ViewModelProvider(this, factory).get(LoginViewModel::class.java)
-    }
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+    getDependency()
+    viewModel = ViewModelProvider(this, factory).get(LoginViewModel::class.java)
+  }
 
-    private fun getDependency() {
-        val component: LoginActivityComponent = DaggerLoginActivityComponent
-            .builder().applicationComponent(App.get(this).getComponent())
-            .loginActivityModule(LoginActivityModule(this))
-            .build()
-        component.injectLoginActivity(this)
-    }
+  private fun getDependency() {
+    val component: LoginActivityComponent = DaggerLoginActivityComponent
+        .builder()
+        .applicationComponent(
+            App.get(this)
+                .getComponent()
+        )
+        .loginActivityModule(LoginActivityModule(this))
+        .build()
+    component.injectLoginActivity(this)
+  }
 }

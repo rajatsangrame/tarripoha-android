@@ -6,7 +6,6 @@ import com.tarripoha.android.di.ApplicationScope
 import dagger.Module
 import dagger.Provides
 
-
 /**
  * Created by Rajat Sangrame
  * http://github.com/rajatsangrame
@@ -14,10 +13,10 @@ import dagger.Provides
 @Module
 class ContextModule(var context: Context) {
 
-    @ApplicationContext
-    @ApplicationScope
-    @Provides
-    fun context(): Context {
-        return context.applicationContext
-    }
+  @ApplicationContext
+  @ApplicationScope
+  @Provides
+  fun context(): Context {
+    return context.applicationContext
+  }
 }

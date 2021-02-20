@@ -3,7 +3,6 @@ package com.tarripoha.android.di.module
 import com.tarripoha.android.ui.main.MainActivity
 import dagger.Module
 
-
 /**
  * Created by Rajat Sangrame
  * http://github.com/rajatsangrame

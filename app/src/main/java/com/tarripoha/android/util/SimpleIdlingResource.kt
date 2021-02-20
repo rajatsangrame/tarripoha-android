@@ -9,20 +9,20 @@ import com.tarripoha.android.BuildConfig
  */
 object SimpleIdlingResource {
 
-    private const val RESOURCE = "GLOBAL"
+  private const val RESOURCE = "GLOBAL"
 
-    @JvmField
-    val countingIdlingResource = CountingIdlingResource(RESOURCE)
+  @JvmField
+  val countingIdlingResource = CountingIdlingResource(RESOURCE)
 
-    fun increment() {
-        if (BuildConfig.DEBUG) {
-            countingIdlingResource.increment()
-        }
+  fun increment() {
+    if (BuildConfig.DEBUG) {
+      countingIdlingResource.increment()
     }
+  }
 
-    fun decrement() {
-        if (!countingIdlingResource.isIdleNow && BuildConfig.DEBUG) {
-            countingIdlingResource.decrement()
-        }
+  fun decrement() {
+    if (!countingIdlingResource.isIdleNow && BuildConfig.DEBUG) {
+      countingIdlingResource.decrement()
     }
+  }
 }

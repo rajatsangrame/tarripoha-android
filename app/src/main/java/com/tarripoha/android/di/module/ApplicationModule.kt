@@ -2,7 +2,7 @@ package com.tarripoha.android.di.module
 
 import android.content.Context
 import com.tarripoha.android.data.Repository
-import com.tarripoha.android.data.db.ModelDatabase
+import com.tarripoha.android.data.db.WordDatabase
 import com.tarripoha.android.data.rest.RetrofitApi
 
 import com.tarripoha.android.di.ApplicationContext
@@ -16,7 +16,6 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
-
 /**
  * Created by Rajat Sangrame
  * http://github.com/rajatsangrame
@@ -24,49 +23,53 @@ import retrofit2.converter.gson.GsonConverterFactory
 @Module(includes = [ViewModelModule::class, OkHttpClientModule::class])
 class ApplicationModule {
 
-    @Provides
-    fun retrofitApi(retrofit: Retrofit): RetrofitApi {
-        return retrofit.create(RetrofitApi::class.java)
-    }
+  @Provides
+  fun retrofitApi(retrofit: Retrofit): RetrofitApi {
+    return retrofit.create(RetrofitApi::class.java)
+  }
 
-    @ApplicationScope
-    @Provides
-    fun retrofit(
-        okHttpClient: OkHttpClient,
-        gsonConverterFactory: GsonConverterFactory
-    ): Retrofit {
-        return Retrofit.Builder()
-            .client(okHttpClient)
-            .baseUrl(BASE_URL)
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .addConverterFactory(gsonConverterFactory)
-            .build()
-    }
+  @ApplicationScope
+  @Provides
+  fun retrofit(
+    okHttpClient: OkHttpClient,
+    gsonConverterFactory: GsonConverterFactory
+  ): Retrofit {
+    return Retrofit.Builder()
+        .client(okHttpClient)
+        .baseUrl(BASE_URL)
+        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+        .addConverterFactory(gsonConverterFactory)
+        .build()
+  }
 
-    @Provides
-    fun gsonConverterFactory(gson: Gson): GsonConverterFactory {
-        return GsonConverterFactory.create(gson)
-    }
+  @Provides
+  fun gsonConverterFactory(gson: Gson): GsonConverterFactory {
+    return GsonConverterFactory.create(gson)
+  }
 
-    @Provides
-    fun gson(): Gson {
-        val gsonBuilder = GsonBuilder()
-        return gsonBuilder.create()
-    }
+  @Provides
+  fun gson(): Gson {
+    val gsonBuilder = GsonBuilder()
+    return gsonBuilder.create()
+  }
 
-    @ApplicationScope
-    @Provides
-    fun getRepository(retrofitApi: RetrofitApi, database: ModelDatabase?, context: Context): Repository {
-        return Repository(database, retrofitApi, context)
-    }
+  @ApplicationScope
+  @Provides
+  fun getRepository(
+    retrofitApi: RetrofitApi,
+    database: WordDatabase?,
+    context: Context
+  ): Repository {
+    return Repository(database, retrofitApi, context)
+  }
 
-    @ApplicationScope
-    @Provides
-    fun getDatabase(@ApplicationContext context: Context): ModelDatabase? {
-        return ModelDatabase.getDataBase(context)
-    }
+  @ApplicationScope
+  @Provides
+  fun getDatabase(@ApplicationContext context: Context): WordDatabase? {
+    return WordDatabase.getDataBase(context)
+  }
 
-    companion object {
-        const val BASE_URL: String = "https://itunes.apple.com"
-    }
+  companion object {
+    const val BASE_URL: String = "https://itunes.apple.com"
+  }
 }

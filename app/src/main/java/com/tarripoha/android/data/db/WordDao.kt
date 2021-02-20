@@ -2,7 +2,6 @@ package com.tarripoha.android.data.db
 
 import androidx.room.Dao
 
-
 /**
  * Created by Rajat Sangrame
  * http://github.com/rajatsangrame
@@ -12,5 +11,5 @@ import androidx.room.Dao
  * Ref: https://developer.android.com/topic/libraries/architecture/room
  */
 @Dao
-interface ModelDao {
+interface WordDao {
 }

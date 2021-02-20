@@ -5,7 +5,6 @@ import com.tarripoha.android.di.module.LoginActivityModule
 import com.tarripoha.android.ui.login.LoginActivity
 import dagger.Component
 
-
 /**
  * Created by Rajat Sangrame
  * http://github.com/rajatsangrame
@@ -13,5 +12,5 @@ import dagger.Component
 @Component(modules = [LoginActivityModule::class], dependencies = [ApplicationComponent::class])
 @MainActivityScope
 interface LoginActivityComponent {
-    fun injectLoginActivity(loginActivity: LoginActivity)
+  fun injectLoginActivity(loginActivity: LoginActivity)
 }
