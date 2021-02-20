@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "314511864781",
+    "project_id": "tarri-poha",
+    "storage_bucket": "tarri-poha.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:314511864781:android:dac566d20083729b098a84",
+        "android_client_info": {
+          "package_name": "com.tarripoha.android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "314511864781-fibjijktkqgjdolkokkmtkcenbbuecmh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCp9F4G1ojoEd2eHqwnZl8HYS2lhr-1nd8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "314511864781-fibjijktkqgjdolkokkmtkcenbbuecmh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

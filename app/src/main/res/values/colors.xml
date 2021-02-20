@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#424242</color>
+    <color name="colorPrimaryDark">#1b1b1b</color>
+    <color name="colorPrimaryLight">#6d6d6d</color>
+    <color name="colorAccent">#6d6d6d</color>
+    <color name="colorWhite">#F5F5F5</color>
+    <color name="colorTextPrimary">#ffffff</color>
+    <color name="colorTextSecondary">#000000</color>
+    <color name="cardBackground">#ddd</color>
+    <color name="gradientStart">#7f000000</color>
+    <color name="gradientEnd">#00000000</color>
+    <color name="optionItemTintColor">#ad000000</color>
+    <color name="colorGrey">#9E9E9E</color>
+    <color name="colorRed">#ef5350</color>
+    <color name="colorGreen">#66bb6a</color>
+</resources>
