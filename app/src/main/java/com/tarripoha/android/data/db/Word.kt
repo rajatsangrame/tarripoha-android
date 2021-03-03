@@ -1,11 +1,9 @@
 package com.tarripoha.android.data.db
 
-import android.os.Parcel
 import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import kotlinx.android.parcel.Parceler
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 /**
  * Created by Rajat Sangrame
@@ -22,12 +20,11 @@ import kotlinx.android.parcel.Parcelize
 data class Word(
   @PrimaryKey
   val name: String,
-  val meaning: String
+  val meaning: String,
+  var engMeaning: String? = null,
+  var type: String? = null,
+  var addedBy: String? = null,
+  var popular: Double? = null
 ) : Parcelable {
   constructor() : this("", "")
-
-  var engMeaning: String? = null
-  var type: String? = null
-  var addedBy: String? = null
-  var popular: Double? = null
 }

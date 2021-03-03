@@ -1,14 +1,12 @@
 package com.tarripoha.android.ui.main
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.tarripoha.android.R
 import com.tarripoha.android.data.db.Word
+import com.tarripoha.android.databinding.LayoutAdapterWordBinding
 import com.tarripoha.android.util.ItemClickListener
-import kotlinx.android.synthetic.main.layout_adapter_word.view.name_tv
 
 class WordAdapter(
   private var words: MutableList<Word>,
@@ -19,10 +17,11 @@ class WordAdapter(
     parent: ViewGroup,
     viewType: Int
   ): ViewHolder {
-    val view = LayoutInflater
-        .from(parent.context)
-        .inflate(R.layout.layout_adapter_word, parent, false)
-    return ViewHolder(view)
+    val binding: LayoutAdapterWordBinding = LayoutAdapterWordBinding.inflate(
+        LayoutInflater
+            .from(parent.context)
+    )
+    return ViewHolder(binding)
   }
 
   override fun onBindViewHolder(
@@ -42,8 +41,10 @@ class WordAdapter(
     notifyDataSetChanged()
   }
 
-  inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    val nameTv: TextView = itemView.name_tv
+  inner class ViewHolder(binding: LayoutAdapterWordBinding) : RecyclerView.ViewHolder(
+      binding.root
+  ) {
+    val nameTv: TextView = binding.nameTv
     private lateinit var word: Word
 
     init {

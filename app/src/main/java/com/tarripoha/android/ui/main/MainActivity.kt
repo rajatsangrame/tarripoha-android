@@ -9,18 +9,14 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tarripoha.android.App
-import com.tarripoha.android.R
 import com.tarripoha.android.data.db.Word
+import com.tarripoha.android.databinding.ActivityMainBinding
 import com.tarripoha.android.di.component.DaggerMainActivityComponent
 import com.tarripoha.android.di.component.MainActivityComponent
 import com.tarripoha.android.di.module.MainActivityModule
 import com.tarripoha.android.ui.add.WordActivity
-import com.tarripoha.android.ui.add.WordActivity.Companion
 import com.tarripoha.android.util.ItemClickListener
 import com.tarripoha.android.util.ViewModelFactory
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.layout_rv_with_swipe.*
-import java.lang.RuntimeException
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
@@ -29,12 +25,13 @@ class MainActivity : AppCompatActivity() {
   lateinit var factory: ViewModelFactory
 
   private lateinit var viewModel: MainViewModel
-
+  private lateinit var binding: ActivityMainBinding
   private lateinit var wordAdapter: WordAdapter
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
+    binding = ActivityMainBinding.inflate(layoutInflater)
+    setContentView(binding.root)
     getDependency()
     viewModel = ViewModelProvider(this, factory).get(MainViewModel::class.java)
 
@@ -56,8 +53,8 @@ class MainActivity : AppCompatActivity() {
     val linearLayoutManager = LinearLayoutManager(
         this, RecyclerView.VERTICAL, false
     )
-    with_swipe_rv.layoutManager = linearLayoutManager
-    with_swipe_rv.isNestedScrollingEnabled = false
+    binding.layout.withSwipeRv.layoutManager = linearLayoutManager
+    binding.layout.withSwipeRv.isNestedScrollingEnabled = false
     wordAdapter = WordAdapter(ArrayList(), object : ItemClickListener<Word> {
       override fun onClick(
         position: Int,
@@ -68,15 +65,15 @@ class MainActivity : AppCompatActivity() {
         startActivityForResult(intent, REQUEST_CODE_WORD)
       }
     })
-    with_swipe_rv.adapter = wordAdapter
-    with_swipe_rv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+    binding.layout.withSwipeRv.adapter = wordAdapter
+    binding.layout.withSwipeRv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
       override fun onScrolled(
         recyclerView: RecyclerView,
         dx: Int,
         dy: Int
       ) {
         val position = linearLayoutManager.findFirstCompletelyVisibleItemPosition()
-        swipe_refresh_layout.isEnabled = position <= 0
+        binding.layout.swipeRefreshLayout.isEnabled = position <= 0
       }
     })
     val callback = Callback()
@@ -88,7 +85,7 @@ class MainActivity : AppCompatActivity() {
     viewModel.isRefreshing()
         .observe(this, Observer {
           it.let {
-            swipe_refresh_layout.isRefreshing = it
+            binding.layout.swipeRefreshLayout.isRefreshing = it
           }
         })
     viewModel.getAllWords()
@@ -112,10 +109,10 @@ class MainActivity : AppCompatActivity() {
   }
 
   private fun setUpListeners() {
-    btn_add.setOnClickListener {
+    binding.btnAdd.setOnClickListener {
       startActivityForResult(Intent(this, WordActivity::class.java), REQUEST_CODE_WORD)
     }
-    swipe_refresh_layout.setOnRefreshListener {
+    binding.layout.swipeRefreshLayout.setOnRefreshListener {
       fetchAllWord()
     }
   }

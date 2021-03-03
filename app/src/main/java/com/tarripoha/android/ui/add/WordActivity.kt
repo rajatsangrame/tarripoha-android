@@ -5,14 +5,16 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.tarripoha.android.R
 import com.tarripoha.android.data.db.Word
+import com.tarripoha.android.databinding.ActivityWordBinding
 import com.tarripoha.android.util.Utils
-import kotlinx.android.synthetic.main.activity_word.*
 
 class WordActivity : AppCompatActivity() {
+
+  lateinit var binding: ActivityWordBinding
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_word)
-
+    binding = ActivityWordBinding.inflate(layoutInflater)
+    setContentView(binding.root)
     setUpListeners()
     checkForPreFilledData()
   }
@@ -21,27 +23,27 @@ class WordActivity : AppCompatActivity() {
 
     if (intent.hasExtra(KEY_WORD)) {
       val word = intent?.getParcelableExtra<Word>(KEY_WORD)
-      et_name.setText(word?.name)
-      et_name.isEnabled = false
-      et_meaning.setText(word?.meaning)
+      binding.etName.setText(word?.name)
+      binding.etName.isEnabled = false
+      binding.etMeaning.setText(word?.meaning)
     }
   }
 
   private fun setUpListeners() {
-    btn_add.setOnClickListener {
+    binding.btnAdd.setOnClickListener {
       if (
-          et_name.text.trim()
+          binding.etName.text.trim()
               .isEmpty() ||
-          et_meaning.text.trim()
+          binding.etMeaning.text.trim()
               .isEmpty()
       ) {
         Utils.showToast(this, getString(R.string.empty_field))
         return@setOnClickListener
       }
       val word = Word(
-          et_name.text.toString()
+          binding.etName.text.toString()
               .trim(),
-          et_meaning.text.toString()
+          binding.etMeaning.text.toString()
               .trim()
       )
       val intent = Intent()

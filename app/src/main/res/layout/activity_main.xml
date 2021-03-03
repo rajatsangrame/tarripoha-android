@@ -20,6 +20,9 @@
       app:srcCompat="@android:drawable/ic_input_add"
       />
 
-  <include layout="@layout/layout_rv_with_swipe" />
+  <include
+      layout="@layout/layout_rv_with_swipe"
+      android:id="@+id/layout"
+      />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
