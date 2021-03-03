@@ -24,13 +24,17 @@ class WordActivity : AppCompatActivity() {
       et_name.setText(word?.name)
       et_name.isEnabled = false
       et_meaning.setText(word?.meaning)
-      et_sentence.setText(word?.sentence)
     }
   }
 
   private fun setUpListeners() {
     btn_add.setOnClickListener {
-      if (et_name.text.isEmpty() || et_meaning.text.isEmpty() || et_sentence.text.isEmpty()) {
+      if (
+          et_name.text.trim()
+              .isEmpty() ||
+          et_meaning.text.trim()
+              .isEmpty()
+      ) {
         Utils.showToast(this, getString(R.string.empty_field))
         return@setOnClickListener
       }
@@ -38,8 +42,6 @@ class WordActivity : AppCompatActivity() {
           et_name.text.toString()
               .trim(),
           et_meaning.text.toString()
-              .trim(),
-          et_sentence.text.toString()
               .trim()
       )
       val intent = Intent()

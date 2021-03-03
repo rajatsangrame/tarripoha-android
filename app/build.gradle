@@ -17,13 +17,14 @@ android {
     multiDexEnabled true
     targetSdkVersion 29
     versionCode 20210221
-    versionName "0.1.0"
+    versionName "0.1.1"
 
     testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
   }
 
   buildTypes {
     debug {
+      applicationIdSuffix ".debug"
       //buildConfigField("String", "AuthKey", AuthKey)
       debuggable true
     }

@@ -20,6 +20,7 @@ import com.tarripoha.android.util.ItemClickListener
 import com.tarripoha.android.util.ViewModelFactory
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.layout_rv_with_swipe.*
+import java.lang.RuntimeException
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
