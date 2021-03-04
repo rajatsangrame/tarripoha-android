@@ -24,7 +24,9 @@ data class Word(
   var engMeaning: String? = null,
   var type: String? = null,
   var addedBy: String? = null,
-  var popular: Double? = null
+  var popular: Double? = null,
+  var dirty: Boolean? = null,
+  var sentence: MutableList<Sentence>? = null
 ) : Parcelable {
   constructor() : this("", "")
 }

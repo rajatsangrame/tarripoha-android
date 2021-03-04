@@ -6,9 +6,10 @@ import android.os.Bundle
 import com.tarripoha.android.R
 import com.tarripoha.android.data.db.Word
 import com.tarripoha.android.databinding.ActivityWordBinding
+import com.tarripoha.android.ui.BaseActivity
 import com.tarripoha.android.util.Utils
 
-class WordActivity : AppCompatActivity() {
+class WordActivity : BaseActivity() {
 
   lateinit var binding: ActivityWordBinding
   override fun onCreate(savedInstanceState: Bundle?) {

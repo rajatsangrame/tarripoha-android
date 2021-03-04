@@ -10,11 +10,12 @@ import com.tarripoha.android.databinding.ActivityMainBinding
 import com.tarripoha.android.di.component.DaggerLoginActivityComponent
 import com.tarripoha.android.di.component.LoginActivityComponent
 import com.tarripoha.android.di.module.LoginActivityModule
+import com.tarripoha.android.ui.BaseActivity
 
 import com.tarripoha.android.util.ViewModelFactory
 import javax.inject.Inject
 
-class LoginActivity : AppCompatActivity() {
+class LoginActivity : BaseActivity() {
 
   @Inject
   lateinit var factory: ViewModelFactory

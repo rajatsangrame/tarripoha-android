@@ -14,12 +14,13 @@ import com.tarripoha.android.databinding.ActivityMainBinding
 import com.tarripoha.android.di.component.DaggerMainActivityComponent
 import com.tarripoha.android.di.component.MainActivityComponent
 import com.tarripoha.android.di.module.MainActivityModule
+import com.tarripoha.android.ui.BaseActivity
 import com.tarripoha.android.ui.add.WordActivity
 import com.tarripoha.android.util.ItemClickListener
 import com.tarripoha.android.util.ViewModelFactory
 import javax.inject.Inject
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
 
   @Inject
   lateinit var factory: ViewModelFactory

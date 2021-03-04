@@ -20,7 +20,8 @@ data class Sentence(
   val word: String,
   val sentence: String,
   var addedBy: String? = null,
-  var popular: Double? = null
+  var popular: Double? = null,
+  var dirty: Boolean = false
 ) : Parcelable {
   constructor() : this("", "")
 }
