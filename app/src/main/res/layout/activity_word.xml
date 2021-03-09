@@ -1,64 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.add.WordActivity"
-    >
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  tools:context=".ui.add.WordActivity">
 
 
   <Button
-      android:id="@+id/btn_add"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginTop="@dimen/margin_extra_large"
-      android:text="@string/add"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/et_sentence"
-      />
+    android:id="@+id/btn_add"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="16dp"
+    android:text="@string/add"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintHorizontal_bias="0.498"
+    app:layout_constraintTop_toBottomOf="@+id/et_meaning" />
 
   <EditText
-      android:id="@+id/et_meaning"
-      android:layout_width="0dp"
-      android:layout_height="wrap_content"
-      android:layout_marginEnd="@dimen/margin_extra_large"
-      android:layout_marginStart="@dimen/margin_extra_large"
-      android:layout_marginTop="@dimen/margin_extra_large"
-      android:hint="@string/meaning"
-      android:inputType="none"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/et_name"
-      />
+    android:id="@+id/et_meaning"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/margin_extra_large"
+    android:layout_marginTop="@dimen/margin_extra_large"
+    android:layout_marginEnd="@dimen/margin_extra_large"
+    android:hint="@string/meaning"
+    android:inputType="none"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/et_name" />
+
 
   <EditText
-      android:id="@+id/et_sentence"
-      android:layout_width="0dp"
-      android:layout_height="wrap_content"
-      android:layout_marginEnd="@dimen/margin_extra_large"
-      android:layout_marginStart="@dimen/margin_extra_large"
-      android:layout_marginTop="@dimen/margin_extra_large"
-      android:hint="@string/sentence"
-      android:inputType="textMultiLine"
-      android:maxLines="10"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/et_meaning"
-      />
-
-  <EditText
-      android:id="@+id/et_name"
-      android:layout_width="0dp"
-      android:layout_height="wrap_content"
-      android:layout_marginEnd="@dimen/margin_extra_large"
-      android:layout_marginStart="@dimen/margin_extra_large"
-      android:layout_marginTop="@dimen/margin_extra_large"
-      android:hint="@string/word"
-      android:inputType="none"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="parent"
-      />
+    android:id="@+id/et_name"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/margin_extra_large"
+    android:layout_marginTop="@dimen/margin_extra_large"
+    android:layout_marginEnd="@dimen/margin_extra_large"
+    android:hint="@string/word"
+    android:inputType="none"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
