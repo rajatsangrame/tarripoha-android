@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.tarripoha.android.data.db.Word
-import com.tarripoha.android.databinding.LayoutAdapterWordBinding
+import com.tarripoha.android.databinding.LayoutItemWordBinding
 import com.tarripoha.android.util.ItemClickListener
 
 class WordAdapter(
@@ -17,7 +17,7 @@ class WordAdapter(
     parent: ViewGroup,
     viewType: Int
   ): ViewHolder {
-    val binding = LayoutAdapterWordBinding
+    val binding = LayoutItemWordBinding
         .inflate(LayoutInflater.from(parent.context), parent, false)
     return ViewHolder(binding)
   }
@@ -40,7 +40,7 @@ class WordAdapter(
     notifyDataSetChanged()
   }
 
-  inner class ViewHolder(binding: LayoutAdapterWordBinding) : RecyclerView.ViewHolder(
+  inner class ViewHolder(binding: LayoutItemWordBinding) : RecyclerView.ViewHolder(
       binding.root
   ) {
     val nameTv: TextView = binding.nameTv
