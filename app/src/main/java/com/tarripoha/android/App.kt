@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import com.tarripoha.android.di.component.ApplicationComponent
 import com.tarripoha.android.di.component.DaggerApplicationComponent
+import com.tarripoha.android.di.module.ApplicationModule
 import com.tarripoha.android.di.module.ContextModule
 
 /**
@@ -18,6 +19,7 @@ class App : Application() {
     super.onCreate()
     component = DaggerApplicationComponent
         .builder()
+        .applicationModule(ApplicationModule(this))
         .contextModule(ContextModule(this))
         .build()
   }

@@ -1,8 +1,10 @@
 package com.tarripoha.android.ui.main
 
+import android.app.Application
 import androidx.lifecycle.*
 import com.tarripoha.android.data.Repository
 import com.tarripoha.android.data.db.Word
+import com.tarripoha.android.ui.BaseViewModel
 import javax.inject.Inject
 
 /**
@@ -10,7 +12,10 @@ import javax.inject.Inject
  * http://github.com/rajatsangrame
  */
 
-class MainViewModel @Inject constructor(var repository: Repository) : ViewModel() {
+class MainViewModel @Inject constructor(
+  var repository: Repository,
+  app: Application
+) : BaseViewModel(app) {
 
   private val isRefreshing: MutableLiveData<Boolean> = MutableLiveData()
 

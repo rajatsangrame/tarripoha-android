@@ -1,9 +1,8 @@
 package com.tarripoha.android.ui.main
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.lifecycle.Observer
+import androidx.lifecycle.*
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,10 +12,10 @@ import com.tarripoha.android.data.db.Word
 import com.tarripoha.android.databinding.ActivityMainBinding
 import com.tarripoha.android.di.component.DaggerMainActivityComponent
 import com.tarripoha.android.di.component.MainActivityComponent
-import com.tarripoha.android.di.module.MainActivityModule
 import com.tarripoha.android.ui.BaseActivity
 import com.tarripoha.android.ui.add.WordActivity
 import com.tarripoha.android.util.ItemClickListener
+import com.tarripoha.android.util.TPUtils
 import com.tarripoha.android.util.ViewModelFactory
 import javax.inject.Inject
 
@@ -95,6 +94,10 @@ class MainActivity : BaseActivity() {
             wordAdapter.setWordList(it)
           }
         })
+    viewModel.getUserMessage()
+        .observe(this, Observer {
+          TPUtils.showSnacBar(this, it)
+        })
   }
 
   private fun getDependency() {
@@ -104,7 +107,6 @@ class MainActivity : BaseActivity() {
             App.get(this)
                 .getComponent()
         )
-        .mainActivityModule(MainActivityModule(this))
         .build()
     component.injectMainActivity(this)
   }

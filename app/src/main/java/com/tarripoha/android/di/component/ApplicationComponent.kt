@@ -1,5 +1,6 @@
 package com.tarripoha.android.di.component
 
+import android.app.Application
 import com.tarripoha.android.data.Repository
 import com.tarripoha.android.di.ApplicationScope
 import com.tarripoha.android.di.module.ApplicationModule
@@ -17,5 +18,7 @@ interface ApplicationComponent {
   fun getRepository(): Repository
 
   fun getViewModelFactory(): ViewModelFactory
+
+  fun getApp(): Application
 
 }

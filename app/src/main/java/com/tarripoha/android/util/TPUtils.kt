@@ -7,12 +7,14 @@ import android.os.Build
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.snackbar.Snackbar
 
 /**
  * Created by Rajat Sangrame
  * http://github.com/rajatsangrame
  */
-object Utils {
+object TPUtils {
 
   fun isNetworkAvailable(context: Context): Boolean {
     val connectivityManager =
@@ -51,6 +53,14 @@ object Utils {
     message: String
   ) {
     Toast.makeText(context, message, Toast.LENGTH_SHORT)
+        .show()
+  }
+
+  fun showSnacBar(
+    view: AppCompatActivity,
+    message: String
+  ) {
+    Snackbar.make(view.findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT)
         .show()
   }
 }

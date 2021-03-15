@@ -1,6 +1,5 @@
 package com.tarripoha.android.ui.login
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
@@ -9,7 +8,6 @@ import com.tarripoha.android.R
 import com.tarripoha.android.databinding.ActivityMainBinding
 import com.tarripoha.android.di.component.DaggerLoginActivityComponent
 import com.tarripoha.android.di.component.LoginActivityComponent
-import com.tarripoha.android.di.module.LoginActivityModule
 import com.tarripoha.android.ui.BaseActivity
 
 import com.tarripoha.android.util.ViewModelFactory
@@ -37,7 +35,6 @@ class LoginActivity : BaseActivity() {
             App.get(this)
                 .getComponent()
         )
-        .loginActivityModule(LoginActivityModule(this))
         .build()
     component.injectLoginActivity(this)
   }

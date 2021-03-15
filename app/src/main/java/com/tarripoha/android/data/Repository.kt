@@ -6,12 +6,10 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
-import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import com.tarripoha.android.data.db.Word
 import com.tarripoha.android.data.db.WordDatabase
 import com.tarripoha.android.data.rest.RetrofitApi
-import com.tarripoha.android.util.Utils
 import java.lang.Exception
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
@@ -39,11 +37,9 @@ class Repository(
     wordRef.child(word.name)
         .setValue(word)
         .addOnSuccessListener {
-          Utils.showToast(context, "Data Added")
           success()
         }
         .addOnFailureListener {
-          Utils.showToast(context, "Failed")
           failure(it)
         }
   }

@@ -1,8 +1,8 @@
 package com.tarripoha.android.ui.login
 
-import android.util.Log
-import androidx.lifecycle.*
+import android.app.Application
 import com.tarripoha.android.data.Repository
+import com.tarripoha.android.ui.BaseViewModel
 import javax.inject.Inject
 
 /**
@@ -10,13 +10,12 @@ import javax.inject.Inject
  * http://github.com/rajatsangrame
  */
 
-class LoginViewModel @Inject constructor(var repository: Repository) : ViewModel() {
-
-  init {
-    Log.d(TAG, ": init called")
-  }
+class LoginViewModel @Inject constructor(
+  var repository: Repository,
+  app: Application
+) : BaseViewModel(app) {
 
   companion object {
-    private const val TAG = "MainViewModel"
+    private const val TAG = "LoginViewModel"
   }
 }

@@ -1,10 +1,10 @@
 package com.tarripoha.android.di.module
 
+import android.app.Application
 import android.content.Context
 import com.tarripoha.android.data.Repository
 import com.tarripoha.android.data.db.WordDatabase
 import com.tarripoha.android.data.rest.RetrofitApi
-
 import com.tarripoha.android.di.ApplicationContext
 import com.tarripoha.android.di.ApplicationScope
 import com.google.gson.Gson
@@ -21,7 +21,7 @@ import retrofit2.converter.gson.GsonConverterFactory
  * http://github.com/rajatsangrame
  */
 @Module(includes = [ViewModelModule::class, OkHttpClientModule::class])
-class ApplicationModule {
+class ApplicationModule(val application: Application) {
 
   @Provides
   fun retrofitApi(retrofit: Retrofit): RetrofitApi {
@@ -67,6 +67,12 @@ class ApplicationModule {
   @Provides
   fun getDatabase(@ApplicationContext context: Context): WordDatabase? {
     return WordDatabase.getDataBase(context)
+  }
+
+  @ApplicationScope
+  @Provides
+  fun app(): Application {
+    return application
   }
 
   companion object {

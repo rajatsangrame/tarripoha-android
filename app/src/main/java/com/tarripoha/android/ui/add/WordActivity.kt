@@ -1,13 +1,12 @@
 package com.tarripoha.android.ui.add
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.tarripoha.android.R
 import com.tarripoha.android.data.db.Word
 import com.tarripoha.android.databinding.ActivityWordBinding
 import com.tarripoha.android.ui.BaseActivity
-import com.tarripoha.android.util.Utils
+import com.tarripoha.android.util.TPUtils
 
 class WordActivity : BaseActivity() {
 
@@ -38,7 +37,7 @@ class WordActivity : BaseActivity() {
           binding.etMeaning.text.trim()
               .isEmpty()
       ) {
-        Utils.showToast(this, getString(R.string.empty_field))
+        TPUtils.showToast(this, getString(R.string.empty_field))
         return@setOnClickListener
       }
       val word = Word(
