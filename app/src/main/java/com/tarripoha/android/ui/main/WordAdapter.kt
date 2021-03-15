@@ -17,10 +17,8 @@ class WordAdapter(
     parent: ViewGroup,
     viewType: Int
   ): ViewHolder {
-    val binding: LayoutAdapterWordBinding = LayoutAdapterWordBinding.inflate(
-        LayoutInflater
-            .from(parent.context)
-    )
+    val binding = LayoutAdapterWordBinding
+        .inflate(LayoutInflater.from(parent.context), parent, false)
     return ViewHolder(binding)
   }
 
@@ -30,6 +28,7 @@ class WordAdapter(
   ) {
     val word = words[position]
     holder.nameTv.text = word.name
+    holder.meaningTv.text = word.meaning
   }
 
   override fun getItemCount(): Int = words.size
@@ -45,6 +44,7 @@ class WordAdapter(
       binding.root
   ) {
     val nameTv: TextView = binding.nameTv
+    val meaningTv: TextView = binding.meaningTv
     private lateinit var word: Word
 
     init {

@@ -17,37 +17,4 @@
   </style>
 
 
-  <style name="TextViewStyleBold" parent="@android:style/TextAppearance">
-    <item name="android:textColor">@color/colorPrimaryDark</item>
-    <item name="android:textStyle">bold</item>
-    <item name="android:textSize">@dimen/text_normal</item>
-  </style>
-
-  <style name="TextViewStyleSmall" parent="@android:style/TextAppearance">
-    <item name="android:textColor">@color/colorWhite</item>
-    <item name="android:maxLines">1</item>
-    <item name="android:ellipsize">end</item>
-    <item name="android:textSize">@dimen/text_normal</item>
-  </style>
-
-  <style name="TextViewStyleNormal" parent="@android:style/TextAppearance">
-    <item name="android:textColor">@color/colorPrimary</item>
-    <item name="android:maxLines">1</item>
-    <item name="android:ellipsize">end</item>
-    <item name="android:textSize">@dimen/text_normal</item>
-  </style>
-
-  <style name="TextViewStyleExtraSmall" parent="@android:style/TextAppearance">
-    <item name="android:textColor">@color/colorGrey</item>
-    <item name="android:maxLines">1</item>
-    <item name="android:ellipsize">end</item>
-    <item name="android:textSize">@dimen/text_minimum</item>
-  </style>
-
-  <style name="EditTextSearch" parent="@android:style/TextAppearance">
-    <item name="android:textColor">@color/colorPrimaryDark</item>
-    <item name="android:paddingStart">@dimen/margin_extra_large</item>
-    <item name="android:paddingEnd">@dimen/margin_extra_large</item>
-    <item name="android:textSize">@dimen/text_normal</item>
-  </style>
 </resources>
