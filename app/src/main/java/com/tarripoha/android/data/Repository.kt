@@ -10,7 +10,6 @@ import com.google.firebase.ktx.Firebase
 import com.tarripoha.android.data.db.Word
 import com.tarripoha.android.data.db.WordDatabase
 import com.tarripoha.android.data.rest.RetrofitApi
-import java.lang.Exception
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 
@@ -27,6 +26,26 @@ class Repository(
   private val ioExecutor: Executor by lazy { Executors.newSingleThreadExecutor() }
 
   private val wordRef: DatabaseReference by lazy { Firebase.database.getReference("word") }
+
+  fun checkFirebaseConnection(
+    success: () -> Unit,
+    failure: () -> Unit
+  ) {
+    val fireBase = Firebase.database.getReference(".info/connected")
+    fireBase.addValueEventListener(
+        object : ValueEventListener {
+          override fun onDataChange(snapshot: DataSnapshot) {
+            val connected = snapshot.getValue(Boolean::class.java)!!
+            if (connected) success()
+            else failure()
+          }
+
+          override fun onCancelled(error: DatabaseError) {
+            failure()
+          }
+        }
+    )
+  }
 
   fun addWord(
     word: Word,

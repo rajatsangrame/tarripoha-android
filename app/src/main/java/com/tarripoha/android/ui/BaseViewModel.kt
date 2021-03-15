@@ -18,4 +18,6 @@ abstract class BaseViewModel(val app: Application) : ViewModel() {
   }
 
   fun getUserMessage() = userMessage
+
+  fun getString(resId: Int) = app.applicationContext.getString(resId)
 }

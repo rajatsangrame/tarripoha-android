@@ -1,0 +1,10 @@
+Version 0.2.0 [14 Mar 2021]
+
+1. Word + Meaning in home screen
+2. Network Check
+3. SnacBar error
+4.
+
+---------------------------------------------
+
+

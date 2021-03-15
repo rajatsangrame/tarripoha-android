@@ -39,11 +39,11 @@ object ApiError {
                     .getString("error")
             } catch (ex: Exception) {
                 // ignored
-                context.getString(R.string.unable_to_fetch)
+                context.getString(R.string.error_unable_to_fetch)
             }
         }
       else -> {
-        context.getString(R.string.unable_to_fetch)
+        context.getString(R.string.error_unable_to_fetch)
       }
     }
   }
