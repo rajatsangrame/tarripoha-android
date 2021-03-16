@@ -1,12 +1,12 @@
 package com.tarripoha.android.ui.main
 
 import android.app.Application
-import android.os.Handler
 import androidx.lifecycle.*
 import com.tarripoha.android.data.Repository
 import com.tarripoha.android.data.db.Word
 import com.tarripoha.android.ui.BaseViewModel
 import com.tarripoha.android.R
+import com.tarripoha.android.util.TPUtils
 import javax.inject.Inject
 
 /**
@@ -22,17 +22,18 @@ class MainViewModel @Inject constructor(
   private val isRefreshing: MutableLiveData<Boolean> = MutableLiveData()
   private val words: MutableLiveData<List<Word>> = MutableLiveData()
 
-  // Jugaad. to avoid first network error. Firebase take initial time to set up.
-  // Remove when Launch Screen is completed
-  private var firstRun = true
-
   fun isRefreshing() = isRefreshing
 
   fun getAllWords() = words
 
   fun addWord(word: Word) {
+    if (!TPUtils.isNetworkAvailable(getContext())) {
+      setUserMessage(getString(R.string.error_no_internet))
+      return
+    }
     isRefreshing.value = true
-    repository.addWord(word,
+    repository.addWord(
+        word = word,
         success = {
           isRefreshing.value = false
           setUserMessage(getString(R.string.succ_data_added))
@@ -40,30 +41,18 @@ class MainViewModel @Inject constructor(
         failure = {
           isRefreshing.value = false
           setUserMessage(getString(R.string.error_unable_to_process))
+        },
+        connectionStatus = {
+          if (!it) isRefreshing.value = false
         }
     )
   }
 
-  private fun checkFirebaseConnection() {
-    if (firstRun) {
-      Handler().postDelayed({
-        firstRun = false
-        checkFirebaseConnection()
-      }, 2000)
-    } else {
-      repository.checkFirebaseConnection(
-          success = {
-          },
-          failure = {
-            setUserMessage(getString(R.string.error_no_internet))
-            isRefreshing.value = false
-          }
-      )
-    }
-  }
-
   fun fetchAllWord() {
-    checkFirebaseConnection()
+    if (!TPUtils.isNetworkAvailable(getContext())) {
+      setUserMessage(getString(R.string.error_no_internet))
+      return
+    }
     isRefreshing.value = true
     repository.fetchAllWords(
         success = { snapshot ->
@@ -80,6 +69,9 @@ class MainViewModel @Inject constructor(
         failure = {
           isRefreshing.value = false
           setUserMessage(getString(R.string.error_unable_to_fetch))
+        },
+        connectionStatus = {
+          if (!it) isRefreshing.value = false
         }
     )
   }

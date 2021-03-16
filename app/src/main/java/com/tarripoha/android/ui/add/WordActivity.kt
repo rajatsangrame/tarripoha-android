@@ -10,7 +10,8 @@ import com.tarripoha.android.util.TPUtils
 
 class WordActivity : BaseActivity() {
 
-  lateinit var binding: ActivityWordBinding
+  private lateinit var binding: ActivityWordBinding
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     binding = ActivityWordBinding.inflate(layoutInflater)
