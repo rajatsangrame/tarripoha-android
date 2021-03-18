@@ -8,6 +8,11 @@
     <item name="android:fontFamily">@font/roboto_regular</item>
   </style>
 
+  <style name="AppTheme.NoActionBar">
+    <item name="windowActionBar">false</item>
+    <item name="windowNoTitle">true</item>
+  </style>
+
   <style name="AppTheme.Bold" parent="TextAppearance.AppCompat.Title">
     <item name="android:fontFamily">@font/roboto_bold</item>
   </style>

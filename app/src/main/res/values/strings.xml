@@ -1,19 +1,20 @@
 <resources>
-  <string name="app_name">TarriPoha</string>
+    <string name="app_name">TarriPoha</string>
 
-  <string name="please_wait">Please wait…</string>
-  <string name="sample_title">Sample Title</string>
-  <string name="word">word</string>
-  <string name="meaning">meaning</string>
-  <string name="sentence">sentence</string>
-  <string name="add">add</string>
-  <string name="empty_field">Empty Field</string>
+    <string name="please_wait">Please wait…</string>
+    <string name="sample_title">Sample Title</string>
+    <string name="word">Word</string>
+    <string name="meaning">Meaning</string>
+    <string name="sentence">Sentence</string>
+    <string name="add">Add</string>
+    <string name="search">Search</string>
+    <string name="empty_field">Empty Field</string>
 
-  <string name="error_no_result">No result found</string>
-  <string name="error_no_internet">Unable to connect. Please check your internet connection</string>
-  <string name="error_unable_to_fetch">Unable to fetch data</string>
-  <string name="error_unable_to_process">Unable to process data</string>
-  <string name="error_timeout">Connection time out. Please try again later</string>
-  <string name="succ_data_added">Data added successfully</string>
+    <string name="error_no_result">No result found</string>
+    <string name="error_no_internet">Unable to connect. Please check your internet connection</string>
+    <string name="error_unable_to_fetch">Unable to fetch data</string>
+    <string name="error_unable_to_process">Unable to process data</string>
+    <string name="error_timeout">Connection time out. Please try again later</string>
+    <string name="succ_data_added">Data added successfully</string>
 
 </resources>
