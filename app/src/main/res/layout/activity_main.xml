@@ -4,39 +4,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.main.MainActivity">
+    tools:context=".ui.main.MainActivity"
+    >
 
-    <include
-        android:id="@+id/toolbar_layout"
-        layout="@layout/toolbar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+  <include
+      layout="@layout/toolbar"
+      android:id="@+id/toolbar_layout"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btn_add"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin_extra_large"
-        android:layout_marginBottom="@dimen/margin_extra_large"
-        android:clickable="true"
-        android:focusable="true"
-        android:src="@drawable/ic_add_white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <FrameLayout
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_layout">
-
-        <include
-            android:id="@+id/layout"
-            layout="@layout/layout_rv_with_swipe" />
-    </FrameLayout>
-
+  <fragment
+      android:id="@+id/nav_host_fragment"
+      android:layout_width="0dp"
+      android:layout_height="0dp"
+      android:name="androidx.navigation.fragment.NavHostFragment"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintLeft_toLeftOf="parent"
+      app:layout_constraintRight_toRightOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/toolbar_layout"
+      app:defaultNavHost="true"
+      app:navGraph="@navigation/main_nav_graph"
+      />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

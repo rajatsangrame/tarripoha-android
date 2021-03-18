@@ -38,7 +38,7 @@ class WordActivity : BaseActivity() {
           binding.etMeaning.text.trim()
               .isEmpty()
       ) {
-        TPUtils.showSnacBar(this, getString(R.string.empty_field))
+        TPUtils.showSnackBar(this, getString(R.string.empty_field))
         return@setOnClickListener
       }
       val word = Word(

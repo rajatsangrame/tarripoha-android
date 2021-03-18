@@ -56,7 +56,7 @@ object TPUtils {
         .show()
   }
 
-  fun showSnacBar(
+  fun showSnackBar(
     view: AppCompatActivity,
     message: String
   ) {
