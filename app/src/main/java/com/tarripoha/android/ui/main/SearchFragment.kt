@@ -10,11 +10,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.*
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tarripoha.android.App
 import com.tarripoha.android.data.db.Word
 import com.tarripoha.android.databinding.FragmentHomeBinding
+import com.tarripoha.android.databinding.FragmentSearchBinding
 import com.tarripoha.android.ui.add.WordActivity
 import com.tarripoha.android.util.ItemClickListener
 import com.tarripoha.android.util.TPUtils
@@ -22,7 +24,7 @@ import com.tarripoha.android.util.TPUtils
 /**
  * Fragment to show all the cities.
  */
-class HomeFragment : Fragment() {
+class SearchFragment : Fragment() {
 
   // region Variables
 
@@ -31,7 +33,7 @@ class HomeFragment : Fragment() {
   }
 
   private lateinit var factory: ViewModelProvider.Factory
-  private lateinit var binding: FragmentHomeBinding
+  private lateinit var binding: FragmentSearchBinding
   private lateinit var wordAdapter: WordAdapter
   private val viewModel by activityViewModels<MainViewModel> {
     factory
@@ -46,7 +48,7 @@ class HomeFragment : Fragment() {
     container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View {
-    binding = FragmentHomeBinding
+    binding = FragmentSearchBinding
         .inflate(LayoutInflater.from(requireContext()), container, false)
     return binding.root
   }
@@ -63,7 +65,6 @@ class HomeFragment : Fragment() {
       ViewModelProvider.AndroidViewModelFactory(App.get(requireContext()))
 
     setupUI()
-    fetchAllWord()
   }
 
   override fun onActivityResult(
@@ -95,7 +96,7 @@ class HomeFragment : Fragment() {
     val linearLayoutManager = LinearLayoutManager(
         context, RecyclerView.VERTICAL, false
     )
-    binding.layout.withSwipeRv.layoutManager = linearLayoutManager
+    binding.wordsRv.layoutManager = linearLayoutManager
     wordAdapter = WordAdapter(ArrayList(), object : ItemClickListener<Word> {
       override fun onClick(
         position: Int,
@@ -106,40 +107,15 @@ class HomeFragment : Fragment() {
         startActivityForResult(intent, REQUEST_CODE_WORD)
       }
     })
-    binding.layout.withSwipeRv.adapter = wordAdapter
-    binding.layout.withSwipeRv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-      override fun onScrolled(
-        recyclerView: RecyclerView,
-        dx: Int,
-        dy: Int
-      ) {
-        val position = linearLayoutManager.findFirstCompletelyVisibleItemPosition()
-        binding.layout.swipeRefreshLayout.isEnabled = position <= 0
-      }
-    })
+    binding.wordsRv.adapter = wordAdapter
   }
 
   private fun setupObservers() {
-    viewModel.isRefreshing()
-        .observe(viewLifecycleOwner, Observer {
-          it.let {
-            binding.layout.swipeRefreshLayout.isRefreshing = it
-          }
-        })
-    viewModel.getAllWords()
-        .observe(viewLifecycleOwner, Observer {
-          it?.let {
-            wordAdapter.setWordList(it)
-          }
-        })
-    viewModel.getUserMessage()
-        .observe(viewLifecycleOwner, Observer {
-          TPUtils.showSnackBar(activity as AppCompatActivity, it)
-        })
+
   }
 
-  private fun fetchAllWord() {
-    viewModel.fetchAllWord()
+  private fun searchWord() {
+
   }
 
   // endregion
@@ -147,14 +123,8 @@ class HomeFragment : Fragment() {
   // region Click Related Methods
 
   private fun setupListeners() {
-    binding.btnAdd.setOnClickListener {
-      startActivityForResult(
-          Intent(requireContext(), WordActivity::class.java),
-          REQUEST_CODE_WORD
-      )
-    }
-    binding.layout.swipeRefreshLayout.setOnRefreshListener {
-      fetchAllWord()
+    binding.backBtn.setOnClickListener{
+      findNavController().popBackStack()
     }
   }
 

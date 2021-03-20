@@ -11,6 +11,17 @@
       android:name="com.tarripoha.android.ui.main.HomeFragment"
       tools:layout="@layout/fragment_home">
 
+    <action
+        android:id="@+id/action_HomeFragment_to_SearchFragment"
+        app:destination="@+id/nav_search"
+ />
+
   </fragment>
+
+  <fragment
+      android:id="@+id/nav_search"
+      android:label="CityFragment"
+      android:name="com.tarripoha.android.ui.main.SearchFragment"
+      tools:layout="@layout/fragment_search" />
 
 </navigation>

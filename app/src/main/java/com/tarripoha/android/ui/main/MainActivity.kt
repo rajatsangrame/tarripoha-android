@@ -4,6 +4,9 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -13,6 +16,7 @@ import com.tarripoha.android.databinding.ActivityMainBinding
 import com.tarripoha.android.di.component.DaggerMainActivityComponent
 import com.tarripoha.android.di.component.MainActivityComponent
 import com.tarripoha.android.ui.BaseActivity
+import com.tarripoha.android.util.TPUtils
 import com.tarripoha.android.util.ViewModelFactory
 import javax.inject.Inject
 
@@ -50,8 +54,7 @@ class MainActivity : BaseActivity() {
   override fun onOptionsItemSelected(item: MenuItem): Boolean {
     return when (item.itemId) {
       R.id.search -> {
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_toolbar_back)
+        navController.navigate(R.id.action_HomeFragment_to_SearchFragment)
         true
       }
       else -> super.onOptionsItemSelected(item)
@@ -64,6 +67,7 @@ class MainActivity : BaseActivity() {
 
   private fun setupUI() {
     setupToolbar()
+    setupObservers()
   }
 
   private fun setupToolbar() {
@@ -83,15 +87,29 @@ class MainActivity : BaseActivity() {
     component.injectMainActivity(this)
   }
 
+  private fun setupObservers() {
+    viewModel.getUserMessage()
+        .observe(this, Observer {
+          TPUtils.showSnackBar(this, it)
+        })
+  }
+
   private fun handleNavigation() {
     navController.addOnDestinationChangedListener { _, destination, _ ->
       when (destination.id) {
-        R.id.nav_home ->
+        R.id.nav_home -> {
+
+          binding.toolbarLayout.toolbar.visibility = View.VISIBLE
           binding.toolbarLayout.title.text = getString(R.string.app_name)
+        }
+
+        R.id.nav_search -> {
+          binding.toolbarLayout.toolbar.visibility = View.GONE
+        }
       }
     }
   }
 
-  //endregion
+//endregion
 
 }

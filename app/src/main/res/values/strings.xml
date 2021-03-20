@@ -8,6 +8,7 @@
   <string name="sentence">Sentence</string>
   <string name="add">Add</string>
   <string name="search">Search</string>
+  <string name="info">Info</string>
   <string name="empty_field">Empty Field</string>
 
   <string name="error_no_result">No result found</string>
