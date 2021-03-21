@@ -111,6 +111,27 @@ class SearchFragment : Fragment() {
     showKeyboard()
   }
 
+  private fun setupRecyclerView() {
+    val linearLayoutManager = LinearLayoutManager(
+        context, RecyclerView.VERTICAL, false
+    )
+    wordAdapter = WordAdapter(ArrayList(), object : ItemClickListener<Word> {
+      override fun onClick(
+        position: Int,
+        data: Word
+      ) {
+        hideKeyboard()
+        val intent = Intent(context, WordActivity::class.java)
+        intent.putExtra(WordActivity.KEY_WORD, data)
+        startActivityForResult(intent, REQUEST_CODE_WORD)
+      }
+    })
+    binding.wordsRv.apply {
+      layoutManager = linearLayoutManager
+      adapter = wordAdapter
+    }
+  }
+
   private fun setupSearchEditText() {
 
     binding.searchEt.apply {
@@ -123,42 +144,11 @@ class SearchFragment : Fragment() {
           }
       setOnEditorActionListener { _, actionId, _ ->
         if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-          TPUtils.hideKeyboard(requireContext(), this)
+          hideKeyboard()
         }
         true
       }
       compositeDisposable.add(d)
-    }
-  }
-
-  private fun showKeyboard() {
-    TPUtils.showKeyboard(binding.searchEt, requireContext())
-  }
-
-  private fun displayAddWordPlank() {
-    val query = binding.searchEt.text.toString()
-    if (query.isNotEmpty()) {
-      wordAdapter.displayNewWordPlank(query)
-    }
-  }
-
-  private fun setupRecyclerView() {
-    val linearLayoutManager = LinearLayoutManager(
-        context, RecyclerView.VERTICAL, false
-    )
-    wordAdapter = WordAdapter(ArrayList(), object : ItemClickListener<Word> {
-      override fun onClick(
-        position: Int,
-        data: Word
-      ) {
-        val intent = Intent(context, WordActivity::class.java)
-        intent.putExtra(WordActivity.KEY_WORD, data)
-        startActivityForResult(intent, REQUEST_CODE_WORD)
-      }
-    })
-    binding.wordsRv.apply {
-      layoutManager = linearLayoutManager
-      adapter = wordAdapter
     }
   }
 
@@ -188,6 +178,21 @@ class SearchFragment : Fragment() {
               }
             }
           })
+    }
+  }
+
+  private fun showKeyboard() {
+    TPUtils.showKeyboard(context = requireContext(), view = binding.searchEt)
+  }
+
+  private fun hideKeyboard() {
+    TPUtils.hideKeyboard(context = requireContext(), view = binding.searchEt)
+  }
+
+  private fun displayAddWordPlank() {
+    val query = binding.searchEt.text.toString()
+    if (query.isNotEmpty()) {
+      wordAdapter.displayNewWordPlank(query)
     }
   }
 

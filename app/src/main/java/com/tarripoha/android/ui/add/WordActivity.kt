@@ -42,9 +42,9 @@ class WordActivity : BaseActivity() {
         return@setOnClickListener
       }
       val word = Word(
-          binding.etName.text.toString()
+          name = binding.etName.text.toString()
               .trim(),
-          binding.etMeaning.text.toString()
+          meaning = binding.etMeaning.text.toString()
               .trim()
       )
       val intent = Intent()

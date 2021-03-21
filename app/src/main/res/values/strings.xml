@@ -11,7 +11,7 @@
   <string name="info">Info</string>
   <string name="empty_field">Empty Field</string>
 
-  <string name="msg_new_word_plank">Add new word for %1$s</string>
+  <string name="msg_new_word_plank">New word for %1$s</string>
 
   <string name="error_no_result">No result found</string>
   <string name="error_no_internet">Unable to connect. Please check your internet connection</string>

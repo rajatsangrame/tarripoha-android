@@ -43,8 +43,8 @@ object TPUtils {
   }
 
   fun showKeyboard(
+    context: Context,
     view: View,
-    context: Context
   ) {
     val inputManager =
       context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager

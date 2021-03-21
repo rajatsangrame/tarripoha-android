@@ -33,9 +33,9 @@ data class Word(
     const val TYPE_NEW_WORD = "new_word"
   }
 
-  constructor() : this("", "")
+  constructor() : this(name = "", meaning = "")
   constructor(
     name: String,
     type: String
-  ) : this(name = name, type = type, meaning = "")
+  ) : this(name = name, meaning = "", type = type)
 }

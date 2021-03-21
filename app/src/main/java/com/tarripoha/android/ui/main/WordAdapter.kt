@@ -8,18 +8,18 @@ import com.tarripoha.android.data.db.Word
 import com.tarripoha.android.databinding.LayoutItemWordBinding
 import com.tarripoha.android.util.ItemClickListener
 import com.tarripoha.android.databinding.LayoutNewWordPlankBinding
-import com.tarripoha.android.ui.GenericViewHolder
+import com.tarripoha.android.ui.BaseViewHolder
 import com.tarripoha.android.R
 
 class WordAdapter(
   private var words: MutableList<Word>,
   private val itemClickListener: ItemClickListener<Word>
-) : RecyclerView.Adapter<GenericViewHolder>() {
+) : RecyclerView.Adapter<BaseViewHolder>() {
 
   override fun onCreateViewHolder(
     parent: ViewGroup,
     viewType: Int
-  ): GenericViewHolder {
+  ): BaseViewHolder {
     return if (viewType == VIEW_TYPE_NEW_WORD) {
       val binding = LayoutNewWordPlankBinding
           .inflate(LayoutInflater.from(parent.context), parent, false)
@@ -32,7 +32,7 @@ class WordAdapter(
   }
 
   override fun onBindViewHolder(
-    holder: GenericViewHolder,
+    holder: BaseViewHolder,
     position: Int
   ) {
     holder.bind(position)
@@ -59,14 +59,14 @@ class WordAdapter(
   }
 
   fun displayNewWordPlank(query: String) {
-    val word = Word(type = Word.TYPE_NEW_WORD, name = query)
+    val word = Word(name = query, type = Word.TYPE_NEW_WORD)
     words.clear()
     words.add(word)
 
     notifyDataSetChanged()
   }
 
-  inner class WordViewHolder(binding: LayoutItemWordBinding) : GenericViewHolder(
+  inner class WordViewHolder(binding: LayoutItemWordBinding) : BaseViewHolder(
       binding.root
   ) {
 
@@ -87,7 +87,7 @@ class WordAdapter(
   }
 
   inner class NewWordPlankViewHolder(private val binding: LayoutNewWordPlankBinding) :
-      GenericViewHolder(
+      BaseViewHolder(
           binding.root
       ) {
     private val messageTv: TextView = binding.messageTv

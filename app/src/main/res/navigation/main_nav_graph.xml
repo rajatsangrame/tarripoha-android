@@ -13,8 +13,7 @@
 
     <action
         android:id="@+id/action_HomeFragment_to_SearchFragment"
-        app:destination="@+id/nav_search"
- />
+        app:destination="@+id/nav_search" />
 
   </fragment>
 

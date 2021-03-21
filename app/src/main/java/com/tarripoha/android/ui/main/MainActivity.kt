@@ -106,7 +106,6 @@ class MainActivity : BaseActivity() {
     navController.addOnDestinationChangedListener { _, destination, _ ->
       when (destination.id) {
         R.id.nav_home -> {
-
           binding.toolbarLayout.toolbar.visibility = View.VISIBLE
           binding.toolbarLayout.title.text = getString(R.string.app_name)
         }

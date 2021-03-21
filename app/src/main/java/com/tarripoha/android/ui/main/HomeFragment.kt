@@ -133,10 +133,6 @@ class HomeFragment : Fragment() {
               wordAdapter.setWordList(it)
             }
           })
-      getUserMessage()
-          .observe(viewLifecycleOwner, Observer {
-            TPUtils.showSnackBar(activity as AppCompatActivity, it)
-          })
     }
   }
 
