@@ -49,7 +49,7 @@ object TPUtils {
     val inputManager =
       context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     view.requestFocus()
-    inputManager.showSoftInput(view, InputMethodManager.SHOW_FORCED)
+    inputManager.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
   }
 
   fun showToast(

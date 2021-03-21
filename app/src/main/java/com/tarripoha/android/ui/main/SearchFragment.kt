@@ -2,7 +2,6 @@ package com.tarripoha.android.ui.main
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -113,6 +112,13 @@ class SearchFragment : Fragment() {
     TPUtils.showKeyboard(binding.searchEt, requireContext())
   }
 
+  private fun displayAddWordPlank() {
+    val query = binding.searchEt.text.toString()
+    if (query.isNotEmpty()) {
+      wordAdapter.displayNewWordPlank(query)
+    }
+  }
+
   private fun setupRecyclerView() {
     val linearLayoutManager = LinearLayoutManager(
         context, RecyclerView.VERTICAL, false
@@ -138,6 +144,9 @@ class SearchFragment : Fragment() {
         .observe(viewLifecycleOwner, Observer {
           it?.let {
             wordAdapter.setWordList(it)
+            if (it.isEmpty()) {
+              displayAddWordPlank()
+            }
           }
         })
 

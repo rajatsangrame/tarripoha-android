@@ -28,5 +28,14 @@ data class Word(
   var dirty: Boolean? = null,
   var sentence: MutableList<Sentence>? = null
 ) : Parcelable {
+
+  companion object {
+    const val TYPE_NEW_WORD = "new_word"
+  }
+
   constructor() : this("", "")
+  constructor(
+    name: String,
+    type: String
+  ) : this(name = name, type = type, meaning = "")
 }
