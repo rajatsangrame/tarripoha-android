@@ -27,10 +27,26 @@
 
     <EditText
         android:id="@+id/search_et"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
+        android:layout_weight="1"
         android:background="@android:color/transparent"
+        android:focusable="true"
         android:hint="@string/search"
+        />
+
+    <ImageView
+        android:id="@+id/clear_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:layout_marginStart="@dimen/margin_extra_large"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/ic_close_grey"
+        android:visibility="gone"
+        tools:visibility="visible"
         />
 
   </LinearLayout>

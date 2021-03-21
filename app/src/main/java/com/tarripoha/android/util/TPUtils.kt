@@ -42,10 +42,14 @@ object TPUtils {
     inputManager.hideSoftInputFromWindow(view.windowToken, 0)
   }
 
-  fun showKeyboard(context: Context) {
+  fun showKeyboard(
+    view: View,
+    context: Context
+  ) {
     val inputManager =
       context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-    inputManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
+    view.requestFocus()
+    inputManager.showSoftInput(view, InputMethodManager.SHOW_FORCED)
   }
 
   fun showToast(

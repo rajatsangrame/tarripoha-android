@@ -2,6 +2,7 @@ package com.tarripoha.android.ui.main
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,13 +14,15 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.jakewharton.rxbinding.widget.RxTextView
 import com.tarripoha.android.App
 import com.tarripoha.android.data.db.Word
-import com.tarripoha.android.databinding.FragmentHomeBinding
 import com.tarripoha.android.databinding.FragmentSearchBinding
 import com.tarripoha.android.ui.add.WordActivity
 import com.tarripoha.android.util.ItemClickListener
 import com.tarripoha.android.util.TPUtils
+import rx.android.schedulers.AndroidSchedulers
+import java.util.concurrent.TimeUnit
 
 /**
  * Fragment to show all the cities.
@@ -29,7 +32,9 @@ class SearchFragment : Fragment() {
   // region Variables
 
   companion object {
+    private const val TAG = "SearchFragment"
     private const val REQUEST_CODE_WORD = 101
+    private const val SEARCH_DEBOUNCE_TIME_IN_MS = 300L
   }
 
   private lateinit var factory: ViewModelProvider.Factory
@@ -90,13 +95,28 @@ class SearchFragment : Fragment() {
     setupRecyclerView()
     setupListeners()
     setupObservers()
+    setupSearchEditText()
+    showKeyboard()
+  }
+
+  private fun setupSearchEditText() {
+    RxTextView.textChanges(binding.searchEt)
+        .subscribeOn(AndroidSchedulers.mainThread())
+        .debounce(SEARCH_DEBOUNCE_TIME_IN_MS, TimeUnit.MILLISECONDS)
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe {
+          viewModel.setQuery(it.toString())
+        }
+  }
+
+  private fun showKeyboard() {
+    TPUtils.showKeyboard(binding.searchEt, requireContext())
   }
 
   private fun setupRecyclerView() {
     val linearLayoutManager = LinearLayoutManager(
         context, RecyclerView.VERTICAL, false
     )
-    binding.wordsRv.layoutManager = linearLayoutManager
     wordAdapter = WordAdapter(ArrayList(), object : ItemClickListener<Word> {
       override fun onClick(
         position: Int,
@@ -107,15 +127,32 @@ class SearchFragment : Fragment() {
         startActivityForResult(intent, REQUEST_CODE_WORD)
       }
     })
-    binding.wordsRv.adapter = wordAdapter
+    binding.wordsRv.apply {
+      layoutManager = linearLayoutManager
+      adapter = wordAdapter
+    }
   }
 
   private fun setupObservers() {
+    viewModel.getSearchWords()
+        .observe(viewLifecycleOwner, Observer {
+          it?.let {
+            wordAdapter.setWordList(it)
+          }
+        })
 
-  }
-
-  private fun searchWord() {
-
+    viewModel.getQuery()
+        .observe(viewLifecycleOwner, Observer {
+          it?.let {
+            if (it.isEmpty()) {
+              binding.clearBtn.visibility = View.GONE
+              viewModel.setSearchWords(ArrayList())
+            } else {
+              binding.clearBtn.visibility = View.VISIBLE
+              viewModel.search(it)
+            }
+          }
+        })
   }
 
   // endregion
@@ -123,8 +160,13 @@ class SearchFragment : Fragment() {
   // region Click Related Methods
 
   private fun setupListeners() {
-    binding.backBtn.setOnClickListener{
+    binding.backBtn.setOnClickListener {
       findNavController().popBackStack()
+    }
+    binding.clearBtn.setOnClickListener {
+      showKeyboard()
+      binding.searchEt.setText("")
+      binding.clearBtn.visibility = View.GONE
     }
   }
 

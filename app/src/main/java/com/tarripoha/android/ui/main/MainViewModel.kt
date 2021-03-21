@@ -21,10 +21,24 @@ class MainViewModel @Inject constructor(
 
   private val isRefreshing: MutableLiveData<Boolean> = MutableLiveData()
   private val words: MutableLiveData<List<Word>> = MutableLiveData()
+  private val searchWords: MutableLiveData<List<Word>> = MutableLiveData()
+  private val query: MutableLiveData<String> = MutableLiveData()
 
   fun isRefreshing() = isRefreshing
 
   fun getAllWords() = words
+
+  fun getQuery() = query
+
+  fun setQuery(query: String) {
+    this.query.value = query
+  }
+
+  fun getSearchWords() = searchWords
+
+  fun setSearchWords(words: List<Word>) {
+    searchWords.value = words
+  }
 
   fun addWord(word: Word) {
     if (!TPUtils.isNetworkAvailable(getContext())) {
@@ -74,6 +88,21 @@ class MainViewModel @Inject constructor(
           if (!it) isRefreshing.value = false
         }
     )
+  }
+
+  fun search(word: String) {
+    repository.searchWord(
+        word = word,
+        success = { snapshot ->
+          val wordList: MutableList<Word> = mutableListOf()
+          snapshot.children.forEach {
+            if (it.getValue(Word::class.java) != null) {
+              val w: Word = it.getValue(Word::class.java)!!
+              wordList.add(w)
+            }
+          }
+          setSearchWords(wordList)
+        }, failure = {}, connectionStatus = {})
   }
 
   companion object {

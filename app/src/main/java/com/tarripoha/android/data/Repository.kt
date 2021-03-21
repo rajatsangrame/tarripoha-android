@@ -26,7 +26,6 @@ class Repository(
 ) {
 
   private val ioExecutor: Executor by lazy { Executors.newSingleThreadExecutor() }
-
   private val wordRef: DatabaseReference by lazy { Firebase.database.getReference("word") }
 
   /**
@@ -103,7 +102,36 @@ class Repository(
     )
   }
 
+  fun searchWord(
+    word: String,
+    success: (DataSnapshot) -> Unit,
+    failure: (DatabaseError) -> Unit,
+    connectionStatus: (Boolean) -> Unit
+  ) {
+    val query = wordRef.orderByChild("name")
+        .startAt(word)
+        .endAt(word + "\uf8ff")
+        .limitToFirst(LIMIT_TO_FIRST)
+    query.addValueEventListener(
+        object : ValueEventListener {
+          override fun onDataChange(snapshot: DataSnapshot) {
+            success(snapshot)
+          }
+
+          override fun onCancelled(error: DatabaseError) {
+            failure(error)
+          }
+        }
+    )
+    checkFirebaseConnection(
+        connectionStatus = {
+          connectionStatus(it)
+        }
+    )
+  }
+
   companion object {
+    private const val LIMIT_TO_FIRST = 20
     private const val TAG = "Repository"
   }
 }

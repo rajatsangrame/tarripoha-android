@@ -95,7 +95,6 @@ class HomeFragment : Fragment() {
     val linearLayoutManager = LinearLayoutManager(
         context, RecyclerView.VERTICAL, false
     )
-    binding.layout.withSwipeRv.layoutManager = linearLayoutManager
     wordAdapter = WordAdapter(ArrayList(), object : ItemClickListener<Word> {
       override fun onClick(
         position: Int,
@@ -106,8 +105,7 @@ class HomeFragment : Fragment() {
         startActivityForResult(intent, REQUEST_CODE_WORD)
       }
     })
-    binding.layout.withSwipeRv.adapter = wordAdapter
-    binding.layout.withSwipeRv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+    val scrollListener = object : RecyclerView.OnScrollListener() {
       override fun onScrolled(
         recyclerView: RecyclerView,
         dx: Int,
@@ -116,7 +114,12 @@ class HomeFragment : Fragment() {
         val position = linearLayoutManager.findFirstCompletelyVisibleItemPosition()
         binding.layout.swipeRefreshLayout.isEnabled = position <= 0
       }
-    })
+    }
+    binding.layout.withSwipeRv.apply {
+      layoutManager = linearLayoutManager
+      adapter = wordAdapter
+      addOnScrollListener(scrollListener)
+    }
   }
 
   private fun setupObservers() {
