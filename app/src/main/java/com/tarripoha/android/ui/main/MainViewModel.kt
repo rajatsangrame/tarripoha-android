@@ -23,6 +23,9 @@ class MainViewModel @Inject constructor(
   private val words: MutableLiveData<List<Word>> = MutableLiveData()
   private val searchWords: MutableLiveData<List<Word>> = MutableLiveData()
   private val query: MutableLiveData<String> = MutableLiveData()
+  private val wordCount: MutableLiveData<Int> = MutableLiveData()
+
+  fun getWordCount() = wordCount
 
   fun isRefreshing() = isRefreshing
 
@@ -30,13 +33,13 @@ class MainViewModel @Inject constructor(
 
   fun getQuery() = query
 
-  fun setQuery(query: String) {
+  fun setQuery(query: String?) {
     this.query.value = query
   }
 
   fun getSearchWords() = searchWords
 
-  fun setSearchWords(words: List<Word>) {
+  fun setSearchWords(words: List<Word>?) {
     searchWords.value = words
   }
 
@@ -78,6 +81,7 @@ class MainViewModel @Inject constructor(
             }
           }
           words.value = wordList
+          wordCount.value = wordList.size
           isRefreshing.value = false
         },
         failure = {
@@ -91,6 +95,10 @@ class MainViewModel @Inject constructor(
   }
 
   fun search(word: String) {
+    if (!TPUtils.isNetworkAvailable(getContext())) {
+      setUserMessage(getString(R.string.error_no_internet))
+      return
+    }
     repository.searchWord(
         word = word,
         success = { snapshot ->

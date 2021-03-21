@@ -19,9 +19,6 @@ import com.tarripoha.android.ui.add.WordActivity
 import com.tarripoha.android.util.ItemClickListener
 import com.tarripoha.android.util.TPUtils
 
-/**
- * Fragment to show all the cities.
- */
 class HomeFragment : Fragment() {
 
   // region Variables
@@ -123,22 +120,24 @@ class HomeFragment : Fragment() {
   }
 
   private fun setupObservers() {
-    viewModel.isRefreshing()
-        .observe(viewLifecycleOwner, Observer {
-          it.let {
-            binding.layout.swipeRefreshLayout.isRefreshing = it
-          }
-        })
-    viewModel.getAllWords()
-        .observe(viewLifecycleOwner, Observer {
-          it?.let {
-            wordAdapter.setWordList(it)
-          }
-        })
-    viewModel.getUserMessage()
-        .observe(viewLifecycleOwner, Observer {
-          TPUtils.showSnackBar(activity as AppCompatActivity, it)
-        })
+    viewModel.apply {
+      isRefreshing()
+          .observe(viewLifecycleOwner, Observer {
+            it.let {
+              binding.layout.swipeRefreshLayout.isRefreshing = it
+            }
+          })
+      getAllWords()
+          .observe(viewLifecycleOwner, Observer {
+            it?.let {
+              wordAdapter.setWordList(it)
+            }
+          })
+      getUserMessage()
+          .observe(viewLifecycleOwner, Observer {
+            TPUtils.showSnackBar(activity as AppCompatActivity, it)
+          })
+    }
   }
 
   private fun fetchAllWord() {
@@ -150,12 +149,6 @@ class HomeFragment : Fragment() {
   // region Click Related Methods
 
   private fun setupListeners() {
-    binding.btnAdd.setOnClickListener {
-      startActivityForResult(
-          Intent(requireContext(), WordActivity::class.java),
-          REQUEST_CODE_WORD
-      )
-    }
     binding.layout.swipeRefreshLayout.setOnRefreshListener {
       fetchAllWord()
     }

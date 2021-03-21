@@ -33,6 +33,9 @@
         android:background="@android:color/transparent"
         android:focusable="true"
         android:hint="@string/search"
+        android:imeOptions="actionSearch"
+        android:inputType="text|textNoSuggestions"
+        android:maxLines="1"
         />
 
     <ImageView

@@ -5,8 +5,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
+import androidx.lifecycle.*
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -55,6 +54,15 @@ class MainActivity : BaseActivity() {
     return when (item.itemId) {
       R.id.search -> {
         navController.navigate(R.id.action_HomeFragment_to_SearchFragment)
+        true
+      }
+      R.id.info -> {
+        val count = if (viewModel.getWordCount().value == null) {
+          0
+        } else {
+          viewModel.getWordCount().value
+        }
+        TPUtils.showSnackBar(this, "Total words: $count")
         true
       }
       else -> super.onOptionsItemSelected(item)
