@@ -39,20 +39,20 @@ class Repository(
   ) {
     val fireBase = Firebase.database.getReference(".info/connected")
     fireBase.addValueEventListener(
-        object : ValueEventListener {
-          override fun onDataChange(snapshot: DataSnapshot) {
-            Handler().postDelayed({
-              val connected = snapshot.getValue(Boolean::class.java)
-              Log.d(TAG, "onDataChange: $connected")
-              if (connected != null) connectionStatus(connected)
-              else connectionStatus(false)
-            }, 2000)
-          }
-
-          override fun onCancelled(error: DatabaseError) {
-            connectionStatus(false)
-          }
+      object : ValueEventListener {
+        override fun onDataChange(snapshot: DataSnapshot) {
+          Handler().postDelayed({
+            val connected = snapshot.getValue(Boolean::class.java)
+            Log.d(TAG, "onDataChange: $connected")
+            if (connected != null) connectionStatus(connected)
+            else connectionStatus(false)
+          }, 2000)
         }
+
+        override fun onCancelled(error: DatabaseError) {
+          connectionStatus(false)
+        }
+      }
     )
   }
 
@@ -64,18 +64,18 @@ class Repository(
   ) {
 
     wordRef.child(word.name)
-        .setValue(word)
-        .addOnSuccessListener {
-          success()
-        }
-        .addOnFailureListener {
-          failure(it)
-        }
+      .setValue(word)
+      .addOnSuccessListener {
+        success()
+      }
+      .addOnFailureListener {
+        failure(it)
+      }
 
     checkFirebaseConnection(
-        connectionStatus = {
-          connectionStatus(it)
-        }
+      connectionStatus = {
+        connectionStatus(it)
+      }
     )
   }
 
@@ -85,20 +85,20 @@ class Repository(
     connectionStatus: (Boolean) -> Unit
   ) {
     wordRef.addValueEventListener(
-        object : ValueEventListener {
-          override fun onDataChange(snapshot: DataSnapshot) {
-            success(snapshot)
-          }
-
-          override fun onCancelled(error: DatabaseError) {
-            failure(error)
-          }
+      object : ValueEventListener {
+        override fun onDataChange(snapshot: DataSnapshot) {
+          success(snapshot)
         }
+
+        override fun onCancelled(error: DatabaseError) {
+          failure(error)
+        }
+      }
     )
     checkFirebaseConnection(
-        connectionStatus = {
-          connectionStatus(it)
-        }
+      connectionStatus = {
+        connectionStatus(it)
+      }
     )
   }
 
@@ -108,30 +108,37 @@ class Repository(
     failure: (DatabaseError) -> Unit,
     connectionStatus: (Boolean) -> Unit
   ) {
-    val query = wordRef.orderByChild("name")
+    Log.d(TAG, "searchWord: ${word.length}")
+    val query = if (word.length > 2) {
+      wordRef.orderByChild("name")
         .startAt(word)
         .endAt(word + "\uf8ff")
         .limitToFirst(LIMIT_TO_FIRST)
+    } else {
+      wordRef.orderByChild("name")
+        .startAt(word)
+        .limitToFirst(LIMIT_TO_FIRST)
+    }
     query.addValueEventListener(
-        object : ValueEventListener {
-          override fun onDataChange(snapshot: DataSnapshot) {
-            success(snapshot)
-          }
-
-          override fun onCancelled(error: DatabaseError) {
-            failure(error)
-          }
+      object : ValueEventListener {
+        override fun onDataChange(snapshot: DataSnapshot) {
+          success(snapshot)
         }
+
+        override fun onCancelled(error: DatabaseError) {
+          failure(error)
+        }
+      }
     )
     checkFirebaseConnection(
-        connectionStatus = {
-          connectionStatus(it)
-        }
+      connectionStatus = {
+        connectionStatus(it)
+      }
     )
   }
 
   companion object {
-    private const val LIMIT_TO_FIRST = 20
+    private const val LIMIT_TO_FIRST = 10
     private const val TAG = "Repository"
   }
 }

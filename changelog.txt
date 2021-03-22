@@ -1,10 +1,18 @@
+Version 0.3.0 [23 Mar 2021]
+
+1. Search limit = 10
+2. Allow other words to search
+
+________________________________
+Version 0.2.2 [22 Mar 2021]
+
+1. Fragment navigation
+2. Search option
+
+________________________________
 Version 0.2.0 [14 Mar 2021]
 
 1. Word + Meaning in home screen
 2. Network Check
-3. SnacBar error
-4.
-
----------------------------------------------
-
+3. SnackBar error
 
