@@ -25,6 +25,12 @@ class MainViewModel @Inject constructor(
   private val query: MutableLiveData<String> = MutableLiveData()
   private val wordCount: MutableLiveData<Int> = MutableLiveData()
 
+  // region WordDetailFragment
+
+  private val wordDetail: MutableLiveData<Word> = MutableLiveData()
+
+  // endregion
+
   fun getWordCount() = wordCount
 
   fun isRefreshing() = isRefreshing
@@ -43,6 +49,14 @@ class MainViewModel @Inject constructor(
     searchWords.value = words
   }
 
+  fun setWordDetail(word: Word?) {
+    wordDetail.value = word
+  }
+
+  fun getWordDetail() = wordDetail
+
+  // Helper Functions
+
   fun addWord(word: Word) {
     if (!TPUtils.isNetworkAvailable(getContext())) {
       setUserMessage(getString(R.string.error_no_internet))
@@ -50,18 +64,18 @@ class MainViewModel @Inject constructor(
     }
     isRefreshing.value = true
     repository.addWord(
-        word = word,
-        success = {
-          isRefreshing.value = false
-          setUserMessage(getString(R.string.succ_data_added))
-        },
-        failure = {
-          isRefreshing.value = false
-          setUserMessage(getString(R.string.error_unable_to_process))
-        },
-        connectionStatus = {
-          if (!it) isRefreshing.value = false
-        }
+      word = word,
+      success = {
+        isRefreshing.value = false
+        setUserMessage(getString(R.string.succ_data_added))
+      },
+      failure = {
+        isRefreshing.value = false
+        setUserMessage(getString(R.string.error_unable_to_process))
+      },
+      connectionStatus = {
+        if (!it) isRefreshing.value = false
+      }
     )
   }
 
@@ -72,25 +86,25 @@ class MainViewModel @Inject constructor(
     }
     isRefreshing.value = true
     repository.fetchAllWords(
-        success = { snapshot ->
-          val wordList: MutableList<Word> = mutableListOf()
-          snapshot.children.forEach {
-            if (it.getValue(Word::class.java) != null) {
-              val word: Word = it.getValue(Word::class.java)!!
-              wordList.add(word)
-            }
+      success = { snapshot ->
+        val wordList: MutableList<Word> = mutableListOf()
+        snapshot.children.forEach {
+          if (it.getValue(Word::class.java) != null) {
+            val word: Word = it.getValue(Word::class.java)!!
+            wordList.add(word)
           }
-          words.value = wordList
-          wordCount.value = wordList.size
-          isRefreshing.value = false
-        },
-        failure = {
-          isRefreshing.value = false
-          setUserMessage(getString(R.string.error_unable_to_fetch))
-        },
-        connectionStatus = {
-          if (!it) isRefreshing.value = false
         }
+        words.value = wordList
+        wordCount.value = wordList.size
+        isRefreshing.value = false
+      },
+      failure = {
+        isRefreshing.value = false
+        setUserMessage(getString(R.string.error_unable_to_fetch))
+      },
+      connectionStatus = {
+        if (!it) isRefreshing.value = false
+      }
     )
   }
 
@@ -100,18 +114,20 @@ class MainViewModel @Inject constructor(
       return
     }
     repository.searchWord(
-        word = word,
-        success = { snapshot ->
-          val wordList: MutableList<Word> = mutableListOf()
-          snapshot.children.forEach {
-            if (it.getValue(Word::class.java) != null) {
-              val w: Word = it.getValue(Word::class.java)!!
-              wordList.add(w)
-            }
+      word = word,
+      success = { snapshot ->
+        val wordList: MutableList<Word> = mutableListOf()
+        snapshot.children.forEach {
+          if (it.getValue(Word::class.java) != null) {
+            val w: Word = it.getValue(Word::class.java)!!
+            wordList.add(w)
           }
-          setSearchWords(wordList)
-        }, failure = {}, connectionStatus = {})
+        }
+        setSearchWords(wordList)
+      }, failure = {}, connectionStatus = {})
   }
+
+  // endregion
 
   companion object {
     private const val TAG = "MainViewModel"

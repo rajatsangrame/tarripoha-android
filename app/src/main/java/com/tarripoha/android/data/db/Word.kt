@@ -4,6 +4,7 @@ import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
+import com.google.firebase.database.DatabaseException
 
 /**
  * Created by Rajat Sangrame
@@ -26,13 +27,15 @@ data class Word(
   var addedBy: String? = null,
   var popular: Double? = null,
   var dirty: Boolean? = null,
-  var sentence: MutableList<Sentence>? = null
+  var approved: Boolean? = null,
+  var comments: MutableList<Sentence>? = null
 ) : Parcelable {
 
   companion object {
     const val TYPE_NEW_WORD = "new_word"
   }
 
+  /** Must define a no-argument constructor to avoid [DatabaseException] */
   constructor() : this(name = "", meaning = "")
   constructor(
     name: String,

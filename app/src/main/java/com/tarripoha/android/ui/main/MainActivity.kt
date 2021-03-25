@@ -1,10 +1,10 @@
 package com.tarripoha.android.ui.main
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import android.view.View
 import androidx.lifecycle.*
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
@@ -17,6 +17,7 @@ import com.tarripoha.android.di.component.MainActivityComponent
 import com.tarripoha.android.ui.BaseActivity
 import com.tarripoha.android.util.TPUtils
 import com.tarripoha.android.util.ViewModelFactory
+import java.lang.Exception
 import javax.inject.Inject
 
 class MainActivity : BaseActivity() {
@@ -106,12 +107,19 @@ class MainActivity : BaseActivity() {
     navController.addOnDestinationChangedListener { _, destination, _ ->
       when (destination.id) {
         R.id.nav_home -> {
-          binding.toolbarLayout.toolbar.visibility = View.VISIBLE
-          binding.toolbarLayout.title.text = getString(R.string.app_name)
+          try {
+            this.supportActionBar?.show()
+          } catch (e: Exception) {
+            Log.e(TAG, "handleNavigation: ${e.localizedMessage}")
+          }
         }
 
-        R.id.nav_search -> {
-          binding.toolbarLayout.toolbar.visibility = View.GONE
+        R.id.nav_search, R.id.nav_word_detail -> {
+          try {
+            this.supportActionBar?.hide()
+          }catch (e: Exception){
+            Log.e(TAG, "handleNavigation: ${e.localizedMessage}")
+          }
         }
       }
     }

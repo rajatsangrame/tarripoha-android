@@ -7,20 +7,37 @@
 
   <fragment
       android:id="@+id/nav_home"
-      android:label="CityFragment"
+      android:label="HomeFragment"
       android:name="com.tarripoha.android.ui.main.HomeFragment"
       tools:layout="@layout/fragment_home">
 
     <action
         android:id="@+id/action_HomeFragment_to_SearchFragment"
         app:destination="@+id/nav_search" />
+    <action
+        android:id="@+id/action_HomeFragment_to_WordDetailFragment"
+        app:destination="@id/nav_word_detail" />
 
   </fragment>
 
   <fragment
       android:id="@+id/nav_search"
-      android:label="CityFragment"
+      android:label="SearchFragment"
       android:name="com.tarripoha.android.ui.main.SearchFragment"
-      tools:layout="@layout/fragment_search" />
+      tools:layout="@layout/fragment_search">
+    <action
+        android:id="@+id/action_SearchFragment_to_WordDetailFragment"
+        app:destination="@id/nav_word_detail" />
+  </fragment>
+
+  <fragment
+      android:id="@+id/nav_word_detail"
+      android:label="WordDetailFragment"
+      android:name="com.tarripoha.android.ui.main.WordDetailFragment"
+      tools:layout="@layout/fragment_word_detail">
+    <action
+        android:id="@+id/action_WordDetailFragment_to_SearchFragment"
+        app:destination="@id/nav_search" />
+  </fragment>
 
 </navigation>

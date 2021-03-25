@@ -8,15 +8,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.*
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.tarripoha.android.App
+import com.tarripoha.android.R
 import com.tarripoha.android.data.db.Word
 import com.tarripoha.android.databinding.FragmentSearchBinding
 import com.tarripoha.android.ui.add.WordActivity
@@ -57,7 +58,7 @@ class SearchFragment : Fragment() {
     savedInstanceState: Bundle?
   ): View {
     binding = FragmentSearchBinding
-        .inflate(LayoutInflater.from(requireContext()), container, false)
+      .inflate(LayoutInflater.from(requireContext()), container, false)
     return binding.root
   }
 
@@ -113,7 +114,7 @@ class SearchFragment : Fragment() {
 
   private fun setupRecyclerView() {
     val linearLayoutManager = LinearLayoutManager(
-        context, RecyclerView.VERTICAL, false
+      context, RecyclerView.VERTICAL, false
     )
     wordAdapter = WordAdapter(ArrayList(), object : ItemClickListener<Word> {
       override fun onClick(
@@ -121,9 +122,14 @@ class SearchFragment : Fragment() {
         data: Word
       ) {
         hideKeyboard()
-        val intent = Intent(context, WordActivity::class.java)
-        intent.putExtra(WordActivity.KEY_WORD, data)
-        startActivityForResult(intent, REQUEST_CODE_WORD)
+        if (data.type == Word.TYPE_NEW_WORD) {
+          val intent = Intent(context, WordActivity::class.java)
+          intent.putExtra(WordActivity.KEY_WORD, data)
+          startActivityForResult(intent, REQUEST_CODE_WORD)
+        } else {
+          viewModel.setWordDetail(word = data)
+          findNavController().navigate(R.id.action_SearchFragment_to_WordDetailFragment)
+        }
       }
     })
     binding.wordsRv.apply {
@@ -136,12 +142,12 @@ class SearchFragment : Fragment() {
 
     binding.searchEt.apply {
       val d = RxTextView.textChanges(this)
-          .subscribeOn(AndroidSchedulers.mainThread())
-          .debounce(SEARCH_DEBOUNCE_TIME_IN_MS, TimeUnit.MILLISECONDS)
-          .observeOn(AndroidSchedulers.mainThread())
-          .subscribe {
-            viewModel.setQuery(it.toString())
-          }
+        .subscribeOn(AndroidSchedulers.mainThread())
+        .debounce(SEARCH_DEBOUNCE_TIME_IN_MS, TimeUnit.MILLISECONDS)
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe {
+          viewModel.setQuery(it.toString())
+        }
       setOnEditorActionListener { _, actionId, _ ->
         if (actionId == EditorInfo.IME_ACTION_SEARCH) {
           hideKeyboard()
@@ -149,35 +155,36 @@ class SearchFragment : Fragment() {
         true
       }
       compositeDisposable.add(d)
+      doAfterTextChanged {
+        checkClearBtnVisibility(it.toString())
+      }
     }
   }
 
   private fun setupObservers() {
     viewModel.apply {
       getSearchWords()
-          .observe(viewLifecycleOwner, Observer {
-            Log.d(TAG, "setupObservers: getSearchWords: $it")
-            it?.let {
-              wordAdapter.setWordList(it)
-              if (it.isEmpty()) {
-                displayAddWordPlank()
-              }
+        .observe(viewLifecycleOwner, Observer {
+          Log.d(TAG, "setupObservers: getSearchWords: $it")
+          it?.let {
+            wordAdapter.setWordList(it)
+            if (it.isEmpty()) {
+              displayAddWordPlank()
             }
-          })
+          }
+        })
 
       getQuery()
-          .observe(viewLifecycleOwner, Observer {
-            Log.d(TAG, "setupObservers: getQuery: $it")
-            it?.let {
-              if (it.isEmpty()) {
-                binding.clearBtn.visibility = View.GONE
-                viewModel.setSearchWords(ArrayList())
-              } else {
-                binding.clearBtn.visibility = View.VISIBLE
-                viewModel.search(it)
-              }
+        .observe(viewLifecycleOwner, Observer {
+          Log.d(TAG, "setupObservers: getQuery: $it")
+          it?.let {
+            if (it.isEmpty()) {
+              viewModel.setSearchWords(ArrayList())
+            } else {
+              viewModel.search(it)
             }
-          })
+          }
+        })
     }
   }
 
@@ -194,6 +201,11 @@ class SearchFragment : Fragment() {
     if (query.isNotEmpty()) {
       wordAdapter.displayNewWordPlank(query)
     }
+  }
+
+  private fun checkClearBtnVisibility(query: String) {
+    if (query.isNotEmpty()) binding.clearBtn.visibility = View.VISIBLE
+    else binding.clearBtn.visibility = View.GONE
   }
 
   // endregion

@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.*
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tarripoha.android.App
@@ -17,7 +18,7 @@ import com.tarripoha.android.data.db.Word
 import com.tarripoha.android.databinding.FragmentHomeBinding
 import com.tarripoha.android.ui.add.WordActivity
 import com.tarripoha.android.util.ItemClickListener
-import com.tarripoha.android.util.TPUtils
+import com.tarripoha.android.R
 
 class HomeFragment : Fragment() {
 
@@ -44,7 +45,7 @@ class HomeFragment : Fragment() {
     savedInstanceState: Bundle?
   ): View {
     binding = FragmentHomeBinding
-        .inflate(LayoutInflater.from(requireContext()), container, false)
+      .inflate(LayoutInflater.from(requireContext()), container, false)
     return binding.root
   }
 
@@ -90,16 +91,15 @@ class HomeFragment : Fragment() {
 
   private fun setupRecyclerView() {
     val linearLayoutManager = LinearLayoutManager(
-        context, RecyclerView.VERTICAL, false
+      context, RecyclerView.VERTICAL, false
     )
     wordAdapter = WordAdapter(ArrayList(), object : ItemClickListener<Word> {
       override fun onClick(
         position: Int,
         data: Word
       ) {
-        val intent = Intent(context, WordActivity::class.java)
-        intent.putExtra(WordActivity.KEY_WORD, data)
-        startActivityForResult(intent, REQUEST_CODE_WORD)
+        viewModel.setWordDetail(word = data)
+        findNavController().navigate(R.id.action_HomeFragment_to_WordDetailFragment)
       }
     })
     val scrollListener = object : RecyclerView.OnScrollListener() {
@@ -122,17 +122,17 @@ class HomeFragment : Fragment() {
   private fun setupObservers() {
     viewModel.apply {
       isRefreshing()
-          .observe(viewLifecycleOwner, Observer {
-            it.let {
-              binding.layout.swipeRefreshLayout.isRefreshing = it
-            }
-          })
+        .observe(viewLifecycleOwner, Observer {
+          it.let {
+            binding.layout.swipeRefreshLayout.isRefreshing = it
+          }
+        })
       getAllWords()
-          .observe(viewLifecycleOwner, Observer {
-            it?.let {
-              wordAdapter.setWordList(it)
-            }
-          })
+        .observe(viewLifecycleOwner, Observer {
+          it?.let {
+            wordAdapter.setWordList(it)
+          }
+        })
     }
   }
 
