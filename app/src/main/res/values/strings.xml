@@ -5,11 +5,15 @@
   <string name="sample_title">Sample Title</string>
   <string name="word">Word</string>
   <string name="meaning">Meaning</string>
+  <string name="eng_meaning">Eng Meaning</string>
   <string name="sentence">Sentence</string>
   <string name="add">Add</string>
   <string name="search">Search</string>
   <string name="info">Info</string>
   <string name="empty_field">Empty Field</string>
+  <string name="add_comment">Add a comment</string>
+  <string name="added_by_user">Added by %1$s</string>
+
 
   <string name="msg_new_word_plank">New word for %1$s</string>
 

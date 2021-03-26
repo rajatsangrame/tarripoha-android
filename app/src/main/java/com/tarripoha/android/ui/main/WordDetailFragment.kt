@@ -14,9 +14,6 @@ import com.tarripoha.android.App
 import com.tarripoha.android.R
 import com.tarripoha.android.databinding.FragmentWordDetailBinding
 
-/**
- * Fragment to show all the cities.
- */
 class WordDetailFragment : Fragment() {
 
   // region Variables
@@ -83,6 +80,7 @@ class WordDetailFragment : Fragment() {
     viewModel.getWordDetail().observe(viewLifecycleOwner) {
       it.let { word ->
         binding.wordTv.text = word.name
+        binding.meaningTv.text = word.meaning
       }
     }
   }

@@ -8,15 +8,19 @@
 
   <LinearLayout
       android:id="@+id/word_toolbar"
-      android:layout_width="match_parent"
+      android:layout_width="0dp"
       android:layout_height="?android:attr/actionBarSize"
       android:gravity="center"
       android:orientation="horizontal"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
       >
+
     <ImageView
         android:id="@+id/back_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/icon_size"
+        android:layout_height="@dimen/icon_size"
         android:layout_marginEnd="@dimen/margin_extra_large"
         android:layout_marginStart="@dimen/margin_extra_large"
         android:background="?attr/selectableItemBackgroundBorderless"
@@ -27,7 +31,6 @@
 
     <TextView
         android:id="@+id/word_tv"
-        android:textStyle="bold"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -37,13 +40,14 @@
         android:maxLines="1"
         android:textColor="@color/colorPrimary"
         android:textSize="@dimen/text_huge"
+        android:textStyle="bold"
         tools:text="@string/word"
         />
 
     <ImageView
         android:id="@+id/search_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/icon_size"
+        android:layout_height="@dimen/icon_size"
         android:layout_marginEnd="@dimen/margin_extra_large"
         android:layout_marginStart="@dimen/margin_extra_large"
         android:background="?attr/selectableItemBackgroundBorderless"
@@ -54,5 +58,156 @@
 
   </LinearLayout>
 
+  <androidx.constraintlayout.widget.ConstraintLayout
+      android:id="@+id/constraintLayout"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:paddingBottom="@dimen/margin_normal"
+      android:paddingEnd="@dimen/margin_extra_large"
+      android:paddingStart="@dimen/margin_extra_large"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/word_toolbar"
+      >
+
+    <TextView
+        android:id="@+id/meaning_tv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorGrey"
+        android:textSize="@dimen/text_extra_large"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/meaning"
+        />
+
+    <TextView
+        android:id="@+id/eng_meaning_tv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_normal"
+        android:textColor="@color/colorGrey"
+        android:textSize="@dimen/text_extra_large"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/meaning_tv"
+        tools:text="@string/eng_meaning"
+        tools:visibility="visible"
+        />
+
+    <TextView
+        android:id="@+id/added_by_tv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_normal"
+        android:textColor="@color/colorGrey"
+        android:textSize="@dimen/text_normal"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/eng_meaning_tv"
+        tools:text="@string/added_by_user"
+        tools:visibility="visible"
+        />
+
+    <ImageView
+        android:id="@+id/like_btn"
+        android:layout_width="@dimen/icon_size_small"
+        android:layout_height="@dimen/icon_size_small"
+        android:layout_marginTop="@dimen/margin_normal"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/ic_like_grey"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/added_by_tv"
+        />
+
+    <ImageView
+        android:id="@+id/comment_btn"
+        android:layout_width="@dimen/icon_size_small"
+        android:layout_height="@dimen/icon_size_small"
+        android:layout_marginEnd="8dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/ic_comment_grey"
+        app:layout_constraintBottom_toBottomOf="@+id/like_btn"
+        app:layout_constraintEnd_toStartOf="@+id/comment_count_tv"
+        app:layout_constraintTop_toTopOf="@+id/like_btn"
+        />
+
+    <TextView
+        android:id="@+id/like_count_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_small"
+        app:layout_constraintBottom_toBottomOf="@+id/like_btn"
+        app:layout_constraintStart_toEndOf="@+id/like_btn"
+        app:layout_constraintTop_toTopOf="@+id/like_btn"
+        tools:text="300"
+        />
+
+    <TextView
+        android:id="@+id/comment_count_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/like_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/like_btn"
+        tools:text="100"
+        />
+
+  </androidx.constraintlayout.widget.ConstraintLayout>
+
+  <androidx.recyclerview.widget.RecyclerView
+      android:layout_width="0dp"
+      android:layout_height="0dp"
+      app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
+      />
+
+  <LinearLayout
+      android:id="@+id/linearLayout2"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:background="@color/colorLightGrey"
+      android:orientation="horizontal"
+      android:paddingBottom="@dimen/margin_extra_large"
+      android:paddingEnd="@dimen/margin_extra_large"
+      android:paddingStart="@dimen/margin_extra_large"
+      android:paddingTop="@dimen/margin_extra_large"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      >
+
+    <EditText
+        android:id="@+id/search_et"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@android:color/transparent"
+        android:focusable="true"
+        android:hint="@string/add_comment"
+        android:inputType="text|textNoSuggestions"
+        />
+
+    <ImageView
+        android:id="@+id/add_btn"
+        android:layout_width="@dimen/icon_size"
+        android:layout_height="@dimen/icon_size"
+        android:layout_marginStart="@dimen/margin_extra_large"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/ic_send_black"
+        />
+
+  </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

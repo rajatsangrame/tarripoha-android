@@ -27,9 +27,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import java.util.concurrent.TimeUnit
 
-/**
- * Fragment to show all the cities.
- */
 class SearchFragment : Fragment() {
 
   // region Variables

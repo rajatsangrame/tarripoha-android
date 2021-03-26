@@ -13,5 +13,7 @@
   <dimen name="text_extra_large">20sp</dimen>
   <dimen name="text_huge">24sp</dimen>
 
-  <!--Common dimensions-->
+  <dimen name="icon_size">24dp</dimen>
+  <dimen name="icon_size_small">18dp</dimen>
+
 </resources>
