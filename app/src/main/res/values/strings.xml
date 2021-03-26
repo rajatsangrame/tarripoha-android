@@ -13,7 +13,8 @@
   <string name="empty_field">Empty Field</string>
   <string name="add_comment">Add a comment</string>
   <string name="added_by_user">Added by %1$s</string>
-
+  <string name="username">Username</string>
+  <string name="comment">Comment</string>
 
   <string name="msg_new_word_plank">New word for %1$s</string>
 

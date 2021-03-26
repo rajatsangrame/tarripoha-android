@@ -15,13 +15,14 @@ import kotlinx.parcelize.Parcelize
  */
 
 @Parcelize
-@Entity(tableName = "sentence")
-data class Sentence(
+@Entity(tableName = "comment")
+data class Comment(
   val word: String,
-  val sentence: String,
+  val comment: String,
   var addedBy: String? = null,
   var popular: Double? = null,
-  var dirty: Boolean = false
+  var dirty: Boolean = false,
+  var timestamp: Long? = null
 ) : Parcelable {
-  constructor() : this("", "")
+  constructor() : this(word = "", comment = "")
 }

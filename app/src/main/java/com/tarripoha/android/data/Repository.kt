@@ -27,6 +27,7 @@ class Repository(
 
   private val ioExecutor: Executor by lazy { Executors.newSingleThreadExecutor() }
   private val wordRef: DatabaseReference by lazy { Firebase.database.getReference("word") }
+  private val commentRef: DatabaseReference by lazy { Firebase.database.getReference("comment") }
 
   /**
    * Check if the [DatabaseReference] is connected
@@ -119,6 +120,34 @@ class Repository(
         .startAt(word)
         .limitToFirst(LIMIT_TO_FIRST)
     }
+    query.addValueEventListener(
+      object : ValueEventListener {
+        override fun onDataChange(snapshot: DataSnapshot) {
+          success(snapshot)
+        }
+
+        override fun onCancelled(error: DatabaseError) {
+          failure(error)
+        }
+      }
+    )
+    checkFirebaseConnection(
+      connectionStatus = {
+        connectionStatus(it)
+      }
+    )
+  }
+
+  fun searchComment(
+    word: String,
+    success: (DataSnapshot) -> Unit,
+    failure: (DatabaseError) -> Unit,
+    connectionStatus: (Boolean) -> Unit
+  ) {
+    val query = commentRef.orderByChild("word")
+      .startAt(word)
+      .endAt(word + "\uf8ff")
+      .limitToFirst(LIMIT_TO_FIRST)
     query.addValueEventListener(
       object : ValueEventListener {
         override fun onDataChange(snapshot: DataSnapshot) {

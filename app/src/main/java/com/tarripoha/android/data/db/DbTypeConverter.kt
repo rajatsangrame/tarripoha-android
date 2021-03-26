@@ -17,12 +17,12 @@ class DbTypeConverter : Serializable {
     return date.time
   }
 
-  @TypeConverter fun fromString(value: String): MutableList<Sentence> {
-    val listType: Type = object : TypeToken<MutableList<Sentence>>() {}.type
+  @TypeConverter fun fromString(value: String): MutableList<Comment> {
+    val listType: Type = object : TypeToken<MutableList<Comment>>() {}.type
     return Gson().fromJson(value, listType)
   }
 
-  @TypeConverter fun fromList(list: MutableList<Sentence>): String {
+  @TypeConverter fun fromList(list: MutableList<Comment>): String {
     val gson = Gson()
     return gson.toJson(list)
   }

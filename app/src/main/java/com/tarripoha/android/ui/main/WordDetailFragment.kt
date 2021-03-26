@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
@@ -12,7 +13,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tarripoha.android.App
 import com.tarripoha.android.R
+import com.tarripoha.android.data.db.Comment
 import com.tarripoha.android.databinding.FragmentWordDetailBinding
+import com.tarripoha.android.util.ItemClickListener
 
 class WordDetailFragment : Fragment() {
 
@@ -24,6 +27,7 @@ class WordDetailFragment : Fragment() {
 
   private lateinit var factory: ViewModelProvider.Factory
   private lateinit var binding: FragmentWordDetailBinding
+  private lateinit var commentAdapter: CommentAdapter
   private val viewModel by activityViewModels<MainViewModel> {
     factory
   }
@@ -68,12 +72,41 @@ class WordDetailFragment : Fragment() {
     setupRecyclerView()
     setupListeners()
     setupObservers()
+    binding.commentEt.doAfterTextChanged {
+      checkPostBtnColor(it.toString())
+    }
+  }
+
+  private fun checkPostBtnColor(query: String) {
+    if (query.isNotEmpty()) {
+      binding.postCommentBtn.apply {
+        setBackgroundResource(R.drawable.ic_send_black)
+        isEnabled = true
+      }
+    } else {
+      binding.postCommentBtn.apply {
+        setBackgroundResource(R.drawable.ic_send_grey)
+        isEnabled = false
+      }
+    }
   }
 
   private fun setupRecyclerView() {
     val linearLayoutManager = LinearLayoutManager(
       context, RecyclerView.VERTICAL, false
     )
+    commentAdapter = CommentAdapter(ArrayList(), object : ItemClickListener<Comment> {
+      override fun onClick(
+        position: Int,
+        data: Comment
+      ) {
+        // no-op
+      }
+    })
+    binding.commentRv.apply {
+      layoutManager = linearLayoutManager
+      adapter = commentAdapter
+    }
   }
 
   private fun setupObservers() {
@@ -95,6 +128,9 @@ class WordDetailFragment : Fragment() {
     }
     binding.searchBtn.setOnClickListener {
       findNavController().navigate(R.id.action_WordDetailFragment_to_SearchFragment)
+    }
+    binding.postCommentBtn.setOnClickListener {
+
     }
   }
 

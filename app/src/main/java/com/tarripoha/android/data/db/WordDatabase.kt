@@ -18,7 +18,7 @@ import androidx.room.TypeConverters
 @TypeConverters(DbTypeConverter::class)
 abstract class WordDatabase : RoomDatabase() {
 
-  abstract fun commentDao(): WordDao
+  abstract fun wordDao(): WordDao
 
   companion object {
     @Volatile

@@ -163,6 +163,7 @@
   </androidx.constraintlayout.widget.ConstraintLayout>
 
   <androidx.recyclerview.widget.RecyclerView
+      android:id="@+id/comment_rv"
       android:layout_width="0dp"
       android:layout_height="0dp"
       app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
@@ -187,7 +188,7 @@
       >
 
     <EditText
-        android:id="@+id/search_et"
+        android:id="@+id/comment_et"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
@@ -198,14 +199,14 @@
         />
 
     <ImageView
-        android:id="@+id/add_btn"
+        android:id="@+id/post_comment_btn"
         android:layout_width="@dimen/icon_size"
         android:layout_height="@dimen/icon_size"
         android:layout_marginStart="@dimen/margin_extra_large"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:clickable="true"
         android:focusable="true"
-        android:src="@drawable/ic_send_black"
+        android:src="@drawable/ic_send_grey"
         />
 
   </LinearLayout>
