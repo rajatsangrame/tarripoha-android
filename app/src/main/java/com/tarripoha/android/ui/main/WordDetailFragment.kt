@@ -42,7 +42,7 @@ class WordDetailFragment : Fragment() {
     savedInstanceState: Bundle?
   ): View {
     binding = FragmentWordDetailBinding
-      .inflate(LayoutInflater.from(requireContext()), container, false)
+        .inflate(LayoutInflater.from(requireContext()), container, false)
     return binding.root
   }
 
@@ -93,7 +93,7 @@ class WordDetailFragment : Fragment() {
 
   private fun setupRecyclerView() {
     val linearLayoutManager = LinearLayoutManager(
-      context, RecyclerView.VERTICAL, false
+        context, RecyclerView.VERTICAL, false
     )
     commentAdapter = CommentAdapter(ArrayList(), object : ItemClickListener<Comment> {
       override fun onClick(
@@ -110,12 +110,13 @@ class WordDetailFragment : Fragment() {
   }
 
   private fun setupObservers() {
-    viewModel.getWordDetail().observe(viewLifecycleOwner) {
-      it.let { word ->
-        binding.wordTv.text = word.name
-        binding.meaningTv.text = word.meaning
-      }
-    }
+    viewModel.getWordDetail()
+        .observe(viewLifecycleOwner) {
+          it.let { word ->
+            binding.wordTv.text = word.name
+            binding.meaningTv.text = word.meaning
+          }
+        }
   }
 
   // endregion

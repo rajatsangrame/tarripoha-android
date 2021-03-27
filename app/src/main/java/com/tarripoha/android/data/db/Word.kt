@@ -34,6 +34,7 @@ data class Word(
 
   companion object {
     const val TYPE_NEW_WORD = "new_word"
+    fun getNewWord(name: String) = Word(name = name, type = TYPE_NEW_WORD)
   }
 
   /** Must define a no-argument constructor to avoid [DatabaseException] */

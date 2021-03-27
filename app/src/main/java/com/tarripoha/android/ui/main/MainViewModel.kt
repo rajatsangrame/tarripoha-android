@@ -117,12 +117,17 @@ class MainViewModel @Inject constructor(
       word = word,
       success = { snapshot ->
         val wordList: MutableList<Word> = mutableListOf()
+        var wordFound = false
         snapshot.children.forEach {
           if (it.getValue(Word::class.java) != null) {
             val w: Word = it.getValue(Word::class.java)!!
             wordList.add(w)
+            if (w.name == word) {
+              wordFound = true
+            }
           }
         }
+        if (!wordFound) wordList.add(Word.getNewWord(name = word))
         setSearchWords(wordList)
       }, failure = {}, connectionStatus = {})
   }

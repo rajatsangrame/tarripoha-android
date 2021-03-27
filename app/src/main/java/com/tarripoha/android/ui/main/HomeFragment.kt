@@ -45,7 +45,7 @@ class HomeFragment : Fragment() {
     savedInstanceState: Bundle?
   ): View {
     binding = FragmentHomeBinding
-      .inflate(LayoutInflater.from(requireContext()), container, false)
+        .inflate(LayoutInflater.from(requireContext()), container, false)
     return binding.root
   }
 
@@ -91,17 +91,18 @@ class HomeFragment : Fragment() {
 
   private fun setupRecyclerView() {
     val linearLayoutManager = LinearLayoutManager(
-      context, RecyclerView.VERTICAL, false
+        context, RecyclerView.VERTICAL, false
     )
-    wordAdapter = WordAdapter(ArrayList(), object : ItemClickListener<Word> {
-      override fun onClick(
-        position: Int,
-        data: Word
-      ) {
-        viewModel.setWordDetail(word = data)
-        findNavController().navigate(R.id.action_HomeFragment_to_WordDetailFragment)
-      }
-    })
+    wordAdapter =
+      WordAdapter(words = ArrayList(), itemClickListener = object : ItemClickListener<Word> {
+        override fun onClick(
+          position: Int,
+          data: Word
+        ) {
+          viewModel.setWordDetail(word = data)
+          findNavController().navigate(R.id.action_HomeFragment_to_WordDetailFragment)
+        }
+      })
     val scrollListener = object : RecyclerView.OnScrollListener() {
       override fun onScrolled(
         recyclerView: RecyclerView,
@@ -122,17 +123,17 @@ class HomeFragment : Fragment() {
   private fun setupObservers() {
     viewModel.apply {
       isRefreshing()
-        .observe(viewLifecycleOwner, Observer {
-          it.let {
-            binding.layout.swipeRefreshLayout.isRefreshing = it
-          }
-        })
+          .observe(viewLifecycleOwner, Observer {
+            it.let {
+              binding.layout.swipeRefreshLayout.isRefreshing = it
+            }
+          })
       getAllWords()
-        .observe(viewLifecycleOwner, Observer {
-          it?.let {
-            wordAdapter.setWordList(it)
-          }
-        })
+          .observe(viewLifecycleOwner, Observer {
+            it?.let {
+              wordAdapter.setWordList(it)
+            }
+          })
     }
   }
 

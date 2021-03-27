@@ -58,14 +58,6 @@ class WordAdapter(
     notifyDataSetChanged()
   }
 
-  fun displayNewWordPlank(query: String) {
-    val word = Word(name = query, type = Word.TYPE_NEW_WORD)
-    words.clear()
-    words.add(word)
-
-    notifyDataSetChanged()
-  }
-
   inner class WordViewHolder(binding: LayoutItemWordBinding) : BaseViewHolder(
       binding.root
   ) {

@@ -21,7 +21,7 @@ class CommentAdapter(
   ): BaseViewHolder {
 
     val binding = LayoutItemCommentBinding
-      .inflate(LayoutInflater.from(parent.context), parent, false)
+        .inflate(LayoutInflater.from(parent.context), parent, false)
     return CommentViewHolder(binding)
 
   }
@@ -43,7 +43,7 @@ class CommentAdapter(
   }
 
   inner class CommentViewHolder(binding: LayoutItemCommentBinding) : BaseViewHolder(
-    binding.root
+      binding.root
   ) {
 
     private val userTv: TextView = binding.userTv
@@ -51,7 +51,7 @@ class CommentAdapter(
 
     init {
       itemView.setOnClickListener {
-        itemClickListener.onClick(adapterPosition, comments[adapterPosition])
+        itemClickListener.onClick(position = adapterPosition, data = comments[adapterPosition])
       }
     }
 

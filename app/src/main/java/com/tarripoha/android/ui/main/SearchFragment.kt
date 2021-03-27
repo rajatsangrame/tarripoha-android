@@ -55,7 +55,7 @@ class SearchFragment : Fragment() {
     savedInstanceState: Bundle?
   ): View {
     binding = FragmentSearchBinding
-      .inflate(LayoutInflater.from(requireContext()), container, false)
+        .inflate(LayoutInflater.from(requireContext()), container, false)
     return binding.root
   }
 
@@ -111,24 +111,25 @@ class SearchFragment : Fragment() {
 
   private fun setupRecyclerView() {
     val linearLayoutManager = LinearLayoutManager(
-      context, RecyclerView.VERTICAL, false
+        context, RecyclerView.VERTICAL, false
     )
-    wordAdapter = WordAdapter(ArrayList(), object : ItemClickListener<Word> {
-      override fun onClick(
-        position: Int,
-        data: Word
-      ) {
-        hideKeyboard()
-        if (data.type == Word.TYPE_NEW_WORD) {
-          val intent = Intent(context, WordActivity::class.java)
-          intent.putExtra(WordActivity.KEY_WORD, data)
-          startActivityForResult(intent, REQUEST_CODE_WORD)
-        } else {
-          viewModel.setWordDetail(word = data)
-          findNavController().navigate(R.id.action_SearchFragment_to_WordDetailFragment)
+    wordAdapter =
+      WordAdapter(words = ArrayList(), itemClickListener = object : ItemClickListener<Word> {
+        override fun onClick(
+          position: Int,
+          data: Word
+        ) {
+          hideKeyboard()
+          if (data.type == Word.TYPE_NEW_WORD) {
+            val intent = Intent(context, WordActivity::class.java)
+            intent.putExtra(WordActivity.KEY_WORD, data)
+            startActivityForResult(intent, REQUEST_CODE_WORD)
+          } else {
+            viewModel.setWordDetail(word = data)
+            findNavController().navigate(R.id.action_SearchFragment_to_WordDetailFragment)
+          }
         }
-      }
-    })
+      })
     binding.wordsRv.apply {
       layoutManager = linearLayoutManager
       adapter = wordAdapter
@@ -139,12 +140,12 @@ class SearchFragment : Fragment() {
 
     binding.searchEt.apply {
       val d = RxTextView.textChanges(this)
-        .subscribeOn(AndroidSchedulers.mainThread())
-        .debounce(SEARCH_DEBOUNCE_TIME_IN_MS, TimeUnit.MILLISECONDS)
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe {
-          viewModel.setQuery(it.toString())
-        }
+          .subscribeOn(AndroidSchedulers.mainThread())
+          .debounce(SEARCH_DEBOUNCE_TIME_IN_MS, TimeUnit.MILLISECONDS)
+          .observeOn(AndroidSchedulers.mainThread())
+          .subscribe {
+            viewModel.setQuery(it.toString())
+          }
       setOnEditorActionListener { _, actionId, _ ->
         if (actionId == EditorInfo.IME_ACTION_SEARCH) {
           hideKeyboard()
@@ -161,27 +162,24 @@ class SearchFragment : Fragment() {
   private fun setupObservers() {
     viewModel.apply {
       getSearchWords()
-        .observe(viewLifecycleOwner, Observer {
-          Log.d(TAG, "setupObservers: getSearchWords: $it")
-          it?.let {
-            wordAdapter.setWordList(it)
-            if (it.isEmpty()) {
-              displayAddWordPlank()
+          .observe(viewLifecycleOwner, Observer {
+            Log.d(TAG, "setupObservers: getSearchWords: $it")
+            it?.let {
+              wordAdapter.setWordList(it)
             }
-          }
-        })
+          })
 
       getQuery()
-        .observe(viewLifecycleOwner, Observer {
-          Log.d(TAG, "setupObservers: getQuery: $it")
-          it?.let {
-            if (it.isEmpty()) {
-              viewModel.setSearchWords(ArrayList())
-            } else {
-              viewModel.search(it)
+          .observe(viewLifecycleOwner, Observer {
+            Log.d(TAG, "setupObservers: getQuery: $it")
+            it?.let {
+              if (it.isEmpty()) {
+                viewModel.setSearchWords(ArrayList())
+              } else {
+                viewModel.search(it)
+              }
             }
-          }
-        })
+          })
     }
   }
 
@@ -191,13 +189,6 @@ class SearchFragment : Fragment() {
 
   private fun hideKeyboard() {
     TPUtils.hideKeyboard(context = requireContext(), view = binding.searchEt)
-  }
-
-  private fun displayAddWordPlank() {
-    val query = binding.searchEt.text.toString()
-    if (query.isNotEmpty()) {
-      wordAdapter.displayNewWordPlank(query)
-    }
   }
 
   private fun checkClearBtnVisibility(query: String) {
