@@ -4,18 +4,16 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.EditorInfo
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.*
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.jakewharton.rxbinding2.widget.RxTextView
 import com.tarripoha.android.App
 import com.tarripoha.android.R
 import com.tarripoha.android.data.db.Word
@@ -23,9 +21,6 @@ import com.tarripoha.android.databinding.FragmentSearchBinding
 import com.tarripoha.android.ui.add.WordActivity
 import com.tarripoha.android.util.ItemClickListener
 import com.tarripoha.android.util.TPUtils
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import java.util.concurrent.TimeUnit
 
 class SearchFragment : Fragment() {
 
@@ -34,13 +29,11 @@ class SearchFragment : Fragment() {
   companion object {
     private const val TAG = "SearchFragment"
     private const val REQUEST_CODE_WORD = 101
-    private const val SEARCH_DEBOUNCE_TIME_IN_MS = 300L
   }
 
   private lateinit var factory: ViewModelProvider.Factory
   private lateinit var binding: FragmentSearchBinding
   private lateinit var wordAdapter: WordAdapter
-  private var compositeDisposable = CompositeDisposable()
   private val viewModel by activityViewModels<MainViewModel> {
     factory
   }
@@ -48,6 +41,16 @@ class SearchFragment : Fragment() {
   // endregion
 
   // region Fragment Related Methods
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+    setHasOptionsMenu(true)
+    super.onCreate(savedInstanceState)
+  }
+
+  override fun onPrepareOptionsMenu(menu: Menu) {
+    menu.clear()
+    super.onPrepareOptionsMenu(menu)
+  }
 
   override fun onCreateView(
     inflater: LayoutInflater,
@@ -89,7 +92,6 @@ class SearchFragment : Fragment() {
   }
 
   override fun onDestroyView() {
-    compositeDisposable.dispose()
     viewModel.apply {
       setQuery(null)
       setSearchWords(null)
@@ -105,8 +107,6 @@ class SearchFragment : Fragment() {
     setupRecyclerView()
     setupListeners()
     setupObservers()
-    setupSearchEditText()
-    showKeyboard()
   }
 
   private fun setupRecyclerView() {
@@ -119,7 +119,7 @@ class SearchFragment : Fragment() {
           position: Int,
           data: Word
         ) {
-          hideKeyboard()
+          TPUtils.hideKeyboard(requireContext(), binding.root)
           if (data.type == Word.TYPE_NEW_WORD) {
             val intent = Intent(context, WordActivity::class.java)
             intent.putExtra(WordActivity.KEY_WORD, data)
@@ -133,29 +133,6 @@ class SearchFragment : Fragment() {
     binding.wordsRv.apply {
       layoutManager = linearLayoutManager
       adapter = wordAdapter
-    }
-  }
-
-  private fun setupSearchEditText() {
-
-    binding.searchEt.apply {
-      val d = RxTextView.textChanges(this)
-          .subscribeOn(AndroidSchedulers.mainThread())
-          .debounce(SEARCH_DEBOUNCE_TIME_IN_MS, TimeUnit.MILLISECONDS)
-          .observeOn(AndroidSchedulers.mainThread())
-          .subscribe {
-            viewModel.setQuery(it.toString())
-          }
-      setOnEditorActionListener { _, actionId, _ ->
-        if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-          hideKeyboard()
-        }
-        true
-      }
-      compositeDisposable.add(d)
-      doAfterTextChanged {
-        checkClearBtnVisibility(it.toString())
-      }
     }
   }
 
@@ -183,32 +160,12 @@ class SearchFragment : Fragment() {
     }
   }
 
-  private fun showKeyboard() {
-    TPUtils.showKeyboard(context = requireContext(), view = binding.searchEt)
-  }
-
-  private fun hideKeyboard() {
-    TPUtils.hideKeyboard(context = requireContext(), view = binding.searchEt)
-  }
-
-  private fun checkClearBtnVisibility(query: String) {
-    if (query.isNotEmpty()) binding.clearBtn.visibility = View.VISIBLE
-    else binding.clearBtn.visibility = View.GONE
-  }
-
   // endregion
 
   // region Click Related Methods
 
   private fun setupListeners() {
-    binding.backBtn.setOnClickListener {
-      findNavController().popBackStack()
-    }
-    binding.clearBtn.setOnClickListener {
-      showKeyboard()
-      binding.searchEt.setText("")
-      binding.clearBtn.visibility = View.GONE
-    }
+    // no-op
   }
 
   // endregion

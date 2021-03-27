@@ -5,6 +5,7 @@
   <color name="colorPrimaryLight">#6d6d6d</color>
   <color name="colorAccent">#6d6d6d</color>
   <color name="colorWhite">#F5F5F5</color>
+  <color name="colorToolbarWhite">#00F5F5F5</color>
   <color name="colorBlack">#000000</color>
   <color name="cardBackground">#ddd</color>
   <color name="gradientStart">#7f000000</color>

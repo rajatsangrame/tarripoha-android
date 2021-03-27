@@ -1,23 +1,31 @@
 package com.tarripoha.android.ui.main
 
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.View
+import android.view.inputmethod.EditorInfo
+import androidx.core.content.ContextCompat
+import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.*
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import com.jakewharton.rxbinding2.widget.RxTextView
 import com.tarripoha.android.App
 import com.tarripoha.android.R
+import com.tarripoha.android.R.color
 import com.tarripoha.android.databinding.ActivityMainBinding
 import com.tarripoha.android.di.component.DaggerMainActivityComponent
 import com.tarripoha.android.di.component.MainActivityComponent
 import com.tarripoha.android.ui.BaseActivity
 import com.tarripoha.android.util.TPUtils
 import com.tarripoha.android.util.ViewModelFactory
-import java.lang.Exception
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class MainActivity : BaseActivity() {
@@ -27,8 +35,10 @@ class MainActivity : BaseActivity() {
   private lateinit var navController: NavController
   private lateinit var viewModel: MainViewModel
   private lateinit var binding: ActivityMainBinding
+  private var compositeDisposable = CompositeDisposable()
 
   companion object {
+    private const val SEARCH_DEBOUNCE_TIME_IN_MS = 300L
     private const val TAG = "MainActivity"
   }
 
@@ -53,11 +63,17 @@ class MainActivity : BaseActivity() {
 
   override fun onOptionsItemSelected(item: MenuItem): Boolean {
     return when (item.itemId) {
-      R.id.search -> {
+      android.R.id.home -> {
+        hideKeyboard()
+        super.onBackPressed()
+        true
+      }
+      R.id.menu_search -> {
+        binding.toolbarLayout.searchEt.text = null
         navController.navigate(R.id.action_HomeFragment_to_SearchFragment)
         true
       }
-      R.id.info -> {
+      R.id.menu_info -> {
         val count = if (viewModel.getWordCount().value == null) {
           0
         } else {
@@ -70,19 +86,28 @@ class MainActivity : BaseActivity() {
     }
   }
 
+  override fun onDestroy() {
+    compositeDisposable.dispose()
+    super.onDestroy()
+  }
+
   //endregion
 
-  // Helper functions
+  //region Helper functions
 
   private fun setupUI() {
     setupToolbar()
     setupObservers()
+    setupListeners()
+    setupSearchEditText()
   }
 
   private fun setupToolbar() {
     setSupportActionBar(binding.toolbarLayout.toolbar)
-    supportActionBar?.title = null
-    supportActionBar?.setDisplayHomeAsUpEnabled(false)
+    supportActionBar?.apply {
+      title = null
+      setDisplayHomeAsUpEnabled(false)
+    }
   }
 
   private fun getDependency() {
@@ -107,24 +132,81 @@ class MainActivity : BaseActivity() {
     navController.addOnDestinationChangedListener { _, destination, _ ->
       when (destination.id) {
         R.id.nav_home -> {
-          try {
-            this.supportActionBar?.show()
-          } catch (e: Exception) {
-            Log.e(TAG, "handleNavigation: ${e.localizedMessage}")
+          supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(false)
+            setBackgroundDrawable(
+                ColorDrawable(ContextCompat.getColor(this@MainActivity, color.colorPrimary))
+            )
+          }
+          binding.toolbarLayout.apply {
+            title.text = getString(R.string.app_name)
+            title.visibility = View.VISIBLE
+            searchToolbar.visibility = View.GONE
           }
         }
 
-        R.id.nav_search, R.id.nav_word_detail -> {
-          try {
-            this.supportActionBar?.hide()
-          }catch (e: Exception){
-            Log.e(TAG, "handleNavigation: ${e.localizedMessage}")
+        R.id.nav_search -> {
+          supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            setHomeAsUpIndicator(R.drawable.ic_arrow_back_grey)
+            setBackgroundDrawable(
+                ColorDrawable(ContextCompat.getColor(this@MainActivity, color.colorToolbarWhite))
+            )
           }
+          binding.toolbarLayout.apply {
+            title.visibility = View.GONE
+            searchToolbar.visibility = View.VISIBLE
+          }
+          showKeyboard()
         }
       }
     }
   }
 
-//endregion
+  private fun setupSearchEditText() {
+
+    binding.toolbarLayout.searchEt.apply {
+      val d = RxTextView.textChanges(this)
+          .subscribeOn(AndroidSchedulers.mainThread())
+          .debounce(SEARCH_DEBOUNCE_TIME_IN_MS, TimeUnit.MILLISECONDS)
+          .observeOn(AndroidSchedulers.mainThread())
+          .subscribe {
+            viewModel.setQuery(it.toString())
+          }
+      setOnEditorActionListener { _, actionId, _ ->
+        if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+          hideKeyboard()
+        }
+        true
+      }
+      compositeDisposable.add(d)
+      doAfterTextChanged {
+        checkClearBtnVisibility(it.toString())
+      }
+    }
+  }
+
+  private fun checkClearBtnVisibility(query: String) {
+    if (query.isNotEmpty()) binding.toolbarLayout.clearBtn.visibility = View.VISIBLE
+    else binding.toolbarLayout.clearBtn.visibility = View.GONE
+  }
+
+  private fun setupListeners() {
+    binding.toolbarLayout.clearBtn.setOnClickListener {
+      showKeyboard()
+      binding.toolbarLayout.searchEt.setText("")
+      binding.toolbarLayout.clearBtn.visibility = View.GONE
+    }
+  }
+
+  private fun showKeyboard() {
+    TPUtils.showKeyboard(context = this, view = binding.toolbarLayout.searchEt)
+  }
+
+  private fun hideKeyboard() {
+    TPUtils.hideKeyboard(context = this, view = binding.toolbarLayout.searchEt)
+  }
+
+  //endregion
 
 }

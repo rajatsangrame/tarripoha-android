@@ -6,57 +6,6 @@
     android:layout_height="match_parent"
     >
 
-  <LinearLayout
-      android:id="@+id/search_toolbar"
-      android:layout_width="0dp"
-      android:layout_height="?android:attr/actionBarSize"
-      android:gravity="center"
-      android:orientation="horizontal"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="parent"
-      >
-    <ImageView
-        android:id="@+id/back_btn"
-        android:layout_width="@dimen/icon_size"
-        android:layout_height="@dimen/icon_size"
-        android:layout_marginEnd="@dimen/margin_extra_large"
-        android:layout_marginStart="@dimen/margin_extra_large"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:clickable="true"
-        android:focusable="true"
-        android:src="@drawable/ic_arrow_back_grey"
-        />
-
-    <EditText
-        android:id="@+id/search_et"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:background="@android:color/transparent"
-        android:focusable="true"
-        android:hint="@string/search"
-        android:imeOptions="actionSearch"
-        android:inputType="text|textNoSuggestions"
-        android:maxLines="1"
-        />
-
-    <ImageView
-        android:id="@+id/clear_btn"
-        android:layout_width="@dimen/icon_size"
-        android:layout_height="@dimen/icon_size"
-        android:layout_marginEnd="@dimen/margin_extra_large"
-        android:layout_marginStart="@dimen/margin_extra_large"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:clickable="true"
-        android:focusable="true"
-        android:src="@drawable/ic_close_grey"
-        android:visibility="gone"
-        tools:visibility="visible"
-        />
-
-  </LinearLayout>
-
   <androidx.recyclerview.widget.RecyclerView
       android:id="@+id/words_rv"
       android:layout_width="0dp"
@@ -64,7 +13,7 @@
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/search_toolbar"
+      app:layout_constraintTop_toTopOf="parent"
       />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

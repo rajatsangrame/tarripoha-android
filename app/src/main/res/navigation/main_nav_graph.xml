@@ -13,10 +13,18 @@
 
     <action
         android:id="@+id/action_HomeFragment_to_SearchFragment"
-        app:destination="@+id/nav_search" />
+        app:destination="@+id/nav_search"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right" />
     <action
         android:id="@+id/action_HomeFragment_to_WordDetailFragment"
-        app:destination="@id/nav_word_detail" />
+        app:destination="@id/nav_word_detail"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right" />
 
   </fragment>
 
@@ -27,7 +35,11 @@
       tools:layout="@layout/fragment_search">
     <action
         android:id="@+id/action_SearchFragment_to_WordDetailFragment"
-        app:destination="@id/nav_word_detail" />
+        app:destination="@id/nav_word_detail"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right" />
   </fragment>
 
   <fragment
@@ -37,7 +49,11 @@
       tools:layout="@layout/fragment_word_detail">
     <action
         android:id="@+id/action_WordDetailFragment_to_SearchFragment"
-        app:destination="@id/nav_search" />
+        app:destination="@id/nav_search"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right" />
   </fragment>
 
 </navigation>
