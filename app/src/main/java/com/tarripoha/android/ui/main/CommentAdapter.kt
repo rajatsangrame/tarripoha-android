@@ -42,6 +42,11 @@ class CommentAdapter(
     notifyDataSetChanged()
   }
 
+  fun addComment(comment: Comment) {
+    this.comments.add(comment)
+    notifyDataSetChanged()
+  }
+
   inner class CommentViewHolder(binding: LayoutItemCommentBinding) : BaseViewHolder(
       binding.root
   ) {
@@ -63,7 +68,6 @@ class CommentAdapter(
   }
 
   companion object {
-    const val VIEW_TYPE_NEW_WORD = 101
   }
 
 }

@@ -159,6 +159,20 @@ class MainActivity : BaseActivity() {
           }
           showKeyboard()
         }
+        R.id.nav_word_detail -> {
+          supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            setHomeAsUpIndicator(R.drawable.ic_arrow_back_white)
+            setBackgroundDrawable(
+                ColorDrawable(ContextCompat.getColor(this@MainActivity, color.colorPrimary))
+            )
+          }
+          binding.toolbarLayout.apply {
+            title.visibility = View.GONE
+            title.visibility = View.GONE
+            searchToolbar.visibility = View.GONE
+          }
+        }
       }
     }
   }

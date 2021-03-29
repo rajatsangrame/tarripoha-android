@@ -22,7 +22,14 @@ data class Comment(
   var addedBy: String? = null,
   var popular: Double? = null,
   var dirty: Boolean = false,
-  var timestamp: Long? = null
+  var timestamp: Long? = null,
+  var localStatus: Boolean? = null
 ) : Parcelable {
   constructor() : this(word = "", comment = "")
+  constructor(
+    word: String,
+    comment: String,
+    time: Long,
+    addedBy: String
+  ) : this(word = word, comment = comment, timestamp = time)
 }

@@ -8,6 +8,7 @@ import com.tarripoha.android.data.Repository
 import com.tarripoha.android.data.db.Word
 import com.tarripoha.android.ui.BaseViewModel
 import com.tarripoha.android.R
+import com.tarripoha.android.data.db.Comment
 import com.tarripoha.android.util.TPUtils
 import java.lang.Exception
 import javax.inject.Inject
@@ -31,6 +32,7 @@ class MainViewModel @Inject constructor(
   // region WordDetailFragment
 
   private val wordDetail: MutableLiveData<Word> = MutableLiveData()
+  private val postComment: MutableLiveData<Comment> = MutableLiveData()
 
   // endregion
 
@@ -58,11 +60,24 @@ class MainViewModel @Inject constructor(
 
   fun getWordDetail() = wordDetail
 
+  fun setPostComment(comment: Comment?) {
+    postComment.value = comment
+  }
+
+  fun getPostComment() = postComment
+
   // Helper Functions
 
-  fun addNewWord(word: Word) {
+  private fun isInternetConnected(): Boolean {
     if (!TPUtils.isNetworkAvailable(getContext())) {
       setUserMessage(getString(R.string.error_no_internet))
+      return false
+    }
+    return true
+  }
+
+  fun addNewWord(word: Word) {
+    if (!isInternetConnected()) {
       return
     }
     isRefreshing.value = true
@@ -83,8 +98,7 @@ class MainViewModel @Inject constructor(
   }
 
   fun fetchAllWord() {
-    if (!TPUtils.isNetworkAvailable(getContext())) {
-      setUserMessage(getString(R.string.error_no_internet))
+    if (!isInternetConnected()) {
       return
     }
     isRefreshing.value = true
@@ -128,8 +142,7 @@ class MainViewModel @Inject constructor(
   }
 
   fun search(query: String) {
-    if (!TPUtils.isNetworkAvailable(getContext())) {
-      setUserMessage(getString(R.string.error_no_internet))
+    if (!isInternetConnected()) {
       return
     }
     repository.searchWord(
@@ -149,6 +162,7 @@ class MainViewModel @Inject constructor(
     query: String,
     snapshot: DataSnapshot
   ) {
+    Log.d(TAG, "handleSearchResponse: query $query size ${query.length}")
     val wordList: MutableList<Word> = mutableListOf()
     var wordFound = false
     snapshot.children.forEach {
@@ -171,6 +185,28 @@ class MainViewModel @Inject constructor(
     }
     if (!wordFound) wordList.add(Word.getNewWord(name = query))
     setSearchWords(wordList)
+  }
+
+  fun postComment(comment: Comment) {
+    if (!isInternetConnected()) {
+      return
+    }
+    repository.postComment(
+        comment = comment,
+        success = {
+          setUserMessage(getString(R.string.succ_data_added))
+        },
+        failure = {
+          setUserMessage(getString(R.string.error_unable_to_process))
+        },
+        connectionStatus = {
+
+        }
+    )
+  }
+
+  private fun handlePostCommentResponse() {
+
   }
 
   // endregion

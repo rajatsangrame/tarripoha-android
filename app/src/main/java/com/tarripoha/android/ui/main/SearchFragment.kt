@@ -91,12 +91,12 @@ class SearchFragment : Fragment() {
 
   }
 
-  override fun onDestroyView() {
+  override fun onDestroy() {
     viewModel.apply {
       setQuery(null)
       setSearchWords(null)
     }
-    super.onDestroyView()
+    super.onDestroy()
   }
 
   // endregion

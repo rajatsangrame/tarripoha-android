@@ -124,7 +124,7 @@ class HomeFragment : Fragment() {
     viewModel.apply {
       isRefreshing()
           .observe(viewLifecycleOwner, Observer {
-            it.let {
+            it?.let {
               binding.layout.swipeRefreshLayout.isRefreshing = it
             }
           })

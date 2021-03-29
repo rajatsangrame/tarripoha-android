@@ -6,57 +6,6 @@
     android:layout_height="match_parent"
     >
 
-  <LinearLayout
-      android:id="@+id/word_toolbar"
-      android:layout_width="0dp"
-      android:layout_height="?android:attr/actionBarSize"
-      android:gravity="center"
-      android:orientation="horizontal"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="parent"
-      >
-
-    <ImageView
-        android:id="@+id/back_btn"
-        android:layout_width="@dimen/icon_size"
-        android:layout_height="@dimen/icon_size"
-        android:layout_marginEnd="@dimen/margin_extra_large"
-        android:layout_marginStart="@dimen/margin_extra_large"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:clickable="true"
-        android:focusable="true"
-        android:src="@drawable/ic_arrow_back_grey"
-        />
-
-    <TextView
-        android:id="@+id/word_tv"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_weight="1"
-        android:background="@android:color/transparent"
-        android:focusable="true"
-        android:maxLines="1"
-        android:textColor="@color/colorPrimary"
-        android:textSize="@dimen/text_huge"
-        android:textStyle="bold"
-        tools:text="@string/word"
-        />
-
-    <ImageView
-        android:id="@+id/search_btn"
-        android:layout_width="@dimen/icon_size"
-        android:layout_height="@dimen/icon_size"
-        android:layout_marginEnd="@dimen/margin_extra_large"
-        android:layout_marginStart="@dimen/margin_extra_large"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:clickable="true"
-        android:focusable="true"
-        android:src="@drawable/ic_search_grey"
-        />
-
-  </LinearLayout>
 
   <androidx.constraintlayout.widget.ConstraintLayout
       android:id="@+id/constraintLayout"
@@ -67,18 +16,38 @@
       android:paddingStart="@dimen/margin_extra_large"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/word_toolbar"
+      app:layout_constraintTop_toTopOf="parent"
       >
+
+    <TextView
+        android:id="@+id/word_tv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/margin_extra_large"
+        android:layout_weight="1"
+        android:background="@android:color/transparent"
+        android:focusable="true"
+        android:maxLines="1"
+        android:textColor="@color/colorPrimary"
+        android:textSize="@dimen/text_huge"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/word"
+        />
 
     <TextView
         android:id="@+id/meaning_tv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_normal"
         android:textColor="@color/colorGrey"
-        android:textSize="@dimen/text_extra_large"
+        android:textSize="@dimen/text_large"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/word_tv"
         tools:text="@string/meaning"
         />
 
@@ -88,7 +57,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_normal"
         android:textColor="@color/colorGrey"
-        android:textSize="@dimen/text_extra_large"
+        android:textSize="@dimen/text_large"
+        android:textStyle="italic"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

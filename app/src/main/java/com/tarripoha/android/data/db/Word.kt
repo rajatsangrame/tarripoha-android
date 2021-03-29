@@ -22,7 +22,7 @@ data class Word(
   @PrimaryKey
   val name: String,
   val meaning: String,
-  var engMeaning: String? = null,
+  var eng: String? = null,
   var type: String? = null,
   var addedBy: String? = null,
   var popular: Double? = null,

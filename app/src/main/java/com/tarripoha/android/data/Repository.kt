@@ -9,6 +9,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.tarripoha.android.data.db.Comment
 import com.tarripoha.android.data.db.Word
 import com.tarripoha.android.data.db.WordDatabase
 import com.tarripoha.android.data.rest.RetrofitApi
@@ -159,6 +160,29 @@ class Repository(
           }
         }
     )
+    checkFirebaseConnection(
+        connectionStatus = {
+          connectionStatus(it)
+        }
+    )
+  }
+
+  fun postComment(
+    comment: Comment,
+    success: () -> Unit,
+    failure: (Exception) -> Unit,
+    connectionStatus: (Boolean) -> Unit
+  ) {
+
+    commentRef.push()
+        .setValue(comment)
+        .addOnSuccessListener {
+          success()
+        }
+        .addOnFailureListener {
+          failure(it)
+        }
+
     checkFirebaseConnection(
         connectionStatus = {
           connectionStatus(it)
