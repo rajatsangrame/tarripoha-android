@@ -2,7 +2,6 @@ package com.tarripoha.android.ui.main
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.tarripoha.android.util.ItemClickListener
 import com.tarripoha.android.ui.BaseViewHolder
@@ -47,12 +46,9 @@ class CommentAdapter(
     notifyDataSetChanged()
   }
 
-  inner class CommentViewHolder(binding: LayoutItemCommentBinding) : BaseViewHolder(
+  inner class CommentViewHolder(private val binding: LayoutItemCommentBinding) : BaseViewHolder(
       binding.root
   ) {
-
-    private val userTv: TextView = binding.userTv
-    private val commentTv: TextView = binding.commentTv
 
     init {
       itemView.setOnClickListener {
@@ -62,8 +58,13 @@ class CommentAdapter(
 
     override fun bind(position: Int) {
       val comment = comments[position]
-      userTv.text = comment.addedBy ?: itemView.context.getString(R.string.username)
-      commentTv.text = comment.comment
+      val user = comment.addedBy ?: itemView.context.getString(R.string.user)
+
+      binding.apply {
+        userTv.text = user
+        commentTv.text = comment.comment
+        avatarTv.text = user[0].toString()
+      }
     }
   }
 

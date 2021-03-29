@@ -104,7 +104,7 @@ class MainViewModel @Inject constructor(
     isRefreshing.value = true
     repository.fetchAllWords(
         success = { snapshot ->
-          handleFetchAllResponse(snapshot = snapshot)
+          fetchAllResponse(snapshot = snapshot)
         },
         failure = {
           isRefreshing.value = false
@@ -116,7 +116,7 @@ class MainViewModel @Inject constructor(
     )
   }
 
-  private fun handleFetchAllResponse(
+  private fun fetchAllResponse(
     snapshot: DataSnapshot
   ) {
     val wordList: MutableList<Word> = mutableListOf()
@@ -129,11 +129,11 @@ class MainViewModel @Inject constructor(
           if (isDirty == null || !isDirty) {
             wordList.add(word)
           } else {
-            Log.i(TAG, "handleFetchAllResponse: ${word.name} found dirty")
+            Log.i(TAG, "fetchAllResponse: ${word.name} found dirty")
           }
         }
       } catch (e: Exception) {
-        Log.e(TAG, "handleFetchAllResponse: ${e.localizedMessage}")
+        Log.e(TAG, "fetchAllResponse: ${e.localizedMessage}")
       }
     }
     words.value = wordList
@@ -148,7 +148,7 @@ class MainViewModel @Inject constructor(
     repository.searchWord(
         word = query,
         success = { snapshot ->
-          handleSearchResponse(query = query, snapshot = snapshot)
+          searchResponse(query = query, snapshot = snapshot)
         },
         failure = {
           setUserMessage(getString(R.string.error_unable_to_fetch))
@@ -158,11 +158,11 @@ class MainViewModel @Inject constructor(
         })
   }
 
-  private fun handleSearchResponse(
+  private fun searchResponse(
     query: String,
     snapshot: DataSnapshot
   ) {
-    Log.d(TAG, "handleSearchResponse: query $query size ${query.length}")
+    Log.d(TAG, "searchResponse: query $query size ${query.length}")
     val wordList: MutableList<Word> = mutableListOf()
     var wordFound = false
     snapshot.children.forEach {
@@ -173,14 +173,14 @@ class MainViewModel @Inject constructor(
           if (isDirty == null || !isDirty) {
             wordList.add(w)
           } else {
-            Log.i(TAG, "handleSearchResponse: ${w.name} found dirty")
+            Log.i(TAG, "searchResponse: ${w.name} found dirty")
           }
           if (w.name == query) {
             wordFound = true
           }
         }
       } catch (e: Exception) {
-        Log.e(TAG, "handleSearchResponse: ${e.localizedMessage}")
+        Log.e(TAG, "searchResponse: ${e.localizedMessage}")
       }
     }
     if (!wordFound) wordList.add(Word.getNewWord(name = query))
@@ -191,10 +191,11 @@ class MainViewModel @Inject constructor(
     if (!isInternetConnected()) {
       return
     }
+    comment.localStatus = true
     repository.postComment(
         comment = comment,
         success = {
-          setUserMessage(getString(R.string.succ_data_added))
+          postCommentResponse(comment)
         },
         failure = {
           setUserMessage(getString(R.string.error_unable_to_process))
@@ -205,8 +206,57 @@ class MainViewModel @Inject constructor(
     )
   }
 
-  private fun handlePostCommentResponse() {
+  private fun postCommentResponse(comment: Comment) {
+    setPostComment(comment)
+  }
 
+  fun fetchComment() {
+    if (!isInternetConnected()) {
+      return
+    }
+    if (getWordDetail().value == null) {
+      setUserMessage(getString(R.string.error_unknown))
+      return
+    }
+    val word = getWordDetail().value!!
+    repository.fetchComments(
+        word = word.name,
+        success = {
+          fetchCommentResponse(it, word)
+        },
+        failure = {
+          setUserMessage(getString(R.string.error_unable_to_process))
+        },
+        connectionStatus = {
+
+        }
+    )
+  }
+
+  private fun fetchCommentResponse(
+    snapshot: DataSnapshot,
+    word: Word
+  ) {
+    val comments: MutableList<Comment> = mutableListOf()
+    snapshot.children.forEach {
+      try {
+        if (it.getValue(Comment::class.java) != null) {
+          val comment: Comment = it.getValue(Comment::class.java)!!
+          val isDirty = comment.dirty
+          if (isDirty == null || !isDirty) {
+            comments.add(comment)
+          } else {
+            Log.i(TAG, "fetchCommentResponse: ${word.name} found dirty")
+          }
+        }
+      } catch (e: Exception) {
+        Log.e(TAG, "fetchCommentResponse: ${e.localizedMessage}")
+      }
+    }
+    if (comments.isEmpty()) return
+    comments.sortByDescending { it.timestamp }
+    word.comments = comments
+    setWordDetail(word)
   }
 
   // endregion

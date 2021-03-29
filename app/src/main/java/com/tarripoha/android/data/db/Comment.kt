@@ -21,7 +21,7 @@ data class Comment(
   val comment: String,
   var addedBy: String? = null,
   var popular: Double? = null,
-  var dirty: Boolean = false,
+  var dirty: Boolean? = null,
   var timestamp: Long? = null,
   var localStatus: Boolean? = null
 ) : Parcelable {

@@ -139,7 +139,7 @@ class Repository(
     )
   }
 
-  fun searchComment(
+  fun fetchComments(
     word: String,
     success: (DataSnapshot) -> Unit,
     failure: (DatabaseError) -> Unit,

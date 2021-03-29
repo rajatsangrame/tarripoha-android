@@ -21,5 +21,9 @@
     <item name="android:fontFamily">@font/roboto_regular</item>
   </style>
 
+  <style name="circularImageView">
+    <item name="cornerFamily">rounded</item>
+    <item name="cornerSize">50%</item>
+  </style>
 
 </resources>

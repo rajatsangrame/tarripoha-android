@@ -28,7 +28,7 @@ data class Word(
   var popular: Double? = null,
   var dirty: Boolean? = null,
   var approved: Boolean? = null,
-  var comments: MutableList<Comment>? = null,
+  var comments: List<Comment>? = null,
   var timestamp: Long? = null
 ) : Parcelable {
 

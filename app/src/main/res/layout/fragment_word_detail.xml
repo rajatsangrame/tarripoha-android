@@ -84,8 +84,8 @@
 
     <ImageView
         android:id="@+id/like_btn"
-        android:layout_width="@dimen/icon_size_small"
-        android:layout_height="@dimen/icon_size_small"
+        android:layout_width="@dimen/icon_size"
+        android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_normal"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:clickable="true"
@@ -97,15 +97,15 @@
 
     <ImageView
         android:id="@+id/comment_btn"
-        android:layout_width="@dimen/icon_size_small"
-        android:layout_height="@dimen/icon_size_small"
-        android:layout_marginEnd="8dp"
+        android:layout_width="@dimen/icon_size"
+        android:layout_height="@dimen/icon_size"
+        android:layout_marginStart="32dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:clickable="true"
         android:focusable="true"
         android:src="@drawable/ic_comment_grey"
         app:layout_constraintBottom_toBottomOf="@+id/like_btn"
-        app:layout_constraintEnd_toStartOf="@+id/comment_count_tv"
+        app:layout_constraintStart_toEndOf="@+id/like_count_tv"
         app:layout_constraintTop_toTopOf="@+id/like_btn"
         />
 
@@ -113,21 +113,21 @@
         android:id="@+id/like_count_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_small"
-        app:layout_constraintBottom_toBottomOf="@+id/like_btn"
-        app:layout_constraintStart_toEndOf="@+id/like_btn"
-        app:layout_constraintTop_toTopOf="@+id/like_btn"
-        tools:text="300"
+        android:layout_marginTop="@dimen/margin_small"
+        android:text="0"
+        app:layout_constraintEnd_toEndOf="@+id/like_btn"
+        app:layout_constraintStart_toStartOf="@+id/like_btn"
+        app:layout_constraintTop_toBottomOf="@+id/like_btn"
         />
-
     <TextView
         android:id="@+id/comment_count_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/like_btn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/like_btn"
-        tools:text="100"
+        android:layout_marginTop="@dimen/margin_small"
+        android:text="0"
+        app:layout_constraintEnd_toEndOf="@+id/comment_btn"
+        app:layout_constraintStart_toStartOf="@+id/comment_btn"
+        app:layout_constraintTop_toBottomOf="@+id/comment_btn"
         />
 
   </androidx.constraintlayout.widget.ConstraintLayout>
@@ -136,6 +136,8 @@
       android:id="@+id/comment_rv"
       android:layout_width="0dp"
       android:layout_height="0dp"
+      android:overScrollMode="never"
+      android:scrollbars="none"
       app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
@@ -148,10 +150,10 @@
       android:layout_height="wrap_content"
       android:background="@color/colorLightGrey"
       android:orientation="horizontal"
-      android:paddingBottom="@dimen/margin_extra_large"
+      android:paddingBottom="@dimen/margin_large"
       android:paddingEnd="@dimen/margin_extra_large"
       android:paddingStart="@dimen/margin_extra_large"
-      android:paddingTop="@dimen/margin_extra_large"
+      android:paddingTop="@dimen/margin_large"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
@@ -164,7 +166,8 @@
         android:layout_weight="1"
         android:background="@android:color/transparent"
         android:focusable="true"
-        android:hint="@string/add_comment"
+        android:hint="@string/add_sentence"
+        android:imeOptions="actionDone"
         android:inputType="text|textNoSuggestions"
         />
 

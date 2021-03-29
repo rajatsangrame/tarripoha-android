@@ -6,6 +6,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -18,6 +19,7 @@ import com.tarripoha.android.data.db.Comment
 import com.tarripoha.android.data.db.Word
 import com.tarripoha.android.databinding.FragmentWordDetailBinding
 import com.tarripoha.android.util.ItemClickListener
+import com.tarripoha.android.util.TPUtils
 
 class WordDetailFragment : Fragment() {
 
@@ -103,9 +105,8 @@ class WordDetailFragment : Fragment() {
     setupRecyclerView()
     setupListeners()
     setupObservers()
-    binding.commentEt.doAfterTextChanged {
-      checkPostBtnColor(it.toString())
-    }
+    setupEditText()
+    viewModel.fetchComment()
   }
 
   private fun checkPostBtnColor(query: String) {
@@ -124,6 +125,7 @@ class WordDetailFragment : Fragment() {
     val linearLayoutManager = LinearLayoutManager(
         context, RecyclerView.VERTICAL, false
     )
+    linearLayoutManager.reverseLayout = true
     commentAdapter = CommentAdapter(ArrayList(), object : ItemClickListener<Comment> {
       override fun onClick(
         position: Int,
@@ -138,6 +140,26 @@ class WordDetailFragment : Fragment() {
     }
   }
 
+  private fun setupEditText() {
+    if (viewModel.getWordDetail().value == null) {
+      viewModel.setUserMessage(getString(R.string.error_unknown))
+      return
+    }
+    val word = viewModel.getWordDetail().value!!
+    binding.commentEt.apply {
+      hint = getString(R.string.add_sentence, word.name)
+      doAfterTextChanged {
+        checkPostBtnColor(it.toString())
+        setOnEditorActionListener { _, actionId, _ ->
+          if (actionId == EditorInfo.IME_ACTION_DONE) {
+            TPUtils.hideKeyboard(context = requireContext(), view = binding.commentEt)
+          }
+          true
+        }
+      }
+    }
+  }
+
   private fun setupObservers() {
     viewModel.getWordDetail()
         .observe(viewLifecycleOwner) {
@@ -147,8 +169,8 @@ class WordDetailFragment : Fragment() {
         }
     viewModel.getPostComment()
         .observe(viewLifecycleOwner) {
-          it?.let { comment ->
-            commentAdapter.addComment(comment)
+          it?.let {
+            //commentAdapter.addComment(it)
           }
         }
   }
@@ -161,6 +183,9 @@ class WordDetailFragment : Fragment() {
         engMeaningTv.text = word.eng
         engMeaningTv.visibility = View.VISIBLE
       }
+      word.comments?.let { comments ->
+        commentAdapter.setComments(comments)
+      }
     }
   }
 
@@ -169,7 +194,26 @@ class WordDetailFragment : Fragment() {
         .trim()
         .isEmpty()
     if (isEmpty) viewModel.setUserMessage(getString(R.string.empty_field))
-    return isEmpty
+    return !isEmpty
+  }
+
+  private fun postComment() {
+    if (viewModel.getWordDetail().value == null) {
+      viewModel.setUserMessage(getString(R.string.error_unknown))
+      return
+    }
+    if (validateComment()) {
+      val comment = binding.commentEt.text.trim()
+          .toString()
+      val word = viewModel.getWordDetail().value!!
+      viewModel.postComment(
+          Comment(
+              word = word.name,
+              comment = comment,
+              timestamp = System.currentTimeMillis()
+          )
+      )
+    }
   }
 
   // endregion
@@ -178,16 +222,7 @@ class WordDetailFragment : Fragment() {
 
   private fun setupListeners() {
     binding.postCommentBtn.setOnClickListener {
-      if (viewModel.getWordDetail().value == null) {
-        viewModel.setUserMessage(getString(R.string.error_unknown))
-        return@setOnClickListener
-      }
-      if (validateComment()) {
-        val comment = binding.commentEt.text.trim()
-            .toString()
-        val word = viewModel.getWordDetail().value!!
-        viewModel.postComment(Comment(word = word.name, comment = comment))
-      }
+      postComment()
     }
   }
 
