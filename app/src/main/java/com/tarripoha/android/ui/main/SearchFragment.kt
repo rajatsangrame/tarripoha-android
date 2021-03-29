@@ -140,16 +140,16 @@ class SearchFragment : Fragment() {
     viewModel.apply {
       getSearchWords()
           .observe(viewLifecycleOwner, Observer {
-            Log.d(TAG, "setupObservers: getSearchWords: $it")
             it?.let {
+              Log.d(TAG, "setupObservers: getSearchWords: $it")
               wordAdapter.setWordList(it)
             }
           })
 
       getQuery()
           .observe(viewLifecycleOwner, Observer {
-            Log.d(TAG, "setupObservers: getQuery: $it")
             it?.let {
+              Log.d(TAG, "setupObservers: getQuery: $it")
               if (it.isEmpty()) {
                 viewModel.setSearchWords(ArrayList())
               } else {

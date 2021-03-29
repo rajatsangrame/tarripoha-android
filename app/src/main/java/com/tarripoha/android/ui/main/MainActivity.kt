@@ -195,7 +195,9 @@ class MainActivity : BaseActivity() {
       }
       compositeDisposable.add(d)
       doAfterTextChanged {
-        checkClearBtnVisibility(it.toString())
+        it?.let { editable ->
+          checkClearBtnVisibility(editable.toString())
+        }
       }
     }
   }
@@ -206,10 +208,12 @@ class MainActivity : BaseActivity() {
   }
 
   private fun setupListeners() {
-    binding.toolbarLayout.clearBtn.setOnClickListener {
-      showKeyboard()
-      binding.toolbarLayout.searchEt.setText("")
-      binding.toolbarLayout.clearBtn.visibility = View.GONE
+    binding.toolbarLayout.apply {
+      clearBtn.setOnClickListener {
+        showKeyboard()
+        searchEt.text = null
+        clearBtn.visibility = View.GONE
+      }
     }
   }
 

@@ -149,12 +149,15 @@ class WordDetailFragment : Fragment() {
     binding.commentEt.apply {
       hint = getString(R.string.add_sentence, word.name)
       doAfterTextChanged {
-        checkPostBtnColor(it.toString())
-        setOnEditorActionListener { _, actionId, _ ->
-          if (actionId == EditorInfo.IME_ACTION_DONE) {
-            TPUtils.hideKeyboard(context = requireContext(), view = binding.commentEt)
+        it?.let { editable ->
+          checkPostBtnColor(editable.toString())
+          setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+              postComment()
+              TPUtils.hideKeyboard(context = requireContext(), view = binding.commentEt)
+            }
+            true
           }
-          true
         }
       }
     }
@@ -213,6 +216,7 @@ class WordDetailFragment : Fragment() {
               timestamp = System.currentTimeMillis()
           )
       )
+      binding.commentEt.text = null
     }
   }
 
