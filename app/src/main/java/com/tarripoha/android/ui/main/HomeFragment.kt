@@ -72,7 +72,7 @@ class HomeFragment : Fragment() {
     if (requestCode == REQUEST_CODE_WORD && resultCode == AppCompatActivity.RESULT_OK) {
       val word = data?.getParcelableExtra<Word>(WordActivity.KEY_WORD)
       if (word is Word) {
-        viewModel.addWord(word)
+        viewModel.addNewWord(word)
       }
     }
     super.onActivityResult(requestCode, resultCode, data)

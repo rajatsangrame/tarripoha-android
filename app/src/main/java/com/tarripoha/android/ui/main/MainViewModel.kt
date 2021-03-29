@@ -1,12 +1,15 @@
 package com.tarripoha.android.ui.main
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.*
+import com.google.firebase.database.DataSnapshot
 import com.tarripoha.android.data.Repository
 import com.tarripoha.android.data.db.Word
 import com.tarripoha.android.ui.BaseViewModel
 import com.tarripoha.android.R
 import com.tarripoha.android.util.TPUtils
+import java.lang.Exception
 import javax.inject.Inject
 
 /**
@@ -57,25 +60,25 @@ class MainViewModel @Inject constructor(
 
   // Helper Functions
 
-  fun addWord(word: Word) {
+  fun addNewWord(word: Word) {
     if (!TPUtils.isNetworkAvailable(getContext())) {
       setUserMessage(getString(R.string.error_no_internet))
       return
     }
     isRefreshing.value = true
-    repository.addWord(
-      word = word,
-      success = {
-        isRefreshing.value = false
-        setUserMessage(getString(R.string.succ_data_added))
-      },
-      failure = {
-        isRefreshing.value = false
-        setUserMessage(getString(R.string.error_unable_to_process))
-      },
-      connectionStatus = {
-        if (!it) isRefreshing.value = false
-      }
+    repository.addNewWord(
+        word = word,
+        success = {
+          isRefreshing.value = false
+          setUserMessage(getString(R.string.succ_data_added))
+        },
+        failure = {
+          isRefreshing.value = false
+          setUserMessage(getString(R.string.error_unable_to_process))
+        },
+        connectionStatus = {
+          if (!it) isRefreshing.value = false
+        }
     )
   }
 
@@ -86,50 +89,88 @@ class MainViewModel @Inject constructor(
     }
     isRefreshing.value = true
     repository.fetchAllWords(
-      success = { snapshot ->
-        val wordList: MutableList<Word> = mutableListOf()
-        snapshot.children.forEach {
-          if (it.getValue(Word::class.java) != null) {
-            val word: Word = it.getValue(Word::class.java)!!
-            wordList.add(word)
-          }
+        success = { snapshot ->
+          handleFetchAllResponse(snapshot = snapshot)
+        },
+        failure = {
+          isRefreshing.value = false
+          setUserMessage(getString(R.string.error_unable_to_fetch))
+        },
+        connectionStatus = {
+          if (!it) isRefreshing.value = false
         }
-        words.value = wordList
-        wordCount.value = wordList.size
-        isRefreshing.value = false
-      },
-      failure = {
-        isRefreshing.value = false
-        setUserMessage(getString(R.string.error_unable_to_fetch))
-      },
-      connectionStatus = {
-        if (!it) isRefreshing.value = false
-      }
     )
   }
 
-  fun search(word: String) {
+  private fun handleFetchAllResponse(
+    snapshot: DataSnapshot
+  ) {
+    val wordList: MutableList<Word> = mutableListOf()
+    snapshot.children.forEach {
+
+      try {
+        if (it.getValue(Word::class.java) != null) {
+          val word: Word = it.getValue(Word::class.java)!!
+          val isDirty = word.dirty
+          if (isDirty == null || !isDirty) {
+            wordList.add(word)
+          } else {
+            Log.i(TAG, "handleFetchAllResponse: ${word.name} found dirty")
+          }
+        }
+      } catch (e: Exception) {
+        Log.e(TAG, "handleFetchAllResponse: ${e.localizedMessage}")
+      }
+    }
+    words.value = wordList
+    wordCount.value = wordList.size
+    isRefreshing.value = false
+  }
+
+  fun search(query: String) {
     if (!TPUtils.isNetworkAvailable(getContext())) {
       setUserMessage(getString(R.string.error_no_internet))
       return
     }
     repository.searchWord(
-      word = word,
-      success = { snapshot ->
-        val wordList: MutableList<Word> = mutableListOf()
-        var wordFound = false
-        snapshot.children.forEach {
-          if (it.getValue(Word::class.java) != null) {
-            val w: Word = it.getValue(Word::class.java)!!
+        word = query,
+        success = { snapshot ->
+          handleSearchResponse(query = query, snapshot = snapshot)
+        },
+        failure = {
+          setUserMessage(getString(R.string.error_unable_to_fetch))
+        },
+        connectionStatus = {
+
+        })
+  }
+
+  private fun handleSearchResponse(
+    query: String,
+    snapshot: DataSnapshot
+  ) {
+    val wordList: MutableList<Word> = mutableListOf()
+    var wordFound = false
+    snapshot.children.forEach {
+      try {
+        if (it.getValue(Word::class.java) != null) {
+          val w: Word = it.getValue(Word::class.java)!!
+          val isDirty = w.dirty
+          if (isDirty == null || !isDirty) {
             wordList.add(w)
-            if (w.name == word) {
-              wordFound = true
-            }
+          } else {
+            Log.i(TAG, "handleSearchResponse: ${w.name} found dirty")
+          }
+          if (w.name == query) {
+            wordFound = true
           }
         }
-        if (!wordFound) wordList.add(Word.getNewWord(name = word))
-        setSearchWords(wordList)
-      }, failure = {}, connectionStatus = {})
+      } catch (e: Exception) {
+        Log.e(TAG, "handleSearchResponse: ${e.localizedMessage}")
+      }
+    }
+    if (!wordFound) wordList.add(Word.getNewWord(name = query))
+    setSearchWords(wordList)
   }
 
   // endregion
