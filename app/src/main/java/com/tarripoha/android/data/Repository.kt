@@ -174,7 +174,7 @@ class Repository(
     connectionStatus: (Boolean) -> Unit
   ) {
 
-    commentRef.push()
+    commentRef.child(comment.id)
         .setValue(comment)
         .addOnSuccessListener {
           success()

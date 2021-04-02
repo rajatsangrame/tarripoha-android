@@ -6,6 +6,10 @@
   <dimen name="margin_large">12dp</dimen>
   <dimen name="margin_extra_large">16dp</dimen>
 
+
+  <dimen name="margin_bottom_sheet">32dp</dimen>
+
+
   <dimen name="text_minimum">10sp</dimen>
   <dimen name="text_small">12sp</dimen>
   <dimen name="text_normal">14sp</dimen>
@@ -14,7 +18,8 @@
   <dimen name="text_huge">28sp</dimen>
 
   <dimen name="icon_size">24dp</dimen>
-  <dimen name="icon_size_small">12dp</dimen>
+  <dimen name="icon_size_small">16dp</dimen>
+
   <dimen name="avatar_size">32dp</dimen>
 
 </resources>

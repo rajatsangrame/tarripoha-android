@@ -189,9 +189,9 @@ class MainActivity : BaseActivity() {
           }
       setOnEditorActionListener { _, actionId, _ ->
         if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-          hideKeyboard()
+          // no-op
         }
-        true
+        false
       }
       compositeDisposable.add(d)
       doAfterTextChanged {

@@ -1,5 +1,5 @@
 <resources>
-  <string name="app_name">TarriPoha</string>
+  <string name="app_name">Tarri Poha</string>
 
   <string name="please_wait">Please wait…</string>
   <string name="sample_title">Sample Title</string>
@@ -11,11 +11,19 @@
   <string name="search">Search</string>
   <string name="info">Info</string>
   <string name="more">More</string>
+  <string name="report">Report</string>
+  <string name="copy">Copy</string>
+  <string name="share">Share</string>
+  <string name="delete">Delete</string>
   <string name="empty_field">Empty Field</string>
-  <string name="add_sentence">Add sentence for %1$s</string>
+  <string name="add_quotes">Add quotes for %1$s</string>
   <string name="added_by_user">Added by %1$s</string>
   <string name="user">User</string>
   <string name="comment">Comment</string>
+  <string name="yesterday">Yesterday</string>
+
+  <string name="sample_time">12:35 PM</string>
+  <string name="sample_likes">2 Likes</string>
 
   <string name="msg_new_word_plank">New word for %1$s</string>
 

@@ -18,7 +18,7 @@ import com.tarripoha.android.R
 import com.tarripoha.android.data.db.Comment
 import com.tarripoha.android.data.db.Word
 import com.tarripoha.android.databinding.FragmentWordDetailBinding
-import com.tarripoha.android.util.ItemClickListener
+import com.tarripoha.android.util.ItemLongClickListener
 import com.tarripoha.android.util.TPUtils
 
 class WordDetailFragment : Fragment() {
@@ -106,6 +106,7 @@ class WordDetailFragment : Fragment() {
     setupListeners()
     setupObservers()
     setupEditText()
+    checkPostBtnColor("")
     viewModel.fetchComment()
   }
 
@@ -126,17 +127,18 @@ class WordDetailFragment : Fragment() {
         context, RecyclerView.VERTICAL, false
     )
     linearLayoutManager.reverseLayout = true
-    commentAdapter = CommentAdapter(ArrayList(), object : ItemClickListener<Comment> {
+    commentAdapter = CommentAdapter(ArrayList(), object : ItemLongClickListener<Comment> {
       override fun onClick(
         position: Int,
         data: Comment
       ) {
-        // no-op
+        showOptionMenu(data)
       }
     })
     binding.commentRv.apply {
       layoutManager = linearLayoutManager
       adapter = commentAdapter
+      registerForContextMenu(this)
     }
   }
 
@@ -147,17 +149,18 @@ class WordDetailFragment : Fragment() {
     }
     val word = viewModel.getWordDetail().value!!
     binding.commentEt.apply {
-      hint = getString(R.string.add_sentence, word.name)
+      hint = getString(R.string.add_quotes, word.name)
+      setOnEditorActionListener { _, actionId, _ ->
+        if (actionId == EditorInfo.IME_ACTION_DONE) {
+          val result = postComment()
+          // Prevent keyboard to hide when result failed
+          return@setOnEditorActionListener !result
+        }
+        false
+      }
       doAfterTextChanged {
         it?.let { editable ->
           checkPostBtnColor(editable.toString())
-          setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-              postComment()
-              TPUtils.hideKeyboard(context = requireContext(), view = binding.commentEt)
-            }
-            true
-          }
         }
       }
     }
@@ -200,17 +203,19 @@ class WordDetailFragment : Fragment() {
     return !isEmpty
   }
 
-  private fun postComment() {
+  private fun postComment(): Boolean {
     if (viewModel.getWordDetail().value == null) {
       viewModel.setUserMessage(getString(R.string.error_unknown))
-      return
+      return false
     }
-    if (validateComment()) {
+    val validate = validateComment()
+    if (validate) {
       val comment = binding.commentEt.text.trim()
           .toString()
       val word = viewModel.getWordDetail().value!!
       viewModel.postComment(
           Comment(
+              id = TPUtils.getRandomUuid(),
               word = word.name,
               comment = comment,
               timestamp = System.currentTimeMillis()
@@ -218,6 +223,11 @@ class WordDetailFragment : Fragment() {
       )
       binding.commentEt.text = null
     }
+    return validate
+  }
+
+  private fun showOptionMenu(comment: Comment) {
+
   }
 
   // endregion

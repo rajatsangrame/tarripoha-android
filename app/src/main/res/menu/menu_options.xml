@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+  <item
+      android:id="@+id/menu_copy"
+      android:title="@string/copy"
+      android:visible="false"
+      app:showAsAction="never"
+      tools:visible="true" />
+
+  <item
+      android:id="@+id/menu_share"
+      android:title="@string/share"
+      android:visible="false"
+      app:showAsAction="never"
+      tools:visible="true" />
+
+  <item
+      android:id="@+id/menu_report"
+      android:title="@string/report"
+      android:visible="false"
+      app:showAsAction="never"
+      tools:visible="true" />
+
+  <item
+      android:id="@+id/menu_delete"
+      android:actionMenuTextColor="@color/colorRed"
+      android:title="@string/delete"
+      android:visible="false"
+      app:showAsAction="never"
+      tools:visible="true" />
+</menu>

@@ -166,7 +166,7 @@
         android:layout_weight="1"
         android:background="@android:color/transparent"
         android:focusable="true"
-        android:hint="@string/add_sentence"
+        android:hint="@string/add_quotes"
         android:imeOptions="actionDone"
         android:inputType="text|textNoSuggestions"
         />

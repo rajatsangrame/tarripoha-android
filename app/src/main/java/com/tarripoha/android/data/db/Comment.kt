@@ -17,6 +17,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 @Entity(tableName = "comment")
 data class Comment(
+  val id: String,
   val word: String,
   val comment: String,
   var addedBy: String? = null,
@@ -25,11 +26,12 @@ data class Comment(
   var timestamp: Long? = null,
   var localStatus: Boolean? = null
 ) : Parcelable {
-  constructor() : this(word = "", comment = "")
+  constructor() : this(id = "", word = "", comment = "")
   constructor(
+    id: String,
     word: String,
     comment: String,
     time: Long,
     addedBy: String
-  ) : this(word = word, comment = comment, timestamp = time)
+  ) : this(id = id, word = word, comment = comment, timestamp = time)
 }
