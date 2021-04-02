@@ -4,12 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingBottom="32dp"
-    android:paddingTop="32dp"
+    android:paddingBottom="@dimen/margin_bottom_sheet"
+    android:paddingTop="@dimen/margin_bottom_sheet"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
     >
-
-  <!-- NOTE: This list should be displayed in a list
-  instead of nested layouts -->
 
   <LinearLayout
       android:id="@+id/menu_copy"
@@ -19,10 +17,10 @@
       android:clickable="true"
       android:focusable="true"
       android:orientation="horizontal"
-      android:paddingBottom="8dp"
+      android:paddingBottom="@dimen/margin_extra_large"
       android:paddingEnd="@dimen/margin_bottom_sheet"
       android:paddingStart="@dimen/margin_bottom_sheet"
-      android:paddingTop="8dp"
+      android:paddingTop="@dimen/margin_extra_large"
       >
 
     <ImageView
@@ -51,10 +49,10 @@
       android:clickable="true"
       android:focusable="true"
       android:orientation="horizontal"
-      android:paddingBottom="8dp"
+      android:paddingBottom="@dimen/margin_extra_large"
       android:paddingEnd="@dimen/margin_bottom_sheet"
       android:paddingStart="@dimen/margin_bottom_sheet"
-      android:paddingTop="8dp"
+      android:paddingTop="@dimen/margin_extra_large"
       >
 
     <ImageView
@@ -82,10 +80,10 @@
       android:clickable="true"
       android:focusable="true"
       android:orientation="horizontal"
-      android:paddingBottom="8dp"
+      android:paddingBottom="@dimen/margin_extra_large"
       android:paddingEnd="@dimen/margin_bottom_sheet"
       android:paddingStart="@dimen/margin_bottom_sheet"
-      android:paddingTop="8dp"
+      android:paddingTop="@dimen/margin_extra_large"
       >
 
     <ImageView
@@ -113,17 +111,17 @@
       android:clickable="true"
       android:focusable="true"
       android:orientation="horizontal"
-      android:paddingBottom="8dp"
+      android:paddingBottom="@dimen/margin_extra_large"
       android:paddingEnd="@dimen/margin_bottom_sheet"
       android:paddingStart="@dimen/margin_bottom_sheet"
-      android:paddingTop="8dp"
+      android:paddingTop="@dimen/margin_extra_large"
       >
 
     <ImageView
         android:layout_width="@dimen/icon_size"
         android:layout_height="@dimen/icon_size"
         android:layout_marginEnd="@dimen/margin_extra_large"
-        android:src="@drawable/ic_comment_black"
+        android:src="@drawable/ic_delete_black"
         app:tint="@color/colorRed"
         />
 
@@ -132,7 +130,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:text="@string/delete"
-        android:textColor="@color/colorGrey"
+        android:textColor="@color/colorRed"
         />
 
   </LinearLayout>

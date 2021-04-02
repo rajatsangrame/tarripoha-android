@@ -28,6 +28,7 @@
   <string name="msg_new_word_plank">New word for %1$s</string>
 
   <string name="error_no_result">No result found</string>
+  <string name="error_no_quotes">No quotes found</string>
   <string name="error_no_internet">Unable to connect. Please check your internet connection</string>
   <string name="error_unable_to_fetch">Unable to fetch data</string>
   <string name="error_unable_to_process">Unable to process data</string>

@@ -14,7 +14,7 @@ android {
 
   defaultConfig {
     applicationId "com.tarripoha.android"
-    minSdkVersion 19
+    minSdkVersion 21
     multiDexEnabled true
     targetSdkVersion 29
     versionCode 20210322

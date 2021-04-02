@@ -1,6 +1,5 @@
 package com.tarripoha.android.ui.main
 
-import android.app.Activity
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -53,8 +52,9 @@ class CommentAdapter(
   ) {
 
     init {
-      itemView.setOnClickListener {
+      itemView.setOnLongClickListener {
         itemClickListener.onClick(position = adapterPosition, data = comments[adapterPosition])
+        true
       }
     }
 

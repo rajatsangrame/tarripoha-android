@@ -1,6 +1,7 @@
 package com.tarripoha.android.ui.main
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
@@ -18,6 +19,9 @@ import com.tarripoha.android.R
 import com.tarripoha.android.data.db.Comment
 import com.tarripoha.android.data.db.Word
 import com.tarripoha.android.databinding.FragmentWordDetailBinding
+import com.tarripoha.android.ui.OptionsBottomFragment
+import com.tarripoha.android.ui.OptionsBottomFragment.Option
+import com.tarripoha.android.ui.OptionsBottomFragment.OptionCLickListener
 import com.tarripoha.android.util.ItemLongClickListener
 import com.tarripoha.android.util.TPUtils
 
@@ -189,6 +193,11 @@ class WordDetailFragment : Fragment() {
         engMeaningTv.text = word.eng
         engMeaningTv.visibility = View.VISIBLE
       }
+      if (word.comments.isNullOrEmpty()) {
+        noCommentLayout.visibility = View.VISIBLE
+      } else {
+        noCommentLayout.visibility = View.GONE
+      }
       word.comments?.let { comments ->
         commentAdapter.setComments(comments)
       }
@@ -227,7 +236,16 @@ class WordDetailFragment : Fragment() {
   }
 
   private fun showOptionMenu(comment: Comment) {
-
+    val bottomSheet = OptionsBottomFragment.newInstance(
+        callback = object : OptionCLickListener {
+          override fun onClick(option: Option) {
+            Log.d(TAG, "onClick: $option} ${comment.comment}")
+            // no-op
+          }
+        },
+        bundle = Bundle()
+    )
+    bottomSheet.show(parentFragmentManager, OptionsBottomFragment.TAG)
   }
 
   // endregion
