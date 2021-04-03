@@ -32,6 +32,7 @@
         android:textColor="@color/colorPrimary"
         android:textSize="@dimen/text_huge"
         android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/more_btn"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="@string/word"
@@ -41,7 +42,7 @@
         android:id="@+id/meaning_tv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_normal"
+        android:paddingBottom="@dimen/margin_normal"
         android:textColor="@color/colorGrey"
         android:textSize="@dimen/text_large"
         app:layout_constraintEnd_toEndOf="parent"
@@ -54,7 +55,7 @@
         android:id="@+id/eng_meaning_tv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_normal"
+        android:paddingBottom="@dimen/margin_normal"
         android:textColor="@color/colorGrey"
         android:textSize="@dimen/text_large"
         android:textStyle="italic"
@@ -70,7 +71,7 @@
         android:id="@+id/added_by_tv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_normal"
+        android:paddingBottom="@dimen/margin_normal"
         android:textColor="@color/colorGrey"
         android:textSize="@dimen/text_normal"
         android:visibility="gone"
@@ -82,38 +83,65 @@
         />
 
     <ImageView
-        android:id="@+id/like_btn"
+        android:id="@+id/more_btn"
         android:layout_width="@dimen/icon_size"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/icon_size"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/ic_more_white"
+        app:layout_constraintBottom_toBottomOf="@+id/word_tv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/word_tv"
+        app:tint="@color/colorBlack"
+        />
+
+    <ImageView
+        android:id="@+id/like_btn"
+        android:layout_width="@dimen/icon_size"
+        android:layout_height="@dimen/icon_size"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:clickable="true"
         android:focusable="true"
         android:src="@drawable/ic_like_border_black"
-        app:layout_constraintEnd_toStartOf="@+id/share_btn"
-        app:layout_constraintTop_toTopOf="@+id/word_tv"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/added_by_tv"
         />
 
     <ImageView
         android:id="@+id/share_btn"
         android:layout_width="@dimen/icon_size"
         android:layout_height="@dimen/icon_size"
+        android:layout_marginStart="@dimen/margin_extra_large"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:clickable="true"
         android:focusable="true"
         android:src="@drawable/ic_share_black"
         app:layout_constraintBottom_toBottomOf="@+id/like_btn"
+        app:layout_constraintStart_toEndOf="@+id/like_btn"
+        app:layout_constraintTop_toTopOf="@+id/like_btn"
+        />
+
+    <ImageView
+        android:id="@+id/save_btn"
+        android:layout_width="@dimen/icon_size"
+        android:layout_height="@dimen/icon_size"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/ic_save_border_black"
+        app:layout_constraintBottom_toBottomOf="@+id/share_btn"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/word_tv"
+        app:layout_constraintTop_toTopOf="@+id/share_btn"
         />
 
     <LinearLayout
+        android:id="@+id/linearLayout2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin_extra_large"
         android:layout_marginTop="@dimen/margin_normal"
         android:orientation="horizontal"
-        app:layout_constraintStart_toStartOf="@+id/added_by_tv"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/added_by_tv"
         >
 
@@ -124,7 +152,7 @@
           android:layout_marginEnd="@dimen/margin_extra_large"
           android:text="12 Likes"
           android:visibility="gone"
-          tools:visibility="visible"
+          tools:visibility="gone"
           />
 
       <TextView
@@ -133,7 +161,7 @@
           android:layout_height="wrap_content"
           android:text="1 Comment"
           android:visibility="gone"
-          tools:visibility="visible"
+          tools:visibility="gone"
           />
 
     </LinearLayout>
@@ -211,6 +239,7 @@
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       >
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

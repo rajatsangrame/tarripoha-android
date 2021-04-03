@@ -50,11 +50,7 @@ class WordDetailFragment : Fragment() {
   }
 
   override fun onPrepareOptionsMenu(menu: Menu) {
-    menu.apply {
-      findItem(R.id.menu_more).isVisible = true
-      findItem(R.id.menu_search).isVisible = false
-      findItem(R.id.menu_info).isVisible = false
-    }
+    menu.clear()
     super.onPrepareOptionsMenu(menu)
   }
 
