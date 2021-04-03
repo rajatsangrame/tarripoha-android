@@ -1,7 +1,11 @@
-Version 0.3.0 [23 Mar 2021]
+Version 0.4.0
+
+________________________________
+Version 0.3.0 [2 April 2021]
 
 1. Search limit = 10
 2. Allow other words to search
+3. Word Detail Screen. Comments. Option Menu.
 
 ________________________________
 Version 0.2.2 [22 Mar 2021]
