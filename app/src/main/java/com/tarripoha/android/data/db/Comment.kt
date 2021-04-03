@@ -20,7 +20,8 @@ data class Comment(
   val id: String,
   val word: String,
   val comment: String,
-  var addedBy: String? = null,
+  var userId: String? = null,
+  var userName: String? = null,
   var popular: Double? = null,
   var dirty: Boolean? = null,
   var timestamp: Long? = null,
@@ -32,6 +33,6 @@ data class Comment(
     word: String,
     comment: String,
     time: Long,
-    addedBy: String
+    userName: String
   ) : this(id = id, word = word, comment = comment, timestamp = time)
 }

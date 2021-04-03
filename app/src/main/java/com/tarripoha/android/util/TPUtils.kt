@@ -82,7 +82,7 @@ object TPUtils {
         .show()
   }
 
-  fun getRandomUuid(length: Int = 8): String {
+  fun getRandomUuid(length: Int = 16): String {
     check(length <= 32) { "random string length cannot be more than than UUID class limit." }
     val uuid = UUID.randomUUID()
         .toString()
@@ -142,12 +142,14 @@ object TPUtils {
           }
         }
       } catch (e: Exception) {
-        FirebaseCrashlytics.getInstance().recordException(e)
+        FirebaseCrashlytics.getInstance()
+            .recordException(e)
         Log.e(TAG, "Error while modifying relativeTime. not changing it")
       }
       return relativeTime
     } catch (e: Exception) {
-      FirebaseCrashlytics.getInstance().recordException(e)
+      FirebaseCrashlytics.getInstance()
+          .recordException(e)
       Log.e(TAG, "Error while getting relativeTimeString og time :$date")
     }
     return ""

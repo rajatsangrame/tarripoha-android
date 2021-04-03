@@ -60,7 +60,7 @@ class CommentAdapter(
 
     override fun bind(position: Int) {
       val comment = comments[position]
-      val user = comment.addedBy ?: itemView.context.getString(R.string.user)
+      val user = comment.userName ?: itemView.context.getString(R.string.user)
 
 
       binding.apply {

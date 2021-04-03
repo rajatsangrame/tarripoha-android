@@ -29,15 +29,16 @@
         android:background="@android:color/transparent"
         android:focusable="true"
         android:maxLines="1"
+        android:paddingBottom="@dimen/margin_normal"
         android:textColor="@color/colorPrimary"
         android:textSize="@dimen/text_huge"
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/more_btn"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="@string/word"
         />
-
     <TextView
         android:id="@+id/meaning_tv"
         android:layout_width="0dp"
