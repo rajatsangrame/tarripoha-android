@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.tarripoha.android.helper.UserHelper
 
 /**
  * Created by Rajat Sangrame
@@ -23,5 +24,7 @@ abstract class BaseViewModel(val app: Application) : ViewModel() {
   fun getString(resId: Int) = app.applicationContext.getString(resId)
 
   fun getContext(): Context = app.applicationContext
+
+  fun getUser() = UserHelper.getUser()
 
 }

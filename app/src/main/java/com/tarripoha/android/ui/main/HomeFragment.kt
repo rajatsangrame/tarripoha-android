@@ -13,7 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.tarripoha.android.App
+import com.tarripoha.android.TPApp
 import com.tarripoha.android.data.db.Word
 import com.tarripoha.android.databinding.FragmentHomeBinding
 import com.tarripoha.android.ui.add.WordActivity
@@ -58,7 +58,7 @@ class HomeFragment : Fragment() {
   override fun onActivityCreated(savedInstanceState: Bundle?) {
     super.onActivityCreated(savedInstanceState)
     factory =
-      ViewModelProvider.AndroidViewModelFactory(App.get(requireContext()))
+      ViewModelProvider.AndroidViewModelFactory(TPApp.get(requireContext()))
 
     setupUI()
     fetchAllWord()

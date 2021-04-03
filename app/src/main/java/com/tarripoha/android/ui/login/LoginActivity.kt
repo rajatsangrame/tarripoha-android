@@ -3,7 +3,7 @@ package com.tarripoha.android.ui.login
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
-import com.tarripoha.android.App
+import com.tarripoha.android.TPApp
 import com.tarripoha.android.R
 import com.tarripoha.android.databinding.ActivityMainBinding
 import com.tarripoha.android.di.component.DaggerLoginActivityComponent
@@ -32,7 +32,7 @@ class LoginActivity : BaseActivity() {
     val component: LoginActivityComponent = DaggerLoginActivityComponent
         .builder()
         .applicationComponent(
-            App.get(this)
+            TPApp.get(this)
                 .getComponent()
         )
         .build()

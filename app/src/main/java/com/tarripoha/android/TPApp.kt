@@ -6,12 +6,13 @@ import com.tarripoha.android.di.component.ApplicationComponent
 import com.tarripoha.android.di.component.DaggerApplicationComponent
 import com.tarripoha.android.di.module.ApplicationModule
 import com.tarripoha.android.di.module.ContextModule
+import com.tarripoha.android.helper.PreferenceHelper
 
 /**
  * Created by Rajat Sangrame
  * http://github.com/rajatsangrame
  */
-class App : Application() {
+class TPApp : Application() {
 
   private var component: ApplicationComponent? = null
 
@@ -22,6 +23,8 @@ class App : Application() {
         .applicationModule(ApplicationModule(application = this))
         .contextModule(ContextModule(context = this))
         .build()
+
+    PreferenceHelper.init(this)
   }
 
   fun getComponent(): ApplicationComponent? {
@@ -30,8 +33,8 @@ class App : Application() {
 
   companion object {
     @JvmStatic
-    fun get(context: Context): App {
-      return context.applicationContext as App
+    fun get(context: Context): TPApp {
+      return context.applicationContext as TPApp
     }
   }
 }

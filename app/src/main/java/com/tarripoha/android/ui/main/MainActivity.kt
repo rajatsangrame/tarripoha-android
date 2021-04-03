@@ -1,5 +1,7 @@
 package com.tarripoha.android.ui.main
 
+import android.content.Context
+import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.Menu
@@ -14,7 +16,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import com.jakewharton.rxbinding2.widget.RxTextView
-import com.tarripoha.android.App
+import com.tarripoha.android.TPApp
 import com.tarripoha.android.R
 import com.tarripoha.android.R.color
 import com.tarripoha.android.databinding.ActivityMainBinding
@@ -40,6 +42,10 @@ class MainActivity : BaseActivity() {
   companion object {
     private const val SEARCH_DEBOUNCE_TIME_IN_MS = 300L
     private const val TAG = "MainActivity"
+
+    fun startMe(context: Context) {
+      context.startActivity(Intent(context, MainActivity::class.java))
+    }
   }
 
   // region Activity Related
@@ -114,7 +120,7 @@ class MainActivity : BaseActivity() {
     val component: MainActivityComponent = DaggerMainActivityComponent
         .builder()
         .applicationComponent(
-            App.get(this)
+            TPApp.get(this)
                 .getComponent()
         )
         .build()

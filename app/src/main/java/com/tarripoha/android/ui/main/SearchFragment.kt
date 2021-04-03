@@ -14,7 +14,7 @@ import androidx.lifecycle.*
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.tarripoha.android.App
+import com.tarripoha.android.TPApp
 import com.tarripoha.android.R
 import com.tarripoha.android.data.db.Word
 import com.tarripoha.android.databinding.FragmentSearchBinding
@@ -58,7 +58,7 @@ class SearchFragment : Fragment() {
     savedInstanceState: Bundle?
   ): View {
     binding = FragmentSearchBinding
-        .inflate(LayoutInflater.from(requireContext()), container, false)
+      .inflate(LayoutInflater.from(requireContext()), container, false)
     return binding.root
   }
 
@@ -71,7 +71,7 @@ class SearchFragment : Fragment() {
   override fun onActivityCreated(savedInstanceState: Bundle?) {
     super.onActivityCreated(savedInstanceState)
     factory =
-      ViewModelProvider.AndroidViewModelFactory(App.get(requireContext()))
+      ViewModelProvider.AndroidViewModelFactory(TPApp.get(requireContext()))
 
     setupUI()
   }
@@ -111,7 +111,7 @@ class SearchFragment : Fragment() {
 
   private fun setupRecyclerView() {
     val linearLayoutManager = LinearLayoutManager(
-        context, RecyclerView.VERTICAL, false
+      context, RecyclerView.VERTICAL, false
     )
     wordAdapter =
       WordAdapter(words = ArrayList(), itemClickListener = object : ItemClickListener<Word> {
@@ -139,24 +139,24 @@ class SearchFragment : Fragment() {
   private fun setupObservers() {
     viewModel.apply {
       getSearchWords()
-          .observe(viewLifecycleOwner, Observer {
-            it?.let {
-              Log.d(TAG, "setupObservers: getSearchWords: $it")
-              wordAdapter.setWordList(it)
-            }
-          })
+        .observe(viewLifecycleOwner, Observer {
+          it?.let {
+            Log.d(TAG, "setupObservers: getSearchWords: $it")
+            wordAdapter.setWordList(it)
+          }
+        })
 
       getQuery()
-          .observe(viewLifecycleOwner, Observer {
-            it?.let {
-              Log.d(TAG, "setupObservers: getQuery: $it")
-              if (it.isEmpty()) {
-                viewModel.setSearchWords(ArrayList())
-              } else {
-                viewModel.search(it)
-              }
+        .observe(viewLifecycleOwner, Observer {
+          it?.let {
+            Log.d(TAG, "setupObservers: getQuery: $it")
+            if (it.isEmpty()) {
+              viewModel.setSearchWords(ArrayList())
+            } else {
+              viewModel.search(it)
             }
-          })
+          }
+        })
     }
   }
 

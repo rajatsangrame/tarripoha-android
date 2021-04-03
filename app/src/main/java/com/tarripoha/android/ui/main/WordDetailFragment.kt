@@ -14,7 +14,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.tarripoha.android.App
+import com.tarripoha.android.TPApp
 import com.tarripoha.android.R
 import com.tarripoha.android.data.db.Comment
 import com.tarripoha.android.data.db.Word
@@ -80,7 +80,7 @@ class WordDetailFragment : Fragment() {
   override fun onActivityCreated(savedInstanceState: Bundle?) {
     super.onActivityCreated(savedInstanceState)
     factory =
-      ViewModelProvider.AndroidViewModelFactory(App.get(requireContext()))
+      ViewModelProvider.AndroidViewModelFactory(TPApp.get(requireContext()))
     if (viewModel.getWordDetail().value == null) {
       viewModel.setUserMessage(getString(R.string.error_unknown))
       return
