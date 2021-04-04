@@ -69,7 +69,7 @@ class CommentAdapter(
         avatarTv.text = user[0].toString()
 
         val time = TPUtils.getTime(itemView.context, comment.timestamp)
-        TPUtils.hideTVForEmptyText(timestampTv, time)
+        TPUtils.handleViewVisibility(timestampTv, time)
       }
     }
   }

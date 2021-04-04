@@ -19,7 +19,7 @@ import com.jakewharton.rxbinding2.widget.RxTextView
 import com.tarripoha.android.TPApp
 import com.tarripoha.android.R
 import com.tarripoha.android.R.color
-import com.tarripoha.android.databinding.ActivityMainBinding
+import com.tarripoha.android.databinding.LayoutToolbarWithNavigationBinding
 import com.tarripoha.android.di.component.DaggerMainActivityComponent
 import com.tarripoha.android.di.component.MainActivityComponent
 import com.tarripoha.android.ui.BaseActivity
@@ -36,7 +36,7 @@ class MainActivity : BaseActivity() {
   lateinit var factory: ViewModelFactory
   private lateinit var navController: NavController
   private lateinit var viewModel: MainViewModel
-  private lateinit var binding: ActivityMainBinding
+  private lateinit var binding: LayoutToolbarWithNavigationBinding
   private var compositeDisposable = CompositeDisposable()
 
   companion object {
@@ -52,11 +52,12 @@ class MainActivity : BaseActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    binding = ActivityMainBinding.inflate(layoutInflater)
+    binding = LayoutToolbarWithNavigationBinding.inflate(layoutInflater)
     setContentView(binding.root)
     getDependency()
     viewModel = ViewModelProvider(this, factory).get(MainViewModel::class.java)
     navController = findNavController(R.id.nav_host_fragment)
+    navController.setGraph(R.navigation.main_nav_graph)
     handleNavigation()
     setupUI()
   }

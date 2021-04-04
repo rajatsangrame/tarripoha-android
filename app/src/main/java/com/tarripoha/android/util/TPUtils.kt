@@ -163,7 +163,7 @@ object TPUtils {
     return thenYear == time.year
   }
 
-  fun hideTVForEmptyText(
+  fun handleViewVisibility(
     view: TextView?,
     text: String?
   ) {

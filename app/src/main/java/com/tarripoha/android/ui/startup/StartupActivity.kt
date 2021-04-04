@@ -10,6 +10,7 @@ import com.tarripoha.android.data.model.User
 import com.tarripoha.android.databinding.ActivityStartupBinding
 import com.tarripoha.android.helper.PreferenceHelper
 import com.tarripoha.android.helper.UserHelper
+import com.tarripoha.android.ui.login.LoginActivity
 import com.tarripoha.android.ui.main.MainActivity
 import java.lang.Exception
 
@@ -21,9 +22,11 @@ class StartupActivity : BaseActivity() {
     binding = ActivityStartupBinding.inflate(layoutInflater)
     setContentView(binding.root)
 
-    val userString: String? = PreferenceHelper.get<String>(PreferenceHelper.KEY_USER, "")
+    val userString: String = PreferenceHelper.get<String>(PreferenceHelper.KEY_USER, "")
+    val loginSkip: Boolean = PreferenceHelper.get<Boolean>(PreferenceHelper.KEY_LOGIN_SKIP, false)
+
     var user: User? = null
-    userString?.let {
+    userString.let {
       try {
         user = Gson().fromJson(userString, User::class.java)
       } catch (e: Exception) {
@@ -35,13 +38,16 @@ class StartupActivity : BaseActivity() {
 
     Handler().postDelayed({
       if (user != null) {
+        Log.i(TAG, "onCreate: user found")
         UserHelper.setUser(user = user)
+        MainActivity.startMe(this)
+      } else if (!loginSkip) {
+        LoginActivity.startMe(this)
       } else {
-        Log.i(TAG, "onCreate: user is null")
+        MainActivity.startMe(this)
       }
-      MainActivity.startMe(this)
       finish()
-    }, 2000)
+    }, 1000)
   }
 
   companion object {

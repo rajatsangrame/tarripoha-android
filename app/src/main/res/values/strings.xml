@@ -21,6 +21,10 @@
   <string name="user">User</string>
   <string name="comment">Comment</string>
   <string name="yesterday">Yesterday</string>
+  <string name="mobile_number">Mobile number</string>
+  <string name="next">Next</string>
+  <string name="submit">Submit</string>
+  <string name="skip">Skip</string>
 
   <string name="sample_time">12:35 PM</string>
   <string name="sample_likes">2 Likes</string>

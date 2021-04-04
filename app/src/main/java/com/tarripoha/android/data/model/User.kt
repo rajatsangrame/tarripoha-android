@@ -6,5 +6,6 @@ data class User(
   val email: String,
   val city: String,
   val comment: String,
+  val admin: Boolean,
   val timestamp: String,
 )

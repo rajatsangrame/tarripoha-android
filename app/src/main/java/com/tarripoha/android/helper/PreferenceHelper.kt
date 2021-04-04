@@ -15,6 +15,7 @@ object PreferenceHelper {
   //region Keys
 
   const val KEY_USER = "user"
+  const val KEY_LOGIN_SKIP = "login_skip"
 
   //endregion
 
@@ -33,7 +34,7 @@ object PreferenceHelper {
 
   inline fun <reified T> put(
     key: String,
-    value: Any?
+    value: Any
   ) {
     when (T::class) {
       String::class -> getPreferences().edit { putString(key, value as String) }
@@ -47,14 +48,14 @@ object PreferenceHelper {
 
   inline fun <reified T> get(
     key: String,
-    default: Any?
-  ): T? {
+    default: Any
+  ): T {
     return when (T::class) {
-      String::class -> getPreferences().getString(key, default as String) as T?
-      Int::class -> getPreferences().getInt(key, default as Int) as T?
-      Boolean::class -> getPreferences().getBoolean(key, default as Boolean) as T?
-      Float::class -> getPreferences().getFloat(key, default as Float) as T?
-      Long::class -> getPreferences().getLong(key, default as Long) as T?
+      String::class -> getPreferences().getString(key, default as String) as T
+      Int::class -> getPreferences().getInt(key, default as Int) as T
+      Boolean::class -> getPreferences().getBoolean(key, default as Boolean) as T
+      Float::class -> getPreferences().getFloat(key, default as Float) as T
+      Long::class -> getPreferences().getLong(key, default as Long) as T
       else -> throw UnsupportedOperationException(ERROR_NOT_IMPLEMENTED)
     }
   }
