@@ -1,4 +1,4 @@
-package com.tarripoha.android.helper
+package com.tarripoha.android.util.helper
 
 import android.app.Application
 import com.tarripoha.android.R

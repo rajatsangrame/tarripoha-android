@@ -4,7 +4,7 @@ import android.app.Application
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.tarripoha.android.helper.UserHelper
+import com.tarripoha.android.util.helper.UserHelper
 
 /**
  * Created by Rajat Sangrame

@@ -6,47 +6,61 @@
     android:layout_height="match_parent"
     >
 
-  <com.google.android.material.textfield.TextInputLayout
-      android:id="@+id/textInputLayout"
-      android:layout_width="match_parent"
+  <androidx.constraintlayout.widget.ConstraintLayout
+      android:layout_width="0dp"
       android:layout_height="wrap_content"
-      android:layout_margin="@dimen/margin_wide_distance"
+      android:layout_marginTop="150dp"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent"
       >
 
-    <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/input_et"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_wide_distance"
+        android:focusable="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:hint="@string/mobile_number"
+        >
+      <com.google.android.material.textfield.TextInputEditText
+          android:id="@+id/input_et"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:focusable="true"
+          android:imeOptions="actionDone"
+          android:maxLines="1"
+          />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/action_btn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_extra_large"
+        android:enabled="false"
+        app:layout_constraintEnd_toEndOf="@+id/textInputLayout"
+        app:layout_constraintStart_toStartOf="@+id/textInputLayout"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout"
+        tools:text="@string/next"
         />
-
-  </com.google.android.material.textfield.TextInputLayout>
-
-  <Button
-      android:id="@+id/action_btn"
-      android:layout_width="0dp"
-      android:layout_height="wrap_content"
-      android:layout_marginTop="@dimen/margin_extra_large"
-      android:enabled="false"
-      app:layout_constraintEnd_toEndOf="@+id/textInputLayout"
-      app:layout_constraintStart_toStartOf="@+id/textInputLayout"
-      app:layout_constraintTop_toBottomOf="@+id/textInputLayout"
-      tools:text="@string/next"
-      />
-  <TextView
-      android:id="@+id/optional_tv"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginTop="@dimen/margin_normal"
-      android:visibility="gone"
-      app:layout_constraintEnd_toEndOf="@+id/action_btn"
-      app:layout_constraintStart_toStartOf="@+id/action_btn"
-      app:layout_constraintTop_toBottomOf="@+id/action_btn"
-      tools:text="@string/skip"
-      tools:visibility="visible"
-      />
+    <TextView
+        android:id="@+id/optional_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingEnd="@dimen/margin_normal"
+        android:paddingStart="@dimen/margin_normal"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@+id/action_btn"
+        app:layout_constraintStart_toStartOf="@+id/action_btn"
+        app:layout_constraintTop_toBottomOf="@+id/action_btn"
+        tools:text="@string/skip"
+        tools:visibility="visible"
+        />
+  </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

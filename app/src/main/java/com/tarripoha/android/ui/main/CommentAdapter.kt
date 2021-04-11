@@ -9,6 +9,7 @@ import com.tarripoha.android.data.db.Comment
 import com.tarripoha.android.databinding.LayoutItemCommentBinding
 import com.tarripoha.android.util.ItemLongClickListener
 import com.tarripoha.android.util.TPUtils
+import com.tarripoha.android.util.setTextWithVisibility
 
 class CommentAdapter(
   private var comments: MutableList<Comment>,
@@ -69,7 +70,7 @@ class CommentAdapter(
         avatarTv.text = user[0].toString()
 
         val time = TPUtils.getTime(itemView.context, comment.timestamp)
-        TPUtils.handleViewVisibility(timestampTv, time)
+        timestampTv.setTextWithVisibility(time)
       }
     }
   }

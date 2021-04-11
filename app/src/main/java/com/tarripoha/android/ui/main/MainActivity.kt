@@ -25,6 +25,7 @@ import com.tarripoha.android.di.component.MainActivityComponent
 import com.tarripoha.android.ui.BaseActivity
 import com.tarripoha.android.util.TPUtils
 import com.tarripoha.android.util.ViewModelFactory
+import com.tarripoha.android.util.toggleVisibility
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import java.util.concurrent.TimeUnit
@@ -194,24 +195,13 @@ class MainActivity : BaseActivity() {
           .subscribe {
             viewModel.setQuery(it.toString())
           }
-      setOnEditorActionListener { _, actionId, _ ->
-        if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-          // no-op
-        }
-        false
-      }
       compositeDisposable.add(d)
       doAfterTextChanged {
         it?.let { editable ->
-          checkClearBtnVisibility(editable.toString())
+          binding.toolbarLayout.clearBtn.toggleVisibility(editable)
         }
       }
     }
-  }
-
-  private fun checkClearBtnVisibility(query: String) {
-    if (query.isNotEmpty()) binding.toolbarLayout.clearBtn.visibility = View.VISIBLE
-    else binding.toolbarLayout.clearBtn.visibility = View.GONE
   }
 
   private fun setupListeners() {

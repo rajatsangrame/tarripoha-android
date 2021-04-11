@@ -163,17 +163,4 @@ object TPUtils {
     return thenYear == time.year
   }
 
-  fun handleViewVisibility(
-    view: TextView?,
-    text: String?
-  ) {
-    view?.let {
-      if (text.isNullOrEmpty()) {
-        view.visibility = View.GONE
-      } else {
-        view.text = text
-        view.visibility = View.VISIBLE
-      }
-    }
-  }
 }

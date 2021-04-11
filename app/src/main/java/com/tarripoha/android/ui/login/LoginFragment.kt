@@ -1,18 +1,26 @@
 package com.tarripoha.android.ui.login
 
 import android.os.Bundle
+import android.os.Handler
 import android.text.InputType
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.*
+import androidx.navigation.fragment.findNavController
 import com.tarripoha.android.TPApp
 import com.tarripoha.android.R
 import com.tarripoha.android.databinding.LayoutTextInputWithButtonBinding
+import com.tarripoha.android.ui.main.MainActivity
 import com.tarripoha.android.util.TPUtils
+import com.tarripoha.android.util.isValidNumber
+import com.tarripoha.android.util.setTextWithVisibility
+import com.tarripoha.android.util.toggleIsEnable
 
 class LoginFragment : Fragment() {
 
@@ -62,24 +70,72 @@ class LoginFragment : Fragment() {
 
   private fun setupUI() {
     binding.inputEt.apply {
-      hint = getString(R.string.mobile_number)
       inputType = InputType.TYPE_CLASS_PHONE
       doAfterTextChanged {
         it?.let { _ ->
-
+          binding.actionBtn.toggleIsEnable(it)
         }
+      }
+      setOnEditorActionListener { _, actionId, _ ->
+        if (actionId == EditorInfo.IME_ACTION_DONE) {
+          // no-op
+          text?.let {
+            val valid = validateNumber()
+            if (valid) {
+              processLogin(it.toString())
+            }
+            return@setOnEditorActionListener !valid
+          }
+        }
+        true
       }
     }
     binding.apply {
+      textInputLayout.hint = getString(R.string.mobile_number)
       actionBtn.setText(R.string.next)
-      TPUtils.handleViewVisibility(optionalTv, getString(R.string.skip))
+      optionalTv.setTextWithVisibility(getString(R.string.skip))
     }
     setupListeners()
     setupObservers()
+    showKeyboard()
   }
 
   private fun setupObservers() {
     // no-op
+  }
+
+  private fun showKeyboard() {
+    Handler().postDelayed({
+      TPUtils.showKeyboard(context = requireContext(), view = binding.inputEt)
+    }, 500)
+  }
+
+  private fun validateNumber(): Boolean {
+    binding.inputEt.text?.let {
+      val valid = it.isValidNumber()
+      if (!valid) {
+        binding.inputEt.error = getString(R.string.msg_number_not_valid)
+      }
+      return valid
+    }
+    return false
+  }
+
+  private fun processLogin() {
+    binding.inputEt.text?.let {
+      if (validateNumber()) {
+        processLogin(it.toString())
+        TPUtils.hideKeyboard(context = requireContext(), view = binding.inputEt)
+      }
+    }
+  }
+
+  private fun processLogin(phone: String) {
+    Log.i(TAG, "processLogin: $phone")
+  }
+
+  private fun navigateToOtpVerifyFragment() {
+    findNavController().navigate(R.id.action_LoginFragment_to_OtpVerifyFragment)
   }
 
   // endregion
@@ -89,10 +145,12 @@ class LoginFragment : Fragment() {
   private fun setupListeners() {
     binding.apply {
       actionBtn.setOnClickListener {
-
+        processLogin()
       }
       optionalTv.setOnClickListener {
-
+        //Skip
+        MainActivity.startMe(requireContext())
+        activity?.finish()
       }
     }
   }

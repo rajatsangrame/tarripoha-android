@@ -8,8 +8,8 @@ import com.google.gson.Gson
 import com.tarripoha.android.ui.BaseActivity
 import com.tarripoha.android.data.model.User
 import com.tarripoha.android.databinding.ActivityStartupBinding
-import com.tarripoha.android.helper.PreferenceHelper
-import com.tarripoha.android.helper.UserHelper
+import com.tarripoha.android.util.helper.PreferenceHelper
+import com.tarripoha.android.util.helper.UserHelper
 import com.tarripoha.android.ui.login.LoginActivity
 import com.tarripoha.android.ui.main.MainActivity
 import java.lang.Exception

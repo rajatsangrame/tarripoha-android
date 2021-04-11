@@ -29,7 +29,8 @@
   <string name="sample_time">12:35 PM</string>
   <string name="sample_likes">2 Likes</string>
 
-  <string name="msg_new_word_plank">New word for %1$s</string>
+  <string name="msg_new_word_plank">Suggest word for %1$s</string>
+  <string name="msg_number_not_valid">Enter valid number</string>
 
   <string name="error_no_result">No result found</string>
   <string name="error_no_quotes">No quotes found</string>

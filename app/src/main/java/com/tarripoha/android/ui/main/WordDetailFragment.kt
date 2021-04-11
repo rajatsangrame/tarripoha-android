@@ -24,6 +24,8 @@ import com.tarripoha.android.ui.OptionsBottomFragment.Option
 import com.tarripoha.android.ui.OptionsBottomFragment.OptionCLickListener
 import com.tarripoha.android.util.ItemLongClickListener
 import com.tarripoha.android.util.TPUtils
+import com.tarripoha.android.util.setTextWithVisibility
+import com.tarripoha.android.util.toggleVisibility
 
 class WordDetailFragment : Fragment() {
 
@@ -185,15 +187,8 @@ class WordDetailFragment : Fragment() {
     binding.apply {
       wordTv.text = word.name
       meaningTv.text = word.meaning
-      if (!word.eng.isNullOrEmpty()) {
-        engMeaningTv.text = word.eng
-        engMeaningTv.visibility = View.VISIBLE
-      }
-      if (word.comments.isNullOrEmpty()) {
-        noCommentLayout.visibility = View.VISIBLE
-      } else {
-        noCommentLayout.visibility = View.GONE
-      }
+      engMeaningTv.setTextWithVisibility(word.eng)
+      noCommentLayout.toggleVisibility(word.comments)
       word.comments?.let { comments ->
         commentAdapter.setComments(comments)
       }

@@ -6,7 +6,7 @@ import com.tarripoha.android.di.component.ApplicationComponent
 import com.tarripoha.android.di.component.DaggerApplicationComponent
 import com.tarripoha.android.di.module.ApplicationModule
 import com.tarripoha.android.di.module.ContextModule
-import com.tarripoha.android.helper.PreferenceHelper
+import com.tarripoha.android.util.helper.PreferenceHelper
 
 /**
  * Created by Rajat Sangrame
