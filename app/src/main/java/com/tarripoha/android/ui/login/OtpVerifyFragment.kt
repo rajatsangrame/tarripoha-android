@@ -1,10 +1,12 @@
 package com.tarripoha.android.ui.login
 
 import android.os.Bundle
+import android.os.Handler
 import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -12,6 +14,8 @@ import androidx.lifecycle.*
 import com.tarripoha.android.TPApp
 import com.tarripoha.android.R
 import com.tarripoha.android.databinding.LayoutTextInputWithButtonBinding
+import com.tarripoha.android.util.TPUtils
+import com.tarripoha.android.util.toggleIsEnable
 
 class OtpVerifyFragment : Fragment() {
 
@@ -60,18 +64,53 @@ class OtpVerifyFragment : Fragment() {
   // region Helper Methods
 
   private fun setupUI() {
+    setupEditText()
+    setupListeners()
+    setupObservers()
+    showKeyboard()
+    binding.apply {
+      actionBtn.setText(R.string.submit)
+      textInputLayout.hint = getString(R.string.otp)
+    }
+  }
+
+  private fun setupEditText() {
     binding.inputEt.apply {
-      hint = getString(R.string.mobile_number)
       inputType = InputType.TYPE_CLASS_PHONE
       doAfterTextChanged {
         it?.let { _ ->
-
+          binding.actionBtn.toggleIsEnable(it)
         }
       }
+      setOnEditorActionListener { _, actionId, _ ->
+        if (actionId == EditorInfo.IME_ACTION_DONE) {
+          text?.let {
+            val valid = validateOtp()
+            if (valid) {
+              viewModel.verifyOtp(it.toString(), requireActivity())
+            }
+            return@setOnEditorActionListener !valid
+          }
+        }
+        true
+      }
     }
-    binding.actionBtn.setText(R.string.submit)
-    setupListeners()
-    setupObservers()
+  }
+
+  private fun validateOtp(): Boolean {
+    binding.inputEt.text.let {
+      val valid = !it.isNullOrEmpty()
+      if (!valid) {
+        binding.inputEt.error = getString(R.string.msg_number_not_valid)
+      }
+      return valid
+    }
+  }
+
+  private fun showKeyboard() {
+    Handler().postDelayed({
+      TPUtils.showKeyboard(context = requireContext(), view = binding.inputEt)
+    }, 500)
   }
 
   private fun setupObservers() {
@@ -84,7 +123,12 @@ class OtpVerifyFragment : Fragment() {
 
   private fun setupListeners() {
     binding.actionBtn.setOnClickListener {
-
+      binding.inputEt.text?.let {
+        if (validateOtp()) {
+          viewModel.verifyOtp(it.toString(), requireActivity())
+          TPUtils.hideKeyboard(context = requireContext(), view = binding.inputEt)
+        }
+      }
     }
   }
 

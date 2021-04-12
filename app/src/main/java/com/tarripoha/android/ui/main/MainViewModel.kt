@@ -9,7 +9,6 @@ import com.tarripoha.android.data.db.Word
 import com.tarripoha.android.ui.BaseViewModel
 import com.tarripoha.android.R
 import com.tarripoha.android.data.db.Comment
-import com.tarripoha.android.util.TPUtils
 import java.lang.Exception
 import javax.inject.Inject
 
@@ -67,14 +66,6 @@ class MainViewModel @Inject constructor(
   fun getPostComment() = postComment
 
   // Helper Functions
-
-  private fun isInternetConnected(): Boolean {
-    if (!TPUtils.isNetworkAvailable(getContext())) {
-      setUserMessage(getString(R.string.error_no_internet))
-      return false
-    }
-    return true
-  }
 
   fun addNewWord(word: Word) {
     if (!isInternetConnected()) {

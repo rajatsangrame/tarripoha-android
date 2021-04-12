@@ -3,7 +3,6 @@ package com.tarripoha.android.ui.login
 import android.os.Bundle
 import android.os.Handler
 import android.text.InputType
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -69,6 +68,18 @@ class LoginFragment : Fragment() {
   // region Helper Methods
 
   private fun setupUI() {
+    setupEditText()
+    setupListeners()
+    setupObservers()
+    showKeyboard()
+    binding.apply {
+      textInputLayout.hint = getString(R.string.mobile_number)
+      actionBtn.setText(R.string.next)
+      optionalTv.setTextWithVisibility(getString(R.string.skip))
+    }
+  }
+
+  private fun setupEditText() {
     binding.inputEt.apply {
       inputType = InputType.TYPE_CLASS_PHONE
       doAfterTextChanged {
@@ -90,18 +101,15 @@ class LoginFragment : Fragment() {
         true
       }
     }
-    binding.apply {
-      textInputLayout.hint = getString(R.string.mobile_number)
-      actionBtn.setText(R.string.next)
-      optionalTv.setTextWithVisibility(getString(R.string.skip))
-    }
-    setupListeners()
-    setupObservers()
-    showKeyboard()
   }
 
   private fun setupObservers() {
-    // no-op
+    viewModel.getIsCodeSent()
+        .observe(viewLifecycleOwner, Observer {
+          it?.let {
+            navigateToOtpVerifyFragment()
+          }
+        })
   }
 
   private fun showKeyboard() {
@@ -130,8 +138,14 @@ class LoginFragment : Fragment() {
     }
   }
 
-  private fun processLogin(phone: String) {
-    Log.i(TAG, "processLogin: $phone")
+  private fun processLogin(
+    number: String,
+  ) {
+    val phone = "+91$number"
+    viewModel.processLogin(
+        phone = phone,
+        activity = requireActivity()
+    )
   }
 
   private fun navigateToOtpVerifyFragment() {

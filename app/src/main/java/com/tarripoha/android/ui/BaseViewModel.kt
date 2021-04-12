@@ -4,6 +4,8 @@ import android.app.Application
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.tarripoha.android.R
+import com.tarripoha.android.util.TPUtils
 import com.tarripoha.android.util.helper.UserHelper
 
 /**
@@ -26,5 +28,13 @@ abstract class BaseViewModel(val app: Application) : ViewModel() {
   fun getContext(): Context = app.applicationContext
 
   fun getUser() = UserHelper.getUser()
+
+  fun isInternetConnected(): Boolean {
+    if (!TPUtils.isNetworkAvailable(getContext())) {
+      setUserMessage(getString(R.string.error_no_internet))
+      return false
+    }
+    return true
+  }
 
 }

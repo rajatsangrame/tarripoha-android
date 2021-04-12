@@ -1,8 +1,13 @@
 package com.tarripoha.android.data
 
+import android.app.Activity
 import android.content.Context
 import android.os.Handler
 import android.util.Log
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.PhoneAuthOptions
+import com.google.firebase.auth.PhoneAuthProvider
+import com.google.firebase.auth.PhoneAuthProvider.OnVerificationStateChangedCallbacks
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -194,4 +199,5 @@ class Repository(
     private const val LIMIT_TO_FIRST = 10
     private const val TAG = "Repository"
   }
+
 }
