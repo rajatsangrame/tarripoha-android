@@ -5,7 +5,7 @@ data class User(
   val name: String,
   val email: String,
   val city: String,
-  val comment: String,
+  val dirty: Boolean,
   val admin: Boolean,
   val timestamp: String,
 )
