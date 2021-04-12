@@ -1,6 +1,7 @@
 package com.tarripoha.android.util.helper
 
 import com.tarripoha.android.data.model.User
+import com.tarripoha.android.util.toJsonString
 
 /**
  * Created by Rajat Sangrame
@@ -12,6 +13,9 @@ object UserHelper {
 
   fun setUser(user: User?) {
     this.user = user
+    user?.let {
+      PreferenceHelper.put<String>(PreferenceHelper.KEY_USER, it.toJsonString())
+    }
   }
 
   fun getUser() = user

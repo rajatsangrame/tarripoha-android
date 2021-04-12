@@ -3,6 +3,7 @@ package com.tarripoha.android.ui.login
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -12,6 +13,7 @@ import com.tarripoha.android.databinding.LayoutToolbarWithNavigationBinding
 import com.tarripoha.android.di.component.DaggerLoginActivityComponent
 import com.tarripoha.android.di.component.LoginActivityComponent
 import com.tarripoha.android.ui.BaseActivity
+import com.tarripoha.android.util.TPUtils
 
 import com.tarripoha.android.util.ViewModelFactory
 import javax.inject.Inject
@@ -40,6 +42,7 @@ class LoginActivity : BaseActivity() {
     navController = findNavController(R.id.nav_host_fragment)
     navController.setGraph(R.navigation.login_nav_graph)
     handleNavigation()
+    setupObservers()
   }
 
   private fun getDependency() {
@@ -58,5 +61,11 @@ class LoginActivity : BaseActivity() {
       when (destination.id) {
       }
     }
+  }
+  private fun setupObservers() {
+    viewModel.getUserMessage()
+      .observe(this, Observer {
+        TPUtils.showSnackBar(this, it)
+      })
   }
 }

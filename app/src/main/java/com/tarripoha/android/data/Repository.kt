@@ -1,13 +1,8 @@
 package com.tarripoha.android.data
 
-import android.app.Activity
 import android.content.Context
 import android.os.Handler
 import android.util.Log
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.PhoneAuthOptions
-import com.google.firebase.auth.PhoneAuthProvider
-import com.google.firebase.auth.PhoneAuthProvider.OnVerificationStateChangedCallbacks
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -17,6 +12,7 @@ import com.google.firebase.ktx.Firebase
 import com.tarripoha.android.data.db.Comment
 import com.tarripoha.android.data.db.Word
 import com.tarripoha.android.data.db.WordDatabase
+import com.tarripoha.android.data.model.User
 import com.tarripoha.android.data.rest.RetrofitApi
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
@@ -34,6 +30,7 @@ class Repository(
   private val ioExecutor: Executor by lazy { Executors.newSingleThreadExecutor() }
   private val wordRef: DatabaseReference by lazy { Firebase.database.getReference("word") }
   private val commentRef: DatabaseReference by lazy { Firebase.database.getReference("comment") }
+  private val userRef: DatabaseReference by lazy { Firebase.database.getReference("user") }
 
   /**
    * Check if the [DatabaseReference] is connected
@@ -188,6 +185,53 @@ class Repository(
           failure(it)
         }
 
+    checkFirebaseConnection(
+        connectionStatus = {
+          connectionStatus(it)
+        }
+    )
+  }
+
+  fun fetchUserInfo(
+    phone: String,
+    success: (DataSnapshot) -> Unit,
+    failure: (DatabaseError) -> Unit,
+    connectionStatus: (Boolean) -> Unit
+  ) {
+    val query = userRef.child(phone)
+    query.addListenerForSingleValueEvent(
+        object : ValueEventListener {
+          override fun onDataChange(snapshot: DataSnapshot) {
+            success(snapshot)
+          }
+
+          override fun onCancelled(error: DatabaseError) {
+            failure(error)
+          }
+        }
+    )
+    checkFirebaseConnection(
+        connectionStatus = {
+          connectionStatus(it)
+        }
+    )
+  }
+
+  fun createUser(
+    phone: String,
+    user: User,
+    success: () -> Unit,
+    failure: () -> Unit,
+    connectionStatus: (Boolean) -> Unit
+  ) {
+    userRef.child(phone)
+        .setValue(user)
+        .addOnSuccessListener {
+          success()
+        }
+        .addOnFailureListener {
+          failure()
+        }
     checkFirebaseConnection(
         connectionStatus = {
           connectionStatus(it)

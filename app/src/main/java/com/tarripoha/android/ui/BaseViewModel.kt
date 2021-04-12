@@ -5,8 +5,8 @@ import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.tarripoha.android.R
+import com.tarripoha.android.data.model.User
 import com.tarripoha.android.util.TPUtils
-import com.tarripoha.android.util.helper.UserHelper
 
 /**
  * Created by Rajat Sangrame
@@ -17,6 +17,8 @@ abstract class BaseViewModel(val app: Application) : ViewModel() {
 
   private val userMessage: MutableLiveData<String> = MutableLiveData()
 
+  private val user = MutableLiveData<User>()
+
   fun setUserMessage(msg: String) {
     userMessage.value = msg
   }
@@ -25,9 +27,18 @@ abstract class BaseViewModel(val app: Application) : ViewModel() {
 
   fun getString(resId: Int) = app.applicationContext.getString(resId)
 
+  fun getString(
+    resId: Int,
+    value: String
+  ) = app.applicationContext.getString(resId, value)
+
   fun getContext(): Context = app.applicationContext
 
-  fun getUser() = UserHelper.getUser()
+  fun setUser(user: User) {
+    this.user.value = user
+  }
+
+  fun getUser() = user
 
   fun isInternetConnected(): Boolean {
     if (!TPUtils.isNetworkAvailable(getContext())) {

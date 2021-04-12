@@ -59,7 +59,7 @@ class LoginFragment : Fragment() {
     super.onActivityCreated(savedInstanceState)
     factory =
       ViewModelProvider.AndroidViewModelFactory(TPApp.get(requireContext()))
-
+    viewModel.resetLoginParams()
     setupUI()
   }
 
@@ -107,7 +107,13 @@ class LoginFragment : Fragment() {
     viewModel.getIsCodeSent()
         .observe(viewLifecycleOwner, Observer {
           it?.let {
-            navigateToOtpVerifyFragment()
+            if (it) navigateToOtpVerifyFragment()
+          }
+        })
+    viewModel.getCreateNewUser()
+        .observe(viewLifecycleOwner, Observer {
+          it?.let {
+            if (it) navigateToCreateUserFragment()
           }
         })
   }
@@ -150,6 +156,9 @@ class LoginFragment : Fragment() {
 
   private fun navigateToOtpVerifyFragment() {
     findNavController().navigate(R.id.action_LoginFragment_to_OtpVerifyFragment)
+  }
+
+  private fun navigateToCreateUserFragment() {
   }
 
   // endregion

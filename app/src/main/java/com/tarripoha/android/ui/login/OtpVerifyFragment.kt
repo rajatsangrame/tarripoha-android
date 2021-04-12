@@ -14,7 +14,9 @@ import androidx.lifecycle.*
 import com.tarripoha.android.TPApp
 import com.tarripoha.android.R
 import com.tarripoha.android.databinding.LayoutTextInputWithButtonBinding
+import com.tarripoha.android.ui.main.MainActivity
 import com.tarripoha.android.util.TPUtils
+import com.tarripoha.android.util.helper.UserHelper
 import com.tarripoha.android.util.toggleIsEnable
 
 class OtpVerifyFragment : Fragment() {
@@ -114,7 +116,14 @@ class OtpVerifyFragment : Fragment() {
   }
 
   private fun setupObservers() {
-    // no-op
+    viewModel.getUser()
+        .observe(viewLifecycleOwner, Observer { user ->
+          user?.let {
+            UserHelper.setUser(it)
+            MainActivity.startMe(requireContext())
+            activity?.finish()
+          }
+        })
   }
 
   // endregion

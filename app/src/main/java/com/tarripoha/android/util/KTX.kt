@@ -2,6 +2,7 @@ package com.tarripoha.android.util
 
 import android.view.View
 import android.widget.TextView
+import com.google.gson.Gson
 import java.util.regex.Pattern
 
 fun CharSequence.isValidNumber(): Boolean {
@@ -30,3 +31,5 @@ fun TextView.setTextWithVisibility(inputText: CharSequence?) {
 fun View.toggleIsEnable(inputText: CharSequence?) {
   isEnabled = !inputText.isNullOrEmpty()
 }
+
+fun Any.toJsonString(): String = Gson().toJson(this)
