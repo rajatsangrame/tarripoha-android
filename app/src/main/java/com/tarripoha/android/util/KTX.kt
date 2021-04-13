@@ -1,12 +1,21 @@
 package com.tarripoha.android.util
 
+import android.util.Patterns
 import android.view.View
 import android.widget.TextView
 import com.google.gson.Gson
 import java.util.regex.Pattern
 
-fun CharSequence.isValidNumber(): Boolean {
+fun CharSequence?.isValidNumber(): Boolean {
+  if (isNullOrEmpty()) return false
   return Pattern.matches("[1-9][0-9]{9}", this)
+}
+
+fun CharSequence?.isValidEmail(): Boolean {
+  if (isNullOrEmpty()) return false
+  val pattern = Patterns.EMAIL_ADDRESS
+  return pattern.matcher(this)
+      .matches()
 }
 
 fun View.toggleVisibility(inputText: CharSequence?) {

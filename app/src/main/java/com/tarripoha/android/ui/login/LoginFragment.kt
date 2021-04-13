@@ -84,6 +84,7 @@ class LoginFragment : Fragment() {
       inputType = InputType.TYPE_CLASS_PHONE
       doAfterTextChanged {
         it?.let { _ ->
+          error = null
           binding.actionBtn.toggleIsEnable(it)
         }
       }
@@ -110,12 +111,6 @@ class LoginFragment : Fragment() {
             if (it) navigateToOtpVerifyFragment()
           }
         })
-    viewModel.getCreateNewUser()
-        .observe(viewLifecycleOwner, Observer {
-          it?.let {
-            if (it) navigateToCreateUserFragment()
-          }
-        })
   }
 
   private fun showKeyboard() {
@@ -126,7 +121,7 @@ class LoginFragment : Fragment() {
 
   private fun validateNumber(): Boolean {
     binding.inputEt.text?.let {
-      val valid = it.isValidNumber()
+      val valid = it.trim().isValidNumber()
       if (!valid) {
         binding.inputEt.error = getString(R.string.msg_number_not_valid)
       }
@@ -138,7 +133,7 @@ class LoginFragment : Fragment() {
   private fun processLogin() {
     binding.inputEt.text?.let {
       if (validateNumber()) {
-        processLogin(it.toString())
+        processLogin(it.toString().trim())
         TPUtils.hideKeyboard(context = requireContext(), view = binding.inputEt)
       }
     }
@@ -156,9 +151,6 @@ class LoginFragment : Fragment() {
 
   private fun navigateToOtpVerifyFragment() {
     findNavController().navigate(R.id.action_LoginFragment_to_OtpVerifyFragment)
-  }
-
-  private fun navigateToCreateUserFragment() {
   }
 
   // endregion

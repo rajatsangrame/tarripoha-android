@@ -2,7 +2,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main_nav_graph"
+    android:id="@+id/login_nav_graph"
     app:startDestination="@id/nav_login">
 
   <fragment
@@ -26,6 +26,22 @@
       android:id="@+id/nav_otp_verify"
       android:label="OtpVerifyFragment"
       android:name="com.tarripoha.android.ui.login.OtpVerifyFragment"
-      tools:layout="@layout/layout_text_input_with_button" />
+      tools:layout="@layout/layout_text_input_with_button">
+
+    <action
+        android:id="@+id/action_OtpVerifyFragment_to_CreateUserFragment"
+        app:destination="@+id/nav_create_user"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right" />
+
+  </fragment>
+
+  <fragment
+      android:id="@+id/nav_create_user"
+      android:label="CreateUserFragment"
+      android:name="com.tarripoha.android.ui.login.CreateUserFragment"
+      tools:layout="@layout/fragment_create_user" />
 
 </navigation>

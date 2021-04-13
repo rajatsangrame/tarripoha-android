@@ -57,9 +57,6 @@ class MainActivity : BaseActivity() {
     setContentView(binding.root)
     getDependency()
     viewModel = ViewModelProvider(this, factory).get(MainViewModel::class.java)
-    navController = findNavController(R.id.nav_host_fragment)
-    navController.setGraph(R.navigation.main_nav_graph)
-    handleNavigation()
     setupUI()
   }
 
@@ -72,7 +69,7 @@ class MainActivity : BaseActivity() {
   override fun onOptionsItemSelected(item: MenuItem): Boolean {
     return when (item.itemId) {
       android.R.id.home -> {
-        hideKeyboard()
+        hideKeyboard(binding.toolbarLayout.searchEt)
         super.onBackPressed()
         true
       }
@@ -108,6 +105,9 @@ class MainActivity : BaseActivity() {
     setupObservers()
     setupListeners()
     setupSearchEditText()
+    navController = findNavController(R.id.nav_host_fragment)
+    navController.setGraph(R.navigation.main_nav_graph)
+    handleNavigation()
   }
 
   private fun setupToolbar() {
@@ -216,10 +216,6 @@ class MainActivity : BaseActivity() {
 
   private fun showKeyboard() {
     TPUtils.showKeyboard(context = this, view = binding.toolbarLayout.searchEt)
-  }
-
-  private fun hideKeyboard() {
-    TPUtils.hideKeyboard(context = this, view = binding.toolbarLayout.searchEt)
   }
 
   //endregion

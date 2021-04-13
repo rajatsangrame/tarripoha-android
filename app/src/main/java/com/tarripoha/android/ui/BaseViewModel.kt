@@ -2,6 +2,7 @@ package com.tarripoha.android.ui
 
 import android.app.Application
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.tarripoha.android.R
@@ -21,6 +22,7 @@ abstract class BaseViewModel(val app: Application) : ViewModel() {
 
   fun setUserMessage(msg: String) {
     userMessage.value = msg
+    Log.i(TAG, "setUserMessage: $msg")
   }
 
   fun getUserMessage() = userMessage
@@ -48,4 +50,7 @@ abstract class BaseViewModel(val app: Application) : ViewModel() {
     return true
   }
 
+  companion object {
+    private const val TAG = "BaseViewModel"
+  }
 }

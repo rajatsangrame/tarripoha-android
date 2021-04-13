@@ -12,7 +12,16 @@ data class User(
   val timestamp: Long,
 ) {
   constructor() : this(
-      id = "", name = "", phone = "", email = "",
-      admin = false, timestamp = 0L
+      id = "", name = "", phone = "", email = "", timestamp = 0L
+  )
+
+  constructor(
+    id: String,
+    name: String,
+    phone: String,
+    email: String,
+    timestamp: Long,
+  ) : this(
+      id = id, name = name, phone = phone, email = email, timestamp = timestamp, dirty = false
   )
 }

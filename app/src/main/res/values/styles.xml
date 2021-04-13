@@ -20,8 +20,12 @@
     <item name="android:windowContentOverlay">@null</item>
   </style>
 
-  <style name="AppTheme.Bold" parent="TextAppearance.AppCompat.Title">
+  <style name="AppTheme.TextBold" parent="TextAppearance.AppCompat.Title">
     <item name="android:fontFamily">@font/roboto_bold</item>
+  </style>
+
+  <style name="AppTheme.TextNormal" parent="TextAppearance.AppCompat.Title">
+    <item name="android:fontFamily">@font/roboto_regular</item>
   </style>
 
   <style name="AppTheme.Regular" parent="TextAppearance.AppCompat.Title">

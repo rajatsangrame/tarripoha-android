@@ -2,7 +2,6 @@ package com.tarripoha.android.ui.login
 
 import android.os.Bundle
 import android.os.Handler
-import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,23 +10,24 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.*
-import androidx.navigation.fragment.findNavController
 import com.tarripoha.android.TPApp
 import com.tarripoha.android.R
-import com.tarripoha.android.databinding.LayoutTextInputWithButtonBinding
+import com.tarripoha.android.databinding.FragmentCreateUserBinding
+import com.tarripoha.android.ui.main.MainActivity
 import com.tarripoha.android.util.TPUtils
-import com.tarripoha.android.util.toggleIsEnable
+import com.tarripoha.android.util.helper.UserHelper
+import com.tarripoha.android.util.isValidEmail
 
-class OtpVerifyFragment : Fragment() {
+class CreateUserFragment : Fragment() {
 
   // region Variables
 
   companion object {
-    private const val TAG = "OtpVerifyFragment"
+    private const val TAG = "CreateUserFragment"
   }
 
   private lateinit var factory: ViewModelProvider.Factory
-  private lateinit var binding: LayoutTextInputWithButtonBinding
+  private lateinit var binding: FragmentCreateUserBinding
   private val viewModel by activityViewModels<LoginViewModel> {
     factory
   }
@@ -41,7 +41,7 @@ class OtpVerifyFragment : Fragment() {
     container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View {
-    binding = LayoutTextInputWithButtonBinding
+    binding = FragmentCreateUserBinding
         .inflate(LayoutInflater.from(requireContext()), container, false)
     return binding.root
   }
@@ -71,25 +71,41 @@ class OtpVerifyFragment : Fragment() {
     showKeyboard()
     binding.apply {
       actionBtn.setText(R.string.submit)
-      textInputLayout.hint = getString(R.string.otp)
     }
   }
 
   private fun setupEditText() {
-    binding.inputEt.apply {
-      inputType = InputType.TYPE_CLASS_PHONE
+    binding.nameEt.apply {
       doAfterTextChanged {
         it?.let { _ ->
           error = null
-          binding.actionBtn.toggleIsEnable(it)
+        }
+      }
+      setOnEditorActionListener { _, actionId, _ ->
+        if (actionId == EditorInfo.IME_ACTION_NEXT) {
+          val empty = text.isNullOrEmpty()
+          if (empty) {
+            error = getString(R.string.empty_field)
+          }
+          return@setOnEditorActionListener empty
+        }
+        true
+      }
+    }
+
+    binding.emailEt.apply {
+      doAfterTextChanged {
+        it?.let { _ ->
+          error = null
         }
       }
       setOnEditorActionListener { _, actionId, _ ->
         if (actionId == EditorInfo.IME_ACTION_DONE) {
+          // no-op
           text?.let {
-            val valid = validateOtp()
+            val valid = validateData()
             if (valid) {
-              viewModel.verifyOtp(it.toString(), requireActivity())
+              submitUserInfo()
             }
             return@setOnEditorActionListener !valid
           }
@@ -99,33 +115,37 @@ class OtpVerifyFragment : Fragment() {
     }
   }
 
-  private fun validateOtp(): Boolean {
-    binding.inputEt.text.let {
-      val valid = !it.isNullOrEmpty()
-      if (!valid) {
-        binding.inputEt.error = getString(R.string.msg_number_not_valid)
+  private fun validateData(): Boolean {
+    var isValid = true
+    binding.apply {
+      if (nameEt.text.isNullOrEmpty()) {
+        nameEt.error = getString(R.string.empty_field)
+        isValid = false
+      } else if (!emailEt.text.isValidEmail()) {
+        emailEt.error = getString(R.string.msg_email_not_valid)
+        isValid = false
       }
-      return valid
     }
+    return isValid
   }
 
   private fun showKeyboard() {
     Handler().postDelayed({
-      TPUtils.showKeyboard(context = requireContext(), view = binding.inputEt)
+      TPUtils.showKeyboard(context = requireContext(), view = binding.nameEt)
     }, 500)
   }
 
   private fun setupObservers() {
-    viewModel.getCreateNewUser()
-        .observe(viewLifecycleOwner, Observer {
-          it?.let {
-            if (it) navigateToCreateUserFragment()
-          }
-        })
+    //no-op
   }
 
-  private fun navigateToCreateUserFragment() {
-    findNavController().navigate(R.id.action_OtpVerifyFragment_to_CreateUserFragment)
+  private fun submitUserInfo() {
+    viewModel.createUser(
+        name = binding.nameEt.text?.trim()
+            .toString(),
+        email = binding.emailEt.text?.trim()
+            .toString()
+    )
   }
 
   // endregion
@@ -134,14 +154,9 @@ class OtpVerifyFragment : Fragment() {
 
   private fun setupListeners() {
     binding.actionBtn.setOnClickListener {
-      binding.inputEt.text?.let {
-        if (validateOtp()) {
-          viewModel.verifyOtp(
-              it.toString()
-                  .trim(), requireActivity()
-          )
-          TPUtils.hideKeyboard(context = requireContext(), view = binding.inputEt)
-        }
+      if (validateData()) {
+        submitUserInfo()
+        TPUtils.hideKeyboard(context = requireContext(), view = binding.emailEt)
       }
     }
   }

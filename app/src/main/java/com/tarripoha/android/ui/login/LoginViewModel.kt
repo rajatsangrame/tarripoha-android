@@ -15,6 +15,7 @@ import com.tarripoha.android.R
 import com.tarripoha.android.data.Repository
 import com.tarripoha.android.data.model.User
 import com.tarripoha.android.ui.BaseViewModel
+import com.tarripoha.android.util.TPUtils
 import java.lang.Exception
 import javax.inject.Inject
 
@@ -129,7 +130,7 @@ class LoginViewModel @Inject constructor(
         ) {
           val user: User = snapshot.getValue(User::class.java)!!
           val isDirty = user.dirty
-          if (isDirty == null || !isDirty) {
+          if (isDirty != null && isDirty) {
             setUserMessage(getString(R.string.msg_user_blocked, user.name))
             return
           }
@@ -144,15 +145,23 @@ class LoginViewModel @Inject constructor(
     }
   }
 
-  private fun createUser(
-    phone: String,
-    user: User
+  fun createUser(
+    name: String,
+    email: String
   ) {
     if (!isInternetConnected()) {
       return
     }
+    if (phoneNumber.isNullOrEmpty() || name.isEmpty() || email.isEmpty()) {
+      setUserMessage(getString(R.string.error_unknown))
+      return
+    }
+    val user = User(
+        id = TPUtils.getRandomUuid(),
+        name = name, phone = phoneNumber!!, email = email, timestamp = System.currentTimeMillis()
+    )
     repository.createUser(
-        phone = phone,
+        phone = phoneNumber!!,
         user = user,
         success = {
           setUserMessage(getString(R.string.msg_user_created, user.name))
