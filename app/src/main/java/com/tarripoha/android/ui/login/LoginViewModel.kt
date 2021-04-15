@@ -29,11 +29,18 @@ class LoginViewModel @Inject constructor(
   app: Application
 ) : BaseViewModel(app) {
 
+  private val showProgress = MutableLiveData<Boolean>()
   private var phoneNumber: String? = null
   private var storedVerificationId: String? = null
   private var resendToken: ForceResendingToken? = null
   private val isCodeSent = MutableLiveData<Boolean>()
   private val createNewUser = MutableLiveData<Boolean>()
+
+  fun setShowProgress(showProgress: Boolean?) {
+    this.showProgress.value = showProgress
+  }
+
+  fun getShowProgress() = showProgress
 
   fun getIsCodeSent() = isCodeSent
 
@@ -48,16 +55,20 @@ class LoginViewModel @Inject constructor(
     }
     Log.i(TAG, "processLogin: $phone")
 
+    setShowProgress(true)
     LoginHelper.processOtpLogin(
         phone = phone,
         activity = activity,
         callbacks = object : OnVerificationStateChangedCallbacks() {
           override fun onVerificationCompleted(p0: PhoneAuthCredential) {
             Log.i(TAG, "onVerificationCompleted: $phone $p0")
+            setShowProgress(false)
           }
 
           override fun onVerificationFailed(e: FirebaseException) {
             Log.e(TAG, "onVerificationFailed: $phone ${e.message}")
+            setShowProgress(false)
+            setUserMessage(getString(R.string.error_otp_verification_failed))
             if (e is FirebaseAuthInvalidCredentialsException) {
               // Invalid request
             } else if (e is FirebaseTooManyRequestsException) {
@@ -69,12 +80,13 @@ class LoginViewModel @Inject constructor(
             id: String,
             token: ForceResendingToken
           ) {
-            super.onCodeSent(id, token)
+            Log.i(TAG, "onCodeSent")
+            setShowProgress(false)
             phoneNumber = phone
             storedVerificationId = id
             resendToken = token
             isCodeSent.value = true
-            Log.i(TAG, "onCodeSent")
+            super.onCodeSent(id, token)
           }
         }
     )
@@ -88,14 +100,17 @@ class LoginViewModel @Inject constructor(
       setUserMessage(getString(R.string.error_unknown))
       return
     }
+    setShowProgress(true)
     LoginHelper.verifyOtp(storedVerificationId!!, otp, activity) { task ->
       if (task.isSuccessful) {
         val user = task.result?.user
         Log.d(TAG, "verifyOtp: success ${user.toString()}")
         fetchUserInfo()
       } else {
-        Log.w(TAG, "verifyOtp: failure", task.exception)
+        setShowProgress(false)
+        Log.e(TAG, "verifyOtp: failure", task.exception)
         if (task.exception is FirebaseAuthInvalidCredentialsException) {
+          setUserMessage(getString(R.string.error_incorrect_otp))
         }
       }
     }
@@ -103,20 +118,23 @@ class LoginViewModel @Inject constructor(
 
   private fun fetchUserInfo() {
     if (!isInternetConnected()) {
+      setShowProgress(false)
       return
     }
     Log.i(TAG, "fetchUserInfo: ")
     if (phoneNumber == null) {
       setUserMessage(getString(R.string.error_unknown))
+      setShowProgress(false)
       return
     }
     repository.fetchUserInfo(
         phone = phoneNumber!!, success = {
       fetchUserInfoResponse(it)
     }, failure = {
+      setShowProgress(false)
       setUserMessage(getString(R.string.error_unable_to_fetch))
     }, connectionStatus = {
-
+      if (!it) setShowProgress(false)
     })
   }
 
@@ -128,6 +146,7 @@ class LoginViewModel @Inject constructor(
       if (snapshot.childrenCount > 0) {
         if (snapshot.getValue(User::class.java) != null
         ) {
+          setShowProgress(false)
           val user: User = snapshot.getValue(User::class.java)!!
           val isDirty = user.dirty
           if (isDirty != null && isDirty) {
@@ -138,9 +157,11 @@ class LoginViewModel @Inject constructor(
           this.setUser(user)
         }
       } else {
+        setShowProgress(false)
         createNewUser.value = true
       }
     } catch (e: Exception) {
+      setShowProgress(false)
       Log.e(TAG, "fetchAllResponse: ${e.localizedMessage}")
     }
   }
@@ -165,6 +186,7 @@ class LoginViewModel @Inject constructor(
         user = user,
         success = {
           setUserMessage(getString(R.string.msg_user_created, user.name))
+          this.setUser(user)
         }, failure = {
       setUserMessage(getString(R.string.error_unable_to_fetch))
     }, connectionStatus = {
@@ -178,6 +200,7 @@ class LoginViewModel @Inject constructor(
     resendToken = null
     isCodeSent.value = false
     createNewUser.value = false
+    setShowProgress(null)
   }
 
   companion object {

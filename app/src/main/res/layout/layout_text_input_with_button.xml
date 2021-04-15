@@ -10,6 +10,7 @@
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_marginTop="150dp"
+      android:padding="@dimen/margin_wide_distance"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent"
@@ -19,7 +20,6 @@
         android:id="@+id/textInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/margin_wide_distance"
         android:focusable="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -37,30 +37,50 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <Button
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/action_btn"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_extra_large"
+        android:layout_marginTop="@dimen/margin_wide_distance"
         android:enabled="false"
+        android:src="@drawable/ic_arrow_forward_white"
+        android:tintMode="@color/colorWhite"
         app:layout_constraintEnd_toEndOf="@+id/textInputLayout"
         app:layout_constraintStart_toStartOf="@+id/textInputLayout"
         app:layout_constraintTop_toBottomOf="@+id/textInputLayout"
-        tools:text="@string/next"
+        app:backgroundTint="@color/colorPrimary"
+        app:rippleColor="@color/colorWhite"
         />
-    <TextView
-        android:id="@+id/optional_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingEnd="@dimen/margin_normal"
-        android:paddingStart="@dimen/margin_normal"
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="@dimen/icon_size"
+        android:layout_height="@dimen/icon_size"
+        android:elevation="16dp"
+        android:indeterminateTint="@color/colorWhite"
         android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/action_btn"
         app:layout_constraintEnd_toEndOf="@+id/action_btn"
         app:layout_constraintStart_toStartOf="@+id/action_btn"
-        app:layout_constraintTop_toBottomOf="@+id/action_btn"
-        tools:text="@string/skip"
+        app:layout_constraintTop_toTopOf="@+id/action_btn"
         tools:visibility="visible"
         />
+
   </androidx.constraintlayout.widget.ConstraintLayout>
+
+  <TextView
+      android:id="@+id/optional_tv"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginEnd="@dimen/margin_extra_large"
+      android:layout_marginTop="@dimen/margin_extra_large"
+      android:paddingEnd="@dimen/margin_normal"
+      android:paddingStart="@dimen/margin_normal"
+      android:visibility="gone"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      tools:text="@string/skip"
+      tools:visibility="visible"
+      />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

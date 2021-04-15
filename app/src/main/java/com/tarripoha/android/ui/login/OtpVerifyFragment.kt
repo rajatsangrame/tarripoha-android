@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -70,7 +71,6 @@ class OtpVerifyFragment : Fragment() {
     setupObservers()
     showKeyboard()
     binding.apply {
-      actionBtn.setText(R.string.submit)
       textInputLayout.hint = getString(R.string.otp)
     }
   }
@@ -120,6 +120,19 @@ class OtpVerifyFragment : Fragment() {
         .observe(viewLifecycleOwner, Observer {
           it?.let {
             if (it) navigateToCreateUserFragment()
+          }
+        })
+    viewModel.getShowProgress()
+        .observe(viewLifecycleOwner, Observer {
+          it.let {
+            if (it == null || !it) {
+              binding.progressBar.visibility = View.GONE
+              val d = ContextCompat.getDrawable(requireContext(), R.drawable.ic_arrow_forward_white)
+              binding.actionBtn.setImageDrawable(d)
+            } else {
+              binding.progressBar.visibility = View.VISIBLE
+              binding.actionBtn.setImageDrawable(null)
+            }
           }
         })
   }

@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -74,7 +75,6 @@ class LoginFragment : Fragment() {
     showKeyboard()
     binding.apply {
       textInputLayout.hint = getString(R.string.mobile_number)
-      actionBtn.setText(R.string.next)
       optionalTv.setTextWithVisibility(getString(R.string.skip))
     }
   }
@@ -111,6 +111,19 @@ class LoginFragment : Fragment() {
             if (it) navigateToOtpVerifyFragment()
           }
         })
+    viewModel.getShowProgress()
+        .observe(viewLifecycleOwner, Observer {
+          it.let {
+            if (it == null || !it) {
+              binding.progressBar.visibility = View.GONE
+              val d = ContextCompat.getDrawable(requireContext(), R.drawable.ic_arrow_forward_white)
+              binding.actionBtn.setImageDrawable(d)
+            } else {
+              binding.actionBtn.setImageDrawable(null)
+              binding.progressBar.visibility = View.VISIBLE
+            }
+          }
+        })
   }
 
   private fun showKeyboard() {
@@ -121,7 +134,8 @@ class LoginFragment : Fragment() {
 
   private fun validateNumber(): Boolean {
     binding.inputEt.text?.let {
-      val valid = it.trim().isValidNumber()
+      val valid = it.trim()
+          .isValidNumber()
       if (!valid) {
         binding.inputEt.error = getString(R.string.msg_number_not_valid)
       }
@@ -133,7 +147,10 @@ class LoginFragment : Fragment() {
   private fun processLogin() {
     binding.inputEt.text?.let {
       if (validateNumber()) {
-        processLogin(it.toString().trim())
+        processLogin(
+            it.toString()
+                .trim()
+        )
         TPUtils.hideKeyboard(context = requireContext(), view = binding.inputEt)
       }
     }
