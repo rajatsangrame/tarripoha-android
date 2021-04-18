@@ -20,19 +20,19 @@ data class Comment(
   val id: String,
   val word: String,
   val comment: String,
+  var timestamp: Double = 0.0,
+  var popular: Double = 0.0,
   var userId: String? = null,
   var userName: String? = null,
-  var popular: Double? = null,
-  var dirty: Boolean? = null,
-  var timestamp: Long? = null,
+  var dirty: Boolean = false,
   var localStatus: Boolean? = null
 ) : Parcelable {
-  constructor() : this(id = "", word = "", comment = "")
+  constructor() : this(id = "", word = "", comment = "", timestamp = 0.0)
   constructor(
     id: String,
     word: String,
     comment: String,
-    time: Long,
+    time: Double,
     userName: String
   ) : this(id = id, word = word, comment = comment, timestamp = time)
 }

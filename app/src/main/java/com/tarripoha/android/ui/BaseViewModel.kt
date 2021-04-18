@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import com.tarripoha.android.R
 import com.tarripoha.android.data.model.User
 import com.tarripoha.android.util.TPUtils
+import com.tarripoha.android.util.helper.UserHelper
 
 /**
  * Created by Rajat Sangrame
@@ -17,7 +18,7 @@ import com.tarripoha.android.util.TPUtils
 abstract class BaseViewModel(val app: Application) : ViewModel() {
 
   private val userMessage: MutableLiveData<String> = MutableLiveData()
-
+  private val showProgress = MutableLiveData<Boolean>()
   private val user = MutableLiveData<User>()
 
   fun setUserMessage(msg: String) {
@@ -26,6 +27,12 @@ abstract class BaseViewModel(val app: Application) : ViewModel() {
   }
 
   fun getUserMessage() = userMessage
+
+  fun setShowProgress(showProgress: Boolean?) {
+    this.showProgress.value = showProgress
+  }
+
+  fun getShowProgress() = showProgress
 
   fun getString(resId: Int) = app.applicationContext.getString(resId)
 
@@ -41,6 +48,10 @@ abstract class BaseViewModel(val app: Application) : ViewModel() {
   }
 
   fun getUser() = user
+
+  fun getUserPhone(): String? = UserHelper.getUser()?.phone
+
+  fun getUserName(): String? = UserHelper.getUser()?.name
 
   fun isInternetConnected(): Boolean {
     if (!TPUtils.isNetworkAvailable(getContext())) {

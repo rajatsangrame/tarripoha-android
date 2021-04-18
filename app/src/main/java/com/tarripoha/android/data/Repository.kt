@@ -8,6 +8,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.tarripoha.android.data.db.Comment
 import com.tarripoha.android.data.db.Word
@@ -29,7 +30,6 @@ class Repository(
 
   private val ioExecutor: Executor by lazy { Executors.newSingleThreadExecutor() }
   private val wordRef: DatabaseReference by lazy { Firebase.database.getReference("word") }
-  private val commentRef: DatabaseReference by lazy { Firebase.database.getReference("comment") }
   private val userRef: DatabaseReference by lazy { Firebase.database.getReference("user") }
 
   /**
@@ -141,17 +141,57 @@ class Repository(
     )
   }
 
-  fun fetchComments(
+  fun fetchPopularComments(
     word: String,
+    startAt: Double? = null,
     success: (DataSnapshot) -> Unit,
     failure: (DatabaseError) -> Unit,
     connectionStatus: (Boolean) -> Unit
   ) {
-    val query = commentRef.orderByChild("word")
-        .startAt(word)
-        .endAt(word + "\uf8ff")
-        .limitToFirst(LIMIT_TO_FIRST)
-    query.addValueEventListener(
+    val commentRef = Firebase.database.getReference("comment/$word")
+    val query = if (startAt == null) {
+      commentRef.orderByChild("popular")
+          .limitToFirst(LIMIT_TO_FIRST)
+    } else {
+      commentRef.orderByChild("popular")
+          .startAt(startAt)
+          .limitToFirst(LIMIT_TO_FIRST)
+    }
+    query.addListenerForSingleValueEvent(
+        object : ValueEventListener {
+          override fun onDataChange(snapshot: DataSnapshot) {
+            success(snapshot)
+          }
+
+          override fun onCancelled(error: DatabaseError) {
+            failure(error)
+          }
+        }
+    )
+    checkFirebaseConnection(
+        connectionStatus = {
+          connectionStatus(it)
+        }
+    )
+  }
+
+  fun fetchRecentComments(
+    word: String,
+    startAt: Double? = null,
+    success: (DataSnapshot) -> Unit,
+    failure: (DatabaseError) -> Unit,
+    connectionStatus: (Boolean) -> Unit
+  ) {
+    val commentRef = Firebase.database.getReference("comment/$word")
+    val query = if (startAt == null) {
+      commentRef.orderByChild("timestamp")
+          .limitToFirst(LIMIT_TO_FIRST)
+    } else {
+      commentRef.orderByChild("timestamp")
+          .startAt(startAt)
+          .limitToFirst(LIMIT_TO_FIRST)
+    }
+    query.addListenerForSingleValueEvent(
         object : ValueEventListener {
           override fun onDataChange(snapshot: DataSnapshot) {
             success(snapshot)
@@ -175,14 +215,16 @@ class Repository(
     failure: (Exception) -> Unit,
     connectionStatus: (Boolean) -> Unit
   ) {
-
-    commentRef.child(comment.id)
-        .setValue(comment)
-        .addOnSuccessListener {
+    val db = Firebase.firestore
+    db.collection("comment")
+        .add(comment)
+        .addOnSuccessListener { documentReference ->
           success()
+          Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
         }
-        .addOnFailureListener {
-          failure(it)
+        .addOnFailureListener { e ->
+          failure(e)
+          Log.w(TAG, "Error adding document", e)
         }
 
     checkFirebaseConnection(

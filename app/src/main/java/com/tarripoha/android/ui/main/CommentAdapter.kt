@@ -3,13 +3,14 @@ package com.tarripoha.android.ui.main
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.tarripoha.android.ui.BaseViewHolder
 import com.tarripoha.android.R
 import com.tarripoha.android.data.db.Comment
 import com.tarripoha.android.databinding.LayoutItemCommentBinding
+import com.tarripoha.android.ui.BaseViewHolder
 import com.tarripoha.android.util.ItemLongClickListener
 import com.tarripoha.android.util.TPUtils
 import com.tarripoha.android.util.setTextWithVisibility
+import java.lang.Exception
 
 class CommentAdapter(
   private var comments: MutableList<Comment>,
@@ -22,8 +23,8 @@ class CommentAdapter(
   ): BaseViewHolder {
 
     val binding = LayoutItemCommentBinding
-        .inflate(LayoutInflater.from(parent.context), parent, false)
-    return CommentViewHolder(binding)
+      .inflate(LayoutInflater.from(parent.context), parent, false)
+    return CommentViewHolder(binding, itemClickListener)
 
   }
 
@@ -43,35 +44,56 @@ class CommentAdapter(
     notifyDataSetChanged()
   }
 
-  fun addComment(comment: Comment) {
-    this.comments.add(comment)
+  fun addComments(comments: List<Comment>) {
+    this.comments.addAll(comments)
     notifyDataSetChanged()
   }
 
-  inner class CommentViewHolder(private val binding: LayoutItemCommentBinding) : BaseViewHolder(
-      binding.root
+  class CommentViewHolder(
+    private val binding: LayoutItemCommentBinding,
+    private val itemClickListener: ItemLongClickListener<Comment>
+  ) : BaseViewHolder(
+    binding.root
   ) {
 
-    init {
-      itemView.setOnLongClickListener {
-        itemClickListener.onClick(position = adapterPosition, data = comments[adapterPosition])
-        true
-      }
+    override fun bind(position: Int) {
+      //no-op
     }
 
-    override fun bind(position: Int) {
-      val comment = comments[position]
-      val user = comment.userName ?: itemView.context.getString(R.string.user)
+    override fun bind(data: Any) {
+      if (data is Comment) {
+        val user = data.userName ?: itemView.context.getString(R.string.user)
 
 
-      binding.apply {
-        userTv.text = user
-        commentTv.text = comment.comment
-        avatarTv.text = user[0].toString()
+        binding.apply {
+          userTv.text = user
+          commentTv.text = data.comment
+          avatarTv.text = user[0].toString()
 
-        val time = TPUtils.getTime(itemView.context, comment.timestamp)
-        timestampTv.setTextWithVisibility(time)
+          val time = TPUtils.getTime(itemView.context, data.timestamp)
+          timestampTv.setTextWithVisibility(time)
+          root.setOnLongClickListener {
+            itemClickListener.onClick(position = adapterPosition, data = data)
+            return@setOnLongClickListener true
+          }
+        }
       }
+    }
+  }
+
+  fun getLastTimeStamp(): Double {
+    return try {
+      comments[comments.size - 1].timestamp
+    } catch (e: Exception) {
+      return 0.0
+    }
+  }
+
+  fun getLastPopularity(): Double {
+    return try {
+      comments[comments.size - 1].popular
+    } catch (e: Exception) {
+      return 0.0
     }
   }
 

@@ -92,12 +92,12 @@ object TPUtils {
 
   fun getTime(
     context: Context,
-    longTime: Long?
+    longTime: Double?
   ): String {
     if (longTime == null) {
       return ""
     }
-    var date: Long = longTime
+    var date: Long = longTime.toLong()
     try {
       val compareLong = 12345678901234L
       if (date > compareLong) {

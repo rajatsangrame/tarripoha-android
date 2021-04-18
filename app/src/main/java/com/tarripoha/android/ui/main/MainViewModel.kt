@@ -27,6 +27,7 @@ class MainViewModel @Inject constructor(
   private val searchWords: MutableLiveData<List<Word>> = MutableLiveData()
   private val query: MutableLiveData<String> = MutableLiveData()
   private val wordCount: MutableLiveData<Int> = MutableLiveData()
+  private var fetchMode: FetchMode = FetchMode.Popular
 
   // region WordDetailFragment
 
@@ -64,6 +65,12 @@ class MainViewModel @Inject constructor(
   }
 
   fun getPostComment() = postComment
+
+  fun setFetchMode(mode: FetchMode) {
+    fetchMode = mode
+  }
+
+  fun getFetchMode() = fetchMode
 
   // Helper Functions
 
@@ -201,56 +208,17 @@ class MainViewModel @Inject constructor(
     setPostComment(comment)
   }
 
-  fun fetchComment() {
-    if (!isInternetConnected()) {
-      return
-    }
-    if (getWordDetail().value == null) {
-      setUserMessage(getString(R.string.error_unknown))
-      return
-    }
-    val word = getWordDetail().value!!
-    repository.fetchComments(
-        word = word.name,
-        success = {
-          fetchCommentResponse(it, word)
-        },
-        failure = {
-          setUserMessage(getString(R.string.error_unable_to_process))
-        },
-        connectionStatus = {
-
-        }
-    )
-  }
-
-  private fun fetchCommentResponse(
-    snapshot: DataSnapshot,
-    word: Word
-  ) {
-    val comments: MutableList<Comment> = mutableListOf()
-    snapshot.children.forEach {
-      try {
-        if (it.getValue(Comment::class.java) != null) {
-          val comment: Comment = it.getValue(Comment::class.java)!!
-          val isDirty = comment.dirty
-          if (isDirty == null || !isDirty) {
-            comments.add(comment)
-          } else {
-            Log.i(TAG, "fetchCommentResponse: ${word.name} found dirty")
-          }
-        }
-      } catch (e: Exception) {
-        Log.e(TAG, "fetchCommentResponse: ${e.localizedMessage}")
-      }
-    }
-    if (comments.isEmpty()) return
-    comments.sortByDescending { it.timestamp }
-    word.comments = comments
-    setWordDetail(word)
+  fun getCommentUser(id: String): String {
+    repository
+    return ""
   }
 
   // endregion
+
+  sealed class FetchMode {
+    object Popular : FetchMode()
+    object Recent : FetchMode()
+  }
 
   companion object {
     private const val TAG = "MainViewModel"

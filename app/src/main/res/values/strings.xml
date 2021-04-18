@@ -50,6 +50,7 @@
   <string name="error_unknown">Something went wrong. Please try again later</string>
   <string name="error_incorrect_otp">Incorrect OTP</string>
   <string name="error_otp_verification_failed">OTP verification failed</string>
+  <string name="error_login">Please login to continue</string>
 
   <string name="succ_data_added">Data added successfully</string>
 
