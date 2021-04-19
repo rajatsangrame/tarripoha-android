@@ -11,9 +11,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.paging.PagedList.Config.Builder
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.firebase.ui.firestore.paging.FirestorePagingAdapter
 import com.firebase.ui.firestore.paging.FirestorePagingOptions
-import com.firebase.ui.firestore.paging.LoadingState
+import com.firebase.ui.firestore.paging.LoadingState.LOADED
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.tarripoha.android.R
@@ -21,13 +20,13 @@ import com.tarripoha.android.TPApp
 import com.tarripoha.android.data.db.Comment
 import com.tarripoha.android.data.db.Word
 import com.tarripoha.android.databinding.FragmentWordDetailBinding
-import com.tarripoha.android.databinding.LayoutItemCommentBinding
+import com.tarripoha.android.paging.CommentPagingAdapter
+import com.tarripoha.android.paging.CommentPagingAdapter.ClickMode
+import com.tarripoha.android.paging.CommentPagingAdapter.OnCommentClickListener
 import com.tarripoha.android.ui.OptionsBottomFragment
 import com.tarripoha.android.ui.OptionsBottomFragment.Option
 import com.tarripoha.android.ui.OptionsBottomFragment.OptionCLickListener
-import com.tarripoha.android.ui.main.CommentAdapter.CommentViewHolder
 import com.tarripoha.android.ui.main.MainViewModel.FetchMode
-import com.tarripoha.android.util.ItemLongClickListener
 import com.tarripoha.android.util.TPUtils
 import com.tarripoha.android.util.setTextWithVisibility
 import com.tarripoha.android.util.toggleVisibility
@@ -42,8 +41,7 @@ class WordDetailFragment : Fragment() {
 
   private lateinit var factory: ViewModelProvider.Factory
   private lateinit var binding: FragmentWordDetailBinding
-  private lateinit var commentAdapter: CommentAdapter
-  private lateinit var adapterV2: FirestorePagingAdapter<Comment, CommentViewHolder>
+  private lateinit var commentAdapter: CommentPagingAdapter
   private val viewModel by activityViewModels<MainViewModel> {
     factory
   }
@@ -137,10 +135,10 @@ class WordDetailFragment : Fragment() {
     binding.commentRv.apply {
       layoutManager = linearLayoutManager
     }
-    setupAdapter()
+    setupAdapter(getOption())
   }
 
-  private fun setupAdapter() {
+  private fun getOption(): FirestorePagingOptions<Comment> {
     // The "base query" is a query with no startAt/endAt/limit clauses that the adapter can use
     // to form smaller queries for each page.  It should only include where() and orderBy() clauses
     val baseQuery = if (viewModel.getFetchMode() == FetchMode.Recent) {
@@ -152,62 +150,47 @@ class WordDetailFragment : Fragment() {
         .collection("comment")
         .orderBy("popular", Query.Direction.ASCENDING)
     }
-
     val config = Builder()
       .setEnablePlaceholders(false)
       .setPrefetchDistance(4)
       .setPageSize(10)
       .build()
 
-    val options: FirestorePagingOptions<Comment> = FirestorePagingOptions.Builder<Comment>()
+    return FirestorePagingOptions.Builder<Comment>()
       .setLifecycleOwner(viewLifecycleOwner)
       .setQuery(
         baseQuery, config
       ) {
         val comment = it.toObject(Comment::class.java)!!
         comment.localStatus = false
-        // TODO: Fetch User info here
         comment
       }
       .build()
+  }
 
-    adapterV2 = object : FirestorePagingAdapter<Comment, CommentViewHolder>(options) {
-      override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-      ): CommentViewHolder {
-        val binding = LayoutItemCommentBinding
-          .inflate(LayoutInflater.from(parent.context), parent, false)
-        return CommentViewHolder(binding, object : ItemLongClickListener<Comment> {
-          override fun onClick(position: Int, data: Comment) {
-            showOptionMenu(comment = data)
-          }
-        })
-      }
+  private fun setupAdapter(options: FirestorePagingOptions<Comment>) {
 
-      override fun onBindViewHolder(
-        holder: CommentViewHolder,
-        position: Int,
-        model: Comment
-      ) {
-        Log.d(TAG, "onBindViewHolder: $position")
-        holder.bind(model)
-      }
-
-      override fun onLoadingStateChanged(state: LoadingState) {
-        super.onLoadingStateChanged(state)
-        when (state) {
-          LoadingState.LOADED -> {
-            if (adapterV2.itemCount != 0) {
-              binding.noCommentLayout.visibility = View.GONE
-            } else {
-              binding.noCommentLayout.visibility = View.VISIBLE
-            }
+    commentAdapter = CommentPagingAdapter(options = options, object : OnCommentClickListener {
+      override fun onClick(comment: Comment, clickMode: ClickMode) {
+        when (clickMode) {
+          ClickMode.LongCLick -> showOptionMenu(comment)
+          ClickMode.LikeButton -> {
+            Log.i(TAG, "onClick: ")
           }
         }
       }
+    }) { state ->
+      Log.i(TAG, "setupAdapter: $state")
+      if (state == LOADED) {
+        if (commentAdapter.itemCount != 0) {
+          binding.noCommentLayout.visibility = View.GONE
+        } else {
+          binding.noCommentLayout.visibility = View.VISIBLE
+        }
+      }
     }
-    binding.commentRv.adapter = adapterV2
+
+    binding.commentRv.adapter = commentAdapter
   }
 
   private fun setupEditText() {
@@ -244,7 +227,7 @@ class WordDetailFragment : Fragment() {
     viewModel.getPostComment()
       .observe(viewLifecycleOwner) {
         it?.let {
-          adapterV2.refresh()
+          commentAdapter.refresh()
         }
       }
   }
@@ -255,9 +238,6 @@ class WordDetailFragment : Fragment() {
       meaningTv.text = word.meaning
       engMeaningTv.setTextWithVisibility(word.eng)
       noCommentLayout.toggleVisibility(word.comments)
-      word.comments?.let { comments ->
-        commentAdapter.addComments(comments)
-      }
     }
   }
 

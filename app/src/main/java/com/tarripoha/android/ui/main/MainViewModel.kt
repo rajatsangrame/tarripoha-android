@@ -208,11 +208,6 @@ class MainViewModel @Inject constructor(
     setPostComment(comment)
   }
 
-  fun getCommentUser(id: String): String {
-    repository
-    return ""
-  }
-
   // endregion
 
   sealed class FetchMode {
