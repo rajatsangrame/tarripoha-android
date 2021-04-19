@@ -84,13 +84,13 @@
         />
 
     <ImageView
-        android:id="@+id/more_btn"
+        android:id="@+id/save_btn"
         android:layout_width="@dimen/icon_size"
         android:layout_height="wrap_content"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:clickable="true"
         android:focusable="true"
-        android:src="@drawable/ic_more_white"
+        android:src="@drawable/ic_save_border_black"
         app:layout_constraintBottom_toBottomOf="@+id/word_tv"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/word_tv"
@@ -121,19 +121,6 @@
         app:layout_constraintBottom_toBottomOf="@+id/like_btn"
         app:layout_constraintStart_toEndOf="@+id/like_btn"
         app:layout_constraintTop_toTopOf="@+id/like_btn"
-        />
-
-    <ImageView
-        android:id="@+id/save_btn"
-        android:layout_width="@dimen/icon_size"
-        android:layout_height="@dimen/icon_size"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:clickable="true"
-        android:focusable="true"
-        android:src="@drawable/ic_save_border_black"
-        app:layout_constraintBottom_toBottomOf="@+id/share_btn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/share_btn"
         />
 
     <LinearLayout

@@ -13,6 +13,10 @@ import com.tarripoha.android.ui.BaseViewHolder
 import com.tarripoha.android.util.TPUtils
 import com.tarripoha.android.util.setTextWithVisibility
 
+/**
+ * Ref:
+ * https://medium.com/firebase-developers/update-queries-without-changing-recyclerview-adapter-using-firebaseui-android-32098b3082b2
+ */
 class CommentPagingAdapter(
   options: FirestorePagingOptions<Comment>,
   private val commentClickListener: OnCommentClickListener,
