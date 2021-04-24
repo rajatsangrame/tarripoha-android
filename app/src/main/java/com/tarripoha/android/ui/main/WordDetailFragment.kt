@@ -77,7 +77,7 @@ class WordDetailFragment : Fragment() {
     savedInstanceState: Bundle?
   ): View {
     binding = FragmentWordDetailBinding
-      .inflate(LayoutInflater.from(requireContext()), container, false)
+        .inflate(LayoutInflater.from(requireContext()), container, false)
     return binding.root
   }
 
@@ -91,10 +91,7 @@ class WordDetailFragment : Fragment() {
     super.onActivityCreated(savedInstanceState)
     factory =
       ViewModelProvider.AndroidViewModelFactory(TPApp.get(requireContext()))
-    if (viewModel.getWordDetail().value == null) {
-      viewModel.setUserMessage(getString(R.string.error_unknown))
-      return
-    }
+    if (!isWordDetailSet()) return
 
     setupUI()
   }
@@ -119,6 +116,14 @@ class WordDetailFragment : Fragment() {
     checkPostBtnColor("")
   }
 
+  private fun isWordDetailSet(): Boolean {
+    if (viewModel.getWordDetail().value == null) {
+      viewModel.setUserMessage(getString(R.string.error_unknown))
+      return false
+    }
+    return true
+  }
+
   private fun checkPostBtnColor(query: String) {
     binding.postCommentBtn.apply {
       isEnabled = if (query.isNotEmpty()) {
@@ -133,49 +138,56 @@ class WordDetailFragment : Fragment() {
 
   private fun setupRecyclerView() {
     val linearLayoutManager = LinearLayoutManager(
-      context, RecyclerView.VERTICAL, false
+        context, RecyclerView.VERTICAL, false
     )
     linearLayoutManager.reverseLayout = true
     binding.commentRv.apply {
       layoutManager = linearLayoutManager
     }
-    setupAdapter(getOption())
+    if (!isWordDetailSet()) return
+    val word = viewModel.getWordDetail().value!!
+    setupAdapter(getOption(word))
   }
 
-  private fun getOption(): FirestorePagingOptions<Comment> {
+  private fun getOption(word: Word): FirestorePagingOptions<Comment> {
     // The "base query" is a query with no startAt/endAt/limit clauses that the adapter can use
     // to form smaller queries for each page.  It should only include where() and orderBy() clauses
     val baseQuery = if (viewModel.getFetchMode() == FetchMode.Recent) {
       FirebaseFirestore.getInstance()
-        .collection("comment")
-        .orderBy("timestamp", Query.Direction.DESCENDING)
+          .collection("comment")
+          .whereEqualTo("word", word.name)
+          .orderBy("timestamp", Query.Direction.DESCENDING)
     } else {
       FirebaseFirestore.getInstance()
-        .collection("comment")
-        .orderBy("popular", Query.Direction.ASCENDING)
+          .collection("comment")
+          .whereEqualTo("word", word.name)
+          .orderBy("popular", Query.Direction.ASCENDING)
     }
     val config = Builder()
-      .setEnablePlaceholders(false)
-      .setPrefetchDistance(4)
-      .setPageSize(10)
-      .build()
+        .setEnablePlaceholders(false)
+        .setPrefetchDistance(4)
+        .setPageSize(10)
+        .build()
 
     return FirestorePagingOptions.Builder<Comment>()
-      .setLifecycleOwner(viewLifecycleOwner)
-      .setQuery(
-        baseQuery, config
-      ) {
-        val comment = it.toObject(Comment::class.java)!!
-        comment.localStatus = false
-        comment
-      }
-      .build()
+        .setLifecycleOwner(viewLifecycleOwner)
+        .setQuery(
+            baseQuery, config
+        ) {
+          val comment = it.toObject(Comment::class.java)!!
+          comment.localStatus = false
+          comment
+        }
+        .build()
   }
 
   private fun setupAdapter(options: FirestorePagingOptions<Comment>) {
 
     commentAdapter = CommentPagingAdapter(options = options, object : OnCommentClickListener {
-      override fun onClick(comment: Comment, clickMode: ClickMode) {
+      override fun onClick(
+        comment: Comment,
+        clickMode: ClickMode
+      ) {
         when (clickMode) {
           ClickMode.LongCLick -> showOptionMenu(comment)
           ClickMode.LikeButton -> {
@@ -198,10 +210,7 @@ class WordDetailFragment : Fragment() {
   }
 
   private fun setupEditText() {
-    if (viewModel.getWordDetail().value == null) {
-      viewModel.setUserMessage(getString(R.string.error_unknown))
-      return
-    }
+    if (!isWordDetailSet()) return
     val word = viewModel.getWordDetail().value!!
     binding.commentEt.apply {
       hint = getString(R.string.add_quotes, word.name)
@@ -223,17 +232,17 @@ class WordDetailFragment : Fragment() {
 
   private fun setupObservers() {
     viewModel.getWordDetail()
-      .observe(viewLifecycleOwner) {
-        it?.let { word ->
-          setupUi(word)
+        .observe(viewLifecycleOwner) {
+          it?.let { word ->
+            setupUi(word)
+          }
         }
-      }
     viewModel.getPostComment()
-      .observe(viewLifecycleOwner) {
-        it?.let {
-          commentAdapter.refresh()
+        .observe(viewLifecycleOwner) {
+          it?.let {
+            commentAdapter.refresh()
+          }
         }
-      }
   }
 
   private fun setupUi(word: Word) {
@@ -247,8 +256,8 @@ class WordDetailFragment : Fragment() {
 
   private fun validateComment(): Boolean {
     val isEmpty = binding.commentEt.text
-      .trim()
-      .isEmpty()
+        .trim()
+        .isEmpty()
     if (isEmpty) viewModel.setUserMessage(getString(R.string.empty_field))
     return !isEmpty
   }
@@ -259,25 +268,22 @@ class WordDetailFragment : Fragment() {
       viewModel.setUserMessage(getString(R.string.error_login))
       return false
     }
-    if (viewModel.getWordDetail().value == null) {
-      viewModel.setUserMessage(getString(R.string.error_unknown))
-      return false
-    }
+    if (!isWordDetailSet()) return false
     val validate = validateComment()
     if (validate) {
       val comment = binding.commentEt.text.trim()
-        .toString()
+          .toString()
       val word = viewModel.getWordDetail().value!!
       viewModel.postComment(
-        Comment(
-          id = TPUtils.getRandomUuid(),
-          word = word.name,
-          comment = comment,
-          timestamp = System.currentTimeMillis()
-            .toDouble(),
-          userId = userId,
-          userName = viewModel.getUserName() ?: getString(R.string.user)
-        )
+          Comment(
+              id = TPUtils.getRandomUuid(),
+              word = word.name,
+              comment = comment,
+              timestamp = System.currentTimeMillis()
+                  .toDouble(),
+              userId = userId,
+              userName = viewModel.getUserName() ?: getString(R.string.user)
+          )
       )
       binding.commentEt.text = null
     }
@@ -286,13 +292,13 @@ class WordDetailFragment : Fragment() {
 
   private fun showOptionMenu(comment: Comment) {
     val bottomSheet = OptionsBottomFragment.newInstance(
-      callback = object : OptionCLickListener {
-        override fun onClick(option: Option) {
-          Log.d(TAG, "onClick: $option} ${comment.comment}")
-          // no-op
-        }
-      },
-      bundle = Bundle()
+        callback = object : OptionCLickListener {
+          override fun onClick(option: Option) {
+            Log.d(TAG, "onClick: $option} ${comment.comment}")
+            // no-op
+          }
+        },
+        bundle = Bundle()
     )
     bottomSheet.show(parentFragmentManager, OptionsBottomFragment.TAG)
   }
