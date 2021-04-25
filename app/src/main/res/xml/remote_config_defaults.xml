@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<defaultsMap>
+  <entry>
+    <key>min_version</key>
+    <value>0.5</value>
+  </entry>
+  <entry>
+    <key>recommended_version</key>
+    <value>0.5</value>
+  </entry>
+</defaultsMap>

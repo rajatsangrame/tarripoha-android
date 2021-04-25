@@ -28,6 +28,7 @@
   <string name="next">Next</string>
   <string name="submit">Submit</string>
   <string name="skip">Skip</string>
+  <string name="update">Update</string>
   <string name="yes">Yes</string>
   <string name="cancel">Cancel</string>
   <string name="no">No</string>
@@ -35,6 +36,7 @@
   <string name="email">Email</string>
   <string name="login">Login</string>
   <string name="almost_done">Almost Done</string>
+  <string name="update_available">New version available</string>
 
   <string name="sample_time">12:35 PM</string>
   <string name="sample_likes">2 Likes</string>
@@ -45,6 +47,8 @@
   <string name="msg_user_blocked">User account is disabled</string>
   <string name="msg_user_created">User account is ready, %1$s!</string>
   <string name="msg_confirm_delete">Are you sure you want to delete?</string>
+  <string name="msg_force_update">Please update the app to new version to continue</string>
+  <string name="msg_update_available">Do you want to update the app to latest version</string>
 
   <string name="error_no_result">No result found</string>
   <string name="error_no_quotes">No quotes found</string>
