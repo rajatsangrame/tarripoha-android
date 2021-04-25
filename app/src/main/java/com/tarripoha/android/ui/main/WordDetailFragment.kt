@@ -29,6 +29,7 @@ import com.tarripoha.android.ui.OptionsBottomFragment.OptionCLickListener
 import com.tarripoha.android.ui.main.MainViewModel.FetchMode
 import com.tarripoha.android.util.TPUtils
 import com.tarripoha.android.util.setTextWithVisibility
+import com.tarripoha.android.util.toJsonString
 import com.tarripoha.android.util.toggleVisibility
 
 class WordDetailFragment : Fragment() {
@@ -66,6 +67,7 @@ class WordDetailFragment : Fragment() {
 
   override fun onOptionsItemSelected(item: MenuItem): Boolean {
     if (item.itemId == R.id.menu_more) {
+      showWordMenu()
       return true
     }
     return super.onOptionsItemSelected(item)
@@ -156,11 +158,13 @@ class WordDetailFragment : Fragment() {
       FirebaseFirestore.getInstance()
           .collection("comment")
           .whereEqualTo("word", word.name)
+          .whereEqualTo("dirty", false)
           .orderBy("timestamp", Query.Direction.DESCENDING)
     } else {
       FirebaseFirestore.getInstance()
           .collection("comment")
           .whereEqualTo("word", word.name)
+          .whereEqualTo("dirty", false)
           .orderBy("popular", Query.Direction.ASCENDING)
     }
     val config = Builder()
@@ -189,7 +193,7 @@ class WordDetailFragment : Fragment() {
         clickMode: ClickMode
       ) {
         when (clickMode) {
-          ClickMode.LongCLick -> showOptionMenu(comment)
+          ClickMode.LongCLick -> showCommentMenu(comment)
           ClickMode.LikeButton -> {
             Log.i(TAG, "onClick: ")
           }
@@ -290,17 +294,67 @@ class WordDetailFragment : Fragment() {
     return validate
   }
 
-  private fun showOptionMenu(comment: Comment) {
+  private fun showCommentMenu(comment: Comment) {
+    val option = getCommentOptions(comment)
+    val bundle = Bundle()
+    bundle.putString(OptionsBottomFragment.KEY_OPTIONS, option.toJsonString())
     val bottomSheet = OptionsBottomFragment.newInstance(
+        bundle = bundle,
         callback = object : OptionCLickListener {
           override fun onClick(option: Option) {
             Log.d(TAG, "onClick: $option} ${comment.comment}")
             // no-op
           }
-        },
-        bundle = Bundle()
+        }
     )
     bottomSheet.show(parentFragmentManager, OptionsBottomFragment.TAG)
+  }
+
+  private fun getCommentOptions(comment: Comment): List<Option> {
+    val options = mutableListOf<Option>()
+    options.add(Option.Copy)
+    options.add(Option.Share)
+    options.add(Option.Report)
+    val user = viewModel.getSavedUser()
+    val isAdmin = viewModel.isUserAdmin()
+    if (isAdmin) {
+      options.add(Option.Edit)
+    }
+    user?.let {
+      if (comment.userId == it.phone || isAdmin) {
+        options.add(Option.Delete)
+      }
+    }
+    return options
+  }
+
+  private fun showWordMenu() {
+    val option = getWordOptions()
+    val bundle = Bundle()
+    bundle.putString(OptionsBottomFragment.KEY_OPTIONS, option.toJsonString())
+    val bottomSheet = OptionsBottomFragment.newInstance(
+        bundle = bundle,
+        callback = object : OptionCLickListener {
+          override fun onClick(option: Option) {
+            Log.d(TAG, "onClick: $option}")
+            // no-op
+          }
+        }
+    )
+    bottomSheet.show(parentFragmentManager, OptionsBottomFragment.TAG)
+  }
+
+  private fun getWordOptions(): List<Option> {
+    val options = mutableListOf<Option>()
+    options.add(Option.Copy)
+    options.add(Option.Share)
+    options.add(Option.Report)
+    val isAdmin = viewModel.isUserAdmin()
+    if (isAdmin) {
+      options.add(Option.Edit)
+      options.add(Option.Delete)
+    }
+    return options
   }
 
   // endregion

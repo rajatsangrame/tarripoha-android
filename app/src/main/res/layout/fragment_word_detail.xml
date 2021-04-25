@@ -90,7 +90,6 @@
         android:clickable="true"
         android:focusable="true"
         android:src="@drawable/ic_save_border_black"
-        app:layout_constraintBottom_toBottomOf="@+id/word_tv"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/word_tv"
         app:tint="@color/colorBlack"

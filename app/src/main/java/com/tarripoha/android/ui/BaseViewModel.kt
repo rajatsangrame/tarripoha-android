@@ -53,6 +53,16 @@ abstract class BaseViewModel(val app: Application) : ViewModel() {
 
   fun getUserName(): String? = UserHelper.getUser()?.name
 
+  fun getSavedUser(): User? = UserHelper.getUser()
+
+  fun isUserAdmin(): Boolean {
+    UserHelper.getUser()
+        ?.let {
+          return@isUserAdmin it.admin
+        }
+    return false
+  }
+
   fun isInternetConnected(): Boolean {
     if (!TPUtils.isNetworkAvailable(getContext())) {
       setUserMessage(getString(R.string.error_no_internet))
