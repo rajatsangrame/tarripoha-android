@@ -32,7 +32,7 @@ class MainViewModel @Inject constructor(
   // region WordDetailFragment
 
   private val wordDetail: MutableLiveData<Word> = MutableLiveData()
-  private val postComment: MutableLiveData<Comment> = MutableLiveData()
+  private val refreshComment: MutableLiveData<Boolean> = MutableLiveData()
 
   // endregion
 
@@ -60,11 +60,11 @@ class MainViewModel @Inject constructor(
 
   fun getWordDetail() = wordDetail
 
-  fun setPostComment(comment: Comment?) {
-    postComment.value = comment
+  fun setRefreshComment(refresh: Boolean?) {
+    refreshComment.value = refresh
   }
 
-  fun getPostComment() = postComment
+  fun getRefreshComment() = refreshComment
 
   fun setFetchMode(mode: FetchMode) {
     fetchMode = mode
@@ -193,7 +193,7 @@ class MainViewModel @Inject constructor(
     repository.postComment(
         comment = comment,
         success = {
-          postCommentResponse(comment)
+          setRefreshComment(true)
         },
         failure = {
           setUserMessage(getString(R.string.error_unable_to_process))
@@ -204,8 +204,24 @@ class MainViewModel @Inject constructor(
     )
   }
 
-  private fun postCommentResponse(comment: Comment) {
-    setPostComment(comment)
+  fun deleteComment(
+    comment: Comment,
+  ) {
+    if (!isInternetConnected()) {
+      return
+    }
+    repository.deleteComment(
+        comment = comment,
+        success = {
+          setRefreshComment(true)
+        },
+        failure = {
+          setUserMessage(getString(R.string.error_unable_to_process))
+        },
+        connectionStatus = {
+
+        }
+    )
   }
 
   // endregion

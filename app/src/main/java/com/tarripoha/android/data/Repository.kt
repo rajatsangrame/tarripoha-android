@@ -8,6 +8,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
+import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.tarripoha.android.data.db.Comment
@@ -31,6 +32,9 @@ class Repository(
   private val ioExecutor: Executor by lazy { Executors.newSingleThreadExecutor() }
   private val wordRef: DatabaseReference by lazy { Firebase.database.getReference("word") }
   private val userRef: DatabaseReference by lazy { Firebase.database.getReference("user") }
+  private val commentRef: CollectionReference by lazy {
+    Firebase.firestore.collection("comment")
+  }
 
   /**
    * Check if the [DatabaseReference] is connected
@@ -147,12 +151,35 @@ class Repository(
     failure: (Exception) -> Unit,
     connectionStatus: (Boolean) -> Unit
   ) {
-    val db = Firebase.firestore
-    db.collection("comment")
-        .add(comment)
-        .addOnSuccessListener { documentReference ->
+    commentRef.document(comment.id)
+        .set(comment)
+        .addOnSuccessListener {
           success()
-          Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
+          Log.d(TAG, "DocumentSnapshot added with ID: ${comment.id}")
+        }
+        .addOnFailureListener { e ->
+          failure(e)
+          Log.w(TAG, "Error adding document", e)
+        }
+
+    checkFirebaseConnection(
+        connectionStatus = {
+          connectionStatus(it)
+        }
+    )
+  }
+
+  fun deleteComment(
+    comment: Comment,
+    success: () -> Unit,
+    failure: (Exception) -> Unit,
+    connectionStatus: (Boolean) -> Unit
+  ) {
+    commentRef.document(comment.id)
+        .update("dirty", true)
+        .addOnSuccessListener {
+          success()
+          Log.d(TAG, "DocumentSnapshot added with ID: ${comment.id}")
         }
         .addOnFailureListener { e ->
           failure(e)

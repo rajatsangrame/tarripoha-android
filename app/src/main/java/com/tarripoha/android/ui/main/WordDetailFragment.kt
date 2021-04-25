@@ -13,8 +13,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.firebase.ui.firestore.paging.FirestorePagingOptions
 import com.firebase.ui.firestore.paging.LoadingState.LOADED
-import com.google.firebase.firestore.FirebaseFirestore
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.tarripoha.android.R
 import com.tarripoha.android.TPApp
 import com.tarripoha.android.data.db.Comment
@@ -29,6 +31,7 @@ import com.tarripoha.android.ui.OptionsBottomFragment.OptionCLickListener
 import com.tarripoha.android.ui.main.MainViewModel.FetchMode
 import com.tarripoha.android.util.TPUtils
 import com.tarripoha.android.util.setTextWithVisibility
+import com.tarripoha.android.util.showDialog
 import com.tarripoha.android.util.toJsonString
 import com.tarripoha.android.util.toggleVisibility
 
@@ -101,7 +104,7 @@ class WordDetailFragment : Fragment() {
   override fun onDestroy() {
     viewModel.apply {
       setWordDetail(null)
-      setPostComment(null)
+      setRefreshComment(null)
     }
     super.onDestroy()
   }
@@ -155,13 +158,13 @@ class WordDetailFragment : Fragment() {
     // The "base query" is a query with no startAt/endAt/limit clauses that the adapter can use
     // to form smaller queries for each page.  It should only include where() and orderBy() clauses
     val baseQuery = if (viewModel.getFetchMode() == FetchMode.Recent) {
-      FirebaseFirestore.getInstance()
+      Firebase.firestore
           .collection("comment")
           .whereEqualTo("word", word.name)
           .whereEqualTo("dirty", false)
           .orderBy("timestamp", Query.Direction.DESCENDING)
     } else {
-      FirebaseFirestore.getInstance()
+      Firebase.firestore
           .collection("comment")
           .whereEqualTo("word", word.name)
           .whereEqualTo("dirty", false)
@@ -241,7 +244,7 @@ class WordDetailFragment : Fragment() {
             setupUi(word)
           }
         }
-    viewModel.getPostComment()
+    viewModel.getRefreshComment()
         .observe(viewLifecycleOwner) {
           it?.let {
             commentAdapter.refresh()
@@ -303,7 +306,18 @@ class WordDetailFragment : Fragment() {
         callback = object : OptionCLickListener {
           override fun onClick(option: Option) {
             Log.d(TAG, "onClick: $option} ${comment.comment}")
-            // no-op
+            when (option) {
+              Option.Delete -> {
+                MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
+                    .showDialog(
+                        message = getString(R.string.msg_confirm_delete),
+                        positiveText = getString(R.string.delete),
+                        positiveListener = {
+                          viewModel.deleteComment(comment = comment)
+                        }
+                    )
+              }
+            }
           }
         }
     )

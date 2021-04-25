@@ -3,7 +3,9 @@ package com.tarripoha.android.util
 import android.util.Patterns
 import android.view.View
 import android.widget.TextView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.Gson
+import com.tarripoha.android.R
 import java.util.regex.Pattern
 
 fun CharSequence?.isValidNumber(): Boolean {
@@ -42,3 +44,27 @@ fun View.toggleIsEnable(inputText: CharSequence?) {
 }
 
 fun Any.toJsonString(): String = Gson().toJson(this)
+
+// Ref: https://medium.com/over-engineering/hands-on-with-material-components-for-android-dialogs-75c6d726f83a
+fun MaterialAlertDialogBuilder.showDialog(
+  title: String? = null,
+  message: String,
+  positiveText: String = context.getString(R.string.yes),
+  negativeText: String = context.getString(R.string.cancel),
+  cancelable: Boolean = true,
+  positiveListener: () -> Unit
+) {
+  title?.let {
+    this.setTitle(it)
+  }
+  this
+      .setMessage(message)
+      .setPositiveButton(positiveText) { dialog, _ ->
+        dialog.dismiss()
+        positiveListener()
+      }
+      .setNegativeButton(negativeText) { _, _ ->
+      }
+      .setCancelable(cancelable)
+      .show()
+}
