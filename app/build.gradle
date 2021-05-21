@@ -159,6 +159,4 @@ dependencies {
   implementation "com.firebaseui:firebase-ui-firestore:$firebase_ui"
 
   implementation "androidx.paging:paging-runtime-ktx:$paging"
-
-
 }
