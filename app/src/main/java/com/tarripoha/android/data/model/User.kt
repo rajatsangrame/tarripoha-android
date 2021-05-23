@@ -5,6 +5,7 @@ data class User(
   val name: String,
   val phone: String,
   val email: String,
+  val password: String? = null,
   var emailVerified: Boolean? = null,
   val city: String? = null,
   var dirty: Boolean? = null,

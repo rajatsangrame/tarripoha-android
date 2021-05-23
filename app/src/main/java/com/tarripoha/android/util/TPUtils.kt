@@ -1,6 +1,8 @@
 package com.tarripoha.android.util
 
 import android.content.Context
+import android.content.pm.PackageInfo
+import android.content.pm.PackageManager.NameNotFoundException
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
@@ -10,11 +12,9 @@ import android.text.format.Time
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.tarripoha.android.R
 import java.text.SimpleDateFormat
@@ -92,12 +92,12 @@ object TPUtils {
 
   fun getTime(
     context: Context,
-    longTime: Long?
+    longTime: Double?
   ): String {
     if (longTime == null) {
       return ""
     }
-    var date: Long = longTime
+    var date: Long = longTime.toLong()
     try {
       val compareLong = 12345678901234L
       if (date > compareLong) {
@@ -161,6 +161,23 @@ object TPUtils {
     val thenYear = time.year
     time.set(System.currentTimeMillis())
     return thenYear == time.year
+  }
+
+  /**
+   * @param context App's context
+   * @return Application version name
+   */
+  fun getAppVersionName(context: Context): String {
+    return try {
+      val info: PackageInfo = context.packageManager
+          .getPackageInfo(context.packageName, 0)
+      var result: String = info.versionName
+      result = result.replace("[a-zA-Z]|-", "")
+      result
+    } catch (e: NameNotFoundException) {
+      e.printStackTrace()
+      ""
+    }
   }
 
 }

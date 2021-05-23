@@ -8,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.tarripoha.android.databinding.FragmentBottomSheetDialogBinding
 
 /**
@@ -34,17 +36,39 @@ class OptionsBottomFragment : BottomSheetDialogFragment(), View.OnClickListener 
     setStyle(DialogFragment.STYLE_NORMAL, R.style.BottomSheet)
   }
 
-  companion object {
-    const val TAG = "OptionsBottomFragment"
+  override fun onViewCreated(
+    view: View,
+    savedInstanceState: Bundle?
+  ) {
+    super.onViewCreated(view, savedInstanceState)
+    setupOptions()
+    setupListeners()
+  }
 
-    @JvmStatic
-    fun newInstance(
-      callback: OptionCLickListener,
-      bundle: Bundle
-    ): OptionsBottomFragment {
-      return OptionsBottomFragment().apply {
-        this.callback = callback
-        arguments = bundle
+  override fun onDestroy() {
+    super.onDestroy()
+    callback = null
+  }
+
+  private fun setupOptions() {
+    arguments?.let {
+      if (it.containsKey(KEY_OPTIONS)) {
+        val options = it.getString(KEY_OPTIONS)
+        val type = object : TypeToken<List<Option>>() {}.type
+        val gson = Gson()
+        val optionList = gson.fromJson<List<Option>>(options, type)
+        setupOptions(optionList)
+      }
+    }
+  }
+
+  private fun setupOptions(optionList: List<Option>) {
+    optionList.let {
+      if (it.contains(Option.Edit)) {
+        binding.menuEdit.visibility = View.VISIBLE
+      }
+      if (it.contains(Option.Delete)) {
+        binding.menuDelete.visibility = View.VISIBLE
       }
     }
   }
@@ -54,6 +78,9 @@ class OptionsBottomFragment : BottomSheetDialogFragment(), View.OnClickListener 
       when (v.id) {
         R.id.menu_copy -> {
           it.onClick(Option.Copy)
+        }
+        R.id.menu_edit -> {
+          it.onClick(Option.Edit)
         }
         R.id.menu_share -> {
           it.onClick(Option.Share)
@@ -68,6 +95,17 @@ class OptionsBottomFragment : BottomSheetDialogFragment(), View.OnClickListener 
           Log.e(TAG, "onClick: Unknown option selected")
         }
       }
+      dismiss()
+    }
+  }
+
+  private fun setupListeners() {
+    binding.apply {
+      menuCopy.setOnClickListener(this@OptionsBottomFragment)
+      menuEdit.setOnClickListener(this@OptionsBottomFragment)
+      menuShare.setOnClickListener(this@OptionsBottomFragment)
+      menuReport.setOnClickListener(this@OptionsBottomFragment)
+      menuDelete.setOnClickListener(this@OptionsBottomFragment)
     }
   }
 
@@ -75,15 +113,27 @@ class OptionsBottomFragment : BottomSheetDialogFragment(), View.OnClickListener 
     fun onClick(option: Option)
   }
 
-  override fun onDestroy() {
-    super.onDestroy()
-    callback = null
+  enum class Option {
+    Copy,
+    Edit,
+    Share,
+    Report,
+    Delete
   }
 
-  sealed class Option {
-    object Copy : Option()
-    object Share : Option()
-    object Report : Option()
-    object Delete : Option()
+  companion object {
+    const val TAG = "OptionsBottomFragment"
+    const val KEY_OPTIONS = "options"
+
+    @JvmStatic
+    fun newInstance(
+      callback: OptionCLickListener,
+      bundle: Bundle
+    ): OptionsBottomFragment {
+      return OptionsBottomFragment().apply {
+        this.callback = callback
+        arguments = bundle
+      }
+    }
   }
 }

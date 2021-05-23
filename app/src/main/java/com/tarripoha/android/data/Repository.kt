@@ -8,6 +8,8 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.tarripoha.android.data.db.Comment
 import com.tarripoha.android.data.db.Word
@@ -29,8 +31,10 @@ class Repository(
 
   private val ioExecutor: Executor by lazy { Executors.newSingleThreadExecutor() }
   private val wordRef: DatabaseReference by lazy { Firebase.database.getReference("word") }
-  private val commentRef: DatabaseReference by lazy { Firebase.database.getReference("comment") }
   private val userRef: DatabaseReference by lazy { Firebase.database.getReference("user") }
+  private val commentRef: CollectionReference by lazy {
+    Firebase.firestore.collection("comment")
+  }
 
   /**
    * Check if the [DatabaseReference] is connected
@@ -141,27 +145,23 @@ class Repository(
     )
   }
 
-  fun fetchComments(
-    word: String,
-    success: (DataSnapshot) -> Unit,
-    failure: (DatabaseError) -> Unit,
+  fun postComment(
+    comment: Comment,
+    success: () -> Unit,
+    failure: (Exception) -> Unit,
     connectionStatus: (Boolean) -> Unit
   ) {
-    val query = commentRef.orderByChild("word")
-        .startAt(word)
-        .endAt(word + "\uf8ff")
-        .limitToFirst(LIMIT_TO_FIRST)
-    query.addValueEventListener(
-        object : ValueEventListener {
-          override fun onDataChange(snapshot: DataSnapshot) {
-            success(snapshot)
-          }
-
-          override fun onCancelled(error: DatabaseError) {
-            failure(error)
-          }
+    commentRef.document(comment.id)
+        .set(comment)
+        .addOnSuccessListener {
+          success()
+          Log.d(TAG, "DocumentSnapshot added with ID: ${comment.id}")
         }
-    )
+        .addOnFailureListener { e ->
+          failure(e)
+          Log.w(TAG, "Error adding document", e)
+        }
+
     checkFirebaseConnection(
         connectionStatus = {
           connectionStatus(it)
@@ -169,20 +169,21 @@ class Repository(
     )
   }
 
-  fun postComment(
+  fun deleteComment(
     comment: Comment,
     success: () -> Unit,
     failure: (Exception) -> Unit,
     connectionStatus: (Boolean) -> Unit
   ) {
-
-    commentRef.child(comment.id)
-        .setValue(comment)
+    commentRef.document(comment.id)
+        .update("dirty", true)
         .addOnSuccessListener {
           success()
+          Log.d(TAG, "DocumentSnapshot added with ID: ${comment.id}")
         }
-        .addOnFailureListener {
-          failure(it)
+        .addOnFailureListener { e ->
+          failure(e)
+          Log.w(TAG, "Error adding document", e)
         }
 
     checkFirebaseConnection(

@@ -27,11 +27,12 @@ class MainViewModel @Inject constructor(
   private val searchWords: MutableLiveData<List<Word>> = MutableLiveData()
   private val query: MutableLiveData<String> = MutableLiveData()
   private val wordCount: MutableLiveData<Int> = MutableLiveData()
+  private var fetchMode: FetchMode = FetchMode.Popular
 
   // region WordDetailFragment
 
   private val wordDetail: MutableLiveData<Word> = MutableLiveData()
-  private val postComment: MutableLiveData<Comment> = MutableLiveData()
+  private val refreshComment: MutableLiveData<Boolean> = MutableLiveData()
 
   // endregion
 
@@ -59,11 +60,17 @@ class MainViewModel @Inject constructor(
 
   fun getWordDetail() = wordDetail
 
-  fun setPostComment(comment: Comment?) {
-    postComment.value = comment
+  fun setRefreshComment(refresh: Boolean?) {
+    refreshComment.value = refresh
   }
 
-  fun getPostComment() = postComment
+  fun getRefreshComment() = refreshComment
+
+  fun setFetchMode(mode: FetchMode) {
+    fetchMode = mode
+  }
+
+  fun getFetchMode() = fetchMode
 
   // Helper Functions
 
@@ -186,7 +193,7 @@ class MainViewModel @Inject constructor(
     repository.postComment(
         comment = comment,
         success = {
-          postCommentResponse(comment)
+          setRefreshComment(true)
         },
         failure = {
           setUserMessage(getString(R.string.error_unable_to_process))
@@ -197,23 +204,16 @@ class MainViewModel @Inject constructor(
     )
   }
 
-  private fun postCommentResponse(comment: Comment) {
-    setPostComment(comment)
-  }
-
-  fun fetchComment() {
+  fun deleteComment(
+    comment: Comment,
+  ) {
     if (!isInternetConnected()) {
       return
     }
-    if (getWordDetail().value == null) {
-      setUserMessage(getString(R.string.error_unknown))
-      return
-    }
-    val word = getWordDetail().value!!
-    repository.fetchComments(
-        word = word.name,
+    repository.deleteComment(
+        comment = comment,
         success = {
-          fetchCommentResponse(it, word)
+          setRefreshComment(true)
         },
         failure = {
           setUserMessage(getString(R.string.error_unable_to_process))
@@ -224,33 +224,12 @@ class MainViewModel @Inject constructor(
     )
   }
 
-  private fun fetchCommentResponse(
-    snapshot: DataSnapshot,
-    word: Word
-  ) {
-    val comments: MutableList<Comment> = mutableListOf()
-    snapshot.children.forEach {
-      try {
-        if (it.getValue(Comment::class.java) != null) {
-          val comment: Comment = it.getValue(Comment::class.java)!!
-          val isDirty = comment.dirty
-          if (isDirty == null || !isDirty) {
-            comments.add(comment)
-          } else {
-            Log.i(TAG, "fetchCommentResponse: ${word.name} found dirty")
-          }
-        }
-      } catch (e: Exception) {
-        Log.e(TAG, "fetchCommentResponse: ${e.localizedMessage}")
-      }
-    }
-    if (comments.isEmpty()) return
-    comments.sortByDescending { it.timestamp }
-    word.comments = comments
-    setWordDetail(word)
-  }
-
   // endregion
+
+  sealed class FetchMode {
+    object Popular : FetchMode()
+    object Recent : FetchMode()
+  }
 
   companion object {
     private const val TAG = "MainViewModel"

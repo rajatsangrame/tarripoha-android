@@ -22,11 +22,11 @@ class WordAdapter(
   ): BaseViewHolder {
     return if (viewType == VIEW_TYPE_NEW_WORD) {
       val binding = LayoutNewWordPlankBinding
-          .inflate(LayoutInflater.from(parent.context), parent, false)
+        .inflate(LayoutInflater.from(parent.context), parent, false)
       NewWordPlankViewHolder(binding)
     } else {
       val binding = LayoutItemWordBinding
-          .inflate(LayoutInflater.from(parent.context), parent, false)
+        .inflate(LayoutInflater.from(parent.context), parent, false)
       WordViewHolder(binding)
     }
   }
@@ -59,7 +59,7 @@ class WordAdapter(
   }
 
   inner class WordViewHolder(binding: LayoutItemWordBinding) : BaseViewHolder(
-      binding.root
+    binding.root
   ) {
 
     private val nameTv: TextView = binding.nameTv
@@ -76,12 +76,16 @@ class WordAdapter(
       nameTv.text = word.name
       meaningTv.text = word.meaning
     }
+
+    override fun bind(data: Any) {
+      // no-op
+    }
   }
 
   inner class NewWordPlankViewHolder(private val binding: LayoutNewWordPlankBinding) :
-      BaseViewHolder(
-          binding.root
-      ) {
+    BaseViewHolder(
+      binding.root
+    ) {
     private val messageTv: TextView = binding.messageTv
 
     init {
@@ -94,6 +98,10 @@ class WordAdapter(
       val word = words[position].name
       val msg = binding.view.context.getString(R.string.msg_new_word_plank, word)
       messageTv.text = msg
+    }
+
+    override fun bind(data: Any) {
+      // no-op
     }
   }
 

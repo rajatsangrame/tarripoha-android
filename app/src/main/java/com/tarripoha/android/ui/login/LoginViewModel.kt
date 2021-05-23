@@ -29,18 +29,11 @@ class LoginViewModel @Inject constructor(
   app: Application
 ) : BaseViewModel(app) {
 
-  private val showProgress = MutableLiveData<Boolean>()
   private var phoneNumber: String? = null
   private var storedVerificationId: String? = null
   private var resendToken: ForceResendingToken? = null
   private val isCodeSent = MutableLiveData<Boolean>()
   private val createNewUser = MutableLiveData<Boolean>()
-
-  fun setShowProgress(showProgress: Boolean?) {
-    this.showProgress.value = showProgress
-  }
-
-  fun getShowProgress() = showProgress
 
   fun getIsCodeSent() = isCodeSent
 

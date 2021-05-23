@@ -6,6 +6,7 @@ import com.tarripoha.android.di.component.ApplicationComponent
 import com.tarripoha.android.di.component.DaggerApplicationComponent
 import com.tarripoha.android.di.module.ApplicationModule
 import com.tarripoha.android.di.module.ContextModule
+import com.tarripoha.android.util.helper.PowerStone
 import com.tarripoha.android.util.helper.PreferenceHelper
 
 /**
@@ -25,6 +26,7 @@ class TPApp : Application() {
         .build()
 
     PreferenceHelper.init(this)
+    PowerStone.init(this)
   }
 
   fun getComponent(): ApplicationComponent? {

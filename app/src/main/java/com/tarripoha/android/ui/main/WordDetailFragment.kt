@@ -2,29 +2,37 @@ package com.tarripoha.android.ui.main
 
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.view.inputmethod.EditorInfo
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.paging.PagedList.Config.Builder
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.tarripoha.android.TPApp
+import com.firebase.ui.firestore.paging.FirestorePagingOptions
+import com.firebase.ui.firestore.paging.LoadingState.LOADED
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.tarripoha.android.R
+import com.tarripoha.android.TPApp
 import com.tarripoha.android.data.db.Comment
 import com.tarripoha.android.data.db.Word
 import com.tarripoha.android.databinding.FragmentWordDetailBinding
+import com.tarripoha.android.paging.CommentPagingAdapter
+import com.tarripoha.android.paging.CommentPagingAdapter.ClickMode
+import com.tarripoha.android.paging.CommentPagingAdapter.OnCommentClickListener
 import com.tarripoha.android.ui.OptionsBottomFragment
 import com.tarripoha.android.ui.OptionsBottomFragment.Option
 import com.tarripoha.android.ui.OptionsBottomFragment.OptionCLickListener
-import com.tarripoha.android.util.ItemLongClickListener
+import com.tarripoha.android.ui.main.MainViewModel.FetchMode
 import com.tarripoha.android.util.TPUtils
 import com.tarripoha.android.util.setTextWithVisibility
+import com.tarripoha.android.util.showDialog
+import com.tarripoha.android.util.toJsonString
 import com.tarripoha.android.util.toggleVisibility
 
 class WordDetailFragment : Fragment() {
@@ -37,7 +45,7 @@ class WordDetailFragment : Fragment() {
 
   private lateinit var factory: ViewModelProvider.Factory
   private lateinit var binding: FragmentWordDetailBinding
-  private lateinit var commentAdapter: CommentAdapter
+  private lateinit var commentAdapter: CommentPagingAdapter
   private val viewModel by activityViewModels<MainViewModel> {
     factory
   }
@@ -52,12 +60,17 @@ class WordDetailFragment : Fragment() {
   }
 
   override fun onPrepareOptionsMenu(menu: Menu) {
-    menu.clear()
+    menu.apply {
+      findItem(R.id.menu_more).isVisible = true
+      findItem(R.id.menu_search).isVisible = false
+      findItem(R.id.menu_info).isVisible = false
+    }
     super.onPrepareOptionsMenu(menu)
   }
 
   override fun onOptionsItemSelected(item: MenuItem): Boolean {
     if (item.itemId == R.id.menu_more) {
+      showWordMenu()
       return true
     }
     return super.onOptionsItemSelected(item)
@@ -83,10 +96,7 @@ class WordDetailFragment : Fragment() {
     super.onActivityCreated(savedInstanceState)
     factory =
       ViewModelProvider.AndroidViewModelFactory(TPApp.get(requireContext()))
-    if (viewModel.getWordDetail().value == null) {
-      viewModel.setUserMessage(getString(R.string.error_unknown))
-      return
-    }
+    if (!isWordDetailSet()) return
 
     setupUI()
   }
@@ -94,7 +104,7 @@ class WordDetailFragment : Fragment() {
   override fun onDestroy() {
     viewModel.apply {
       setWordDetail(null)
-      setPostComment(null)
+      setRefreshComment(null)
     }
     super.onDestroy()
   }
@@ -109,7 +119,14 @@ class WordDetailFragment : Fragment() {
     setupObservers()
     setupEditText()
     checkPostBtnColor("")
-    viewModel.fetchComment()
+  }
+
+  private fun isWordDetailSet(): Boolean {
+    if (viewModel.getWordDetail().value == null) {
+      viewModel.setUserMessage(getString(R.string.error_unknown))
+      return false
+    }
+    return true
   }
 
   private fun checkPostBtnColor(query: String) {
@@ -129,26 +146,78 @@ class WordDetailFragment : Fragment() {
         context, RecyclerView.VERTICAL, false
     )
     linearLayoutManager.reverseLayout = true
-    commentAdapter = CommentAdapter(ArrayList(), object : ItemLongClickListener<Comment> {
-      override fun onClick(
-        position: Int,
-        data: Comment
-      ) {
-        showOptionMenu(data)
-      }
-    })
     binding.commentRv.apply {
       layoutManager = linearLayoutManager
-      adapter = commentAdapter
-      registerForContextMenu(this)
     }
+    if (!isWordDetailSet()) return
+    val word = viewModel.getWordDetail().value!!
+    setupAdapter(getOption(word))
+  }
+
+  private fun getOption(word: Word): FirestorePagingOptions<Comment> {
+    // The "base query" is a query with no startAt/endAt/limit clauses that the adapter can use
+    // to form smaller queries for each page.  It should only include where() and orderBy() clauses
+    val baseQuery = if (viewModel.getFetchMode() == FetchMode.Recent) {
+      Firebase.firestore
+          .collection("comment")
+          .whereEqualTo("word", word.name)
+          .whereEqualTo("dirty", false)
+          .orderBy("timestamp", Query.Direction.DESCENDING)
+    } else {
+      Firebase.firestore
+          .collection("comment")
+          .whereEqualTo("word", word.name)
+          .whereEqualTo("dirty", false)
+          .orderBy("popular", Query.Direction.ASCENDING)
+    }
+    val config = Builder()
+        .setEnablePlaceholders(false)
+        .setPrefetchDistance(4)
+        .setPageSize(10)
+        .build()
+
+    return FirestorePagingOptions.Builder<Comment>()
+        .setLifecycleOwner(viewLifecycleOwner)
+        .setQuery(
+            baseQuery, config
+        ) {
+          val comment = it.toObject(Comment::class.java)!!
+          comment.localStatus = false
+          comment
+        }
+        .build()
+  }
+
+  private fun setupAdapter(options: FirestorePagingOptions<Comment>) {
+
+    commentAdapter = CommentPagingAdapter(options = options, object : OnCommentClickListener {
+      override fun onClick(
+        comment: Comment,
+        clickMode: ClickMode
+      ) {
+        when (clickMode) {
+          ClickMode.LongCLick -> showCommentMenu(comment)
+          ClickMode.LikeButton -> {
+            Log.i(TAG, "onClick: ")
+          }
+        }
+      }
+    }) { state ->
+      Log.i(TAG, "setupAdapter: $state")
+      if (state == LOADED) {
+        if (commentAdapter.itemCount != 0) {
+          binding.noCommentLayout.visibility = View.GONE
+        } else {
+          binding.noCommentLayout.visibility = View.VISIBLE
+        }
+      }
+    }
+
+    binding.commentRv.adapter = commentAdapter
   }
 
   private fun setupEditText() {
-    if (viewModel.getWordDetail().value == null) {
-      viewModel.setUserMessage(getString(R.string.error_unknown))
-      return
-    }
+    if (!isWordDetailSet()) return
     val word = viewModel.getWordDetail().value!!
     binding.commentEt.apply {
       hint = getString(R.string.add_quotes, word.name)
@@ -175,10 +244,10 @@ class WordDetailFragment : Fragment() {
             setupUi(word)
           }
         }
-    viewModel.getPostComment()
+    viewModel.getRefreshComment()
         .observe(viewLifecycleOwner) {
           it?.let {
-            //commentAdapter.addComment(it)
+            commentAdapter.refresh()
           }
         }
   }
@@ -189,9 +258,6 @@ class WordDetailFragment : Fragment() {
       meaningTv.text = word.meaning
       engMeaningTv.setTextWithVisibility(word.eng)
       noCommentLayout.toggleVisibility(word.comments)
-      word.comments?.let { comments ->
-        commentAdapter.setComments(comments)
-      }
     }
   }
 
@@ -204,10 +270,12 @@ class WordDetailFragment : Fragment() {
   }
 
   private fun postComment(): Boolean {
-    if (viewModel.getWordDetail().value == null) {
-      viewModel.setUserMessage(getString(R.string.error_unknown))
+    val userId = viewModel.getUserPhone()
+    if (userId == null) {
+      viewModel.setUserMessage(getString(R.string.error_login))
       return false
     }
+    if (!isWordDetailSet()) return false
     val validate = validateComment()
     if (validate) {
       val comment = binding.commentEt.text.trim()
@@ -219,6 +287,9 @@ class WordDetailFragment : Fragment() {
               word = word.name,
               comment = comment,
               timestamp = System.currentTimeMillis()
+                  .toDouble(),
+              userId = userId,
+              userName = viewModel.getUserName() ?: getString(R.string.user)
           )
       )
       binding.commentEt.text = null
@@ -226,17 +297,78 @@ class WordDetailFragment : Fragment() {
     return validate
   }
 
-  private fun showOptionMenu(comment: Comment) {
+  private fun showCommentMenu(comment: Comment) {
+    val option = getCommentOptions(comment)
+    val bundle = Bundle()
+    bundle.putString(OptionsBottomFragment.KEY_OPTIONS, option.toJsonString())
     val bottomSheet = OptionsBottomFragment.newInstance(
+        bundle = bundle,
         callback = object : OptionCLickListener {
           override fun onClick(option: Option) {
             Log.d(TAG, "onClick: $option} ${comment.comment}")
-            // no-op
+            when (option) {
+              Option.Delete -> {
+                MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
+                    .showDialog(
+                        message = getString(R.string.msg_confirm_delete),
+                        positiveText = getString(R.string.delete),
+                        positiveListener = {
+                          viewModel.deleteComment(comment = comment)
+                        }
+                    )
+              }
+            }
           }
-        },
-        bundle = Bundle()
+        }
     )
     bottomSheet.show(parentFragmentManager, OptionsBottomFragment.TAG)
+  }
+
+  private fun getCommentOptions(comment: Comment): List<Option> {
+    val options = mutableListOf<Option>()
+    options.add(Option.Copy)
+    options.add(Option.Share)
+    options.add(Option.Report)
+    val user = viewModel.getSavedUser()
+    val isAdmin = viewModel.isUserAdmin()
+    if (isAdmin) {
+      options.add(Option.Edit)
+    }
+    user?.let {
+      if (comment.userId == it.phone || isAdmin) {
+        options.add(Option.Delete)
+      }
+    }
+    return options
+  }
+
+  private fun showWordMenu() {
+    val option = getWordOptions()
+    val bundle = Bundle()
+    bundle.putString(OptionsBottomFragment.KEY_OPTIONS, option.toJsonString())
+    val bottomSheet = OptionsBottomFragment.newInstance(
+        bundle = bundle,
+        callback = object : OptionCLickListener {
+          override fun onClick(option: Option) {
+            Log.d(TAG, "onClick: $option}")
+            // no-op
+          }
+        }
+    )
+    bottomSheet.show(parentFragmentManager, OptionsBottomFragment.TAG)
+  }
+
+  private fun getWordOptions(): List<Option> {
+    val options = mutableListOf<Option>()
+    options.add(Option.Copy)
+    options.add(Option.Share)
+    options.add(Option.Report)
+    val isAdmin = viewModel.isUserAdmin()
+    if (isAdmin) {
+      options.add(Option.Edit)
+      options.add(Option.Delete)
+    }
+    return options
   }
 
   // endregion
