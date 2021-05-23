@@ -11,6 +11,7 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.core.widget.doAfterTextChanged
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.*
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
@@ -154,49 +155,65 @@ class MainActivity : BaseActivity() {
     navController.addOnDestinationChangedListener { _, destination, _ ->
       when (destination.id) {
         R.id.nav_home -> {
-          showBackBtn = false
-          supportActionBar?.apply {
-            setHomeAsUpIndicator(R.drawable.ic_menu_white)
-            setBackgroundDrawable(
-              ColorDrawable(ContextCompat.getColor(this@MainActivity, R.color.colorPrimary))
-            )
-          }
-          binding.container.toolbarLayout.apply {
-            title.text = getString(R.string.app_name)
-            title.visibility = View.VISIBLE
-            searchToolbar.visibility = View.GONE
-          }
+          homeNavigation()
         }
 
         R.id.nav_search -> {
-          showBackBtn = true
-          supportActionBar?.apply {
-            setHomeAsUpIndicator(R.drawable.ic_arrow_back_grey)
-            setBackgroundDrawable(
-              ColorDrawable(ContextCompat.getColor(this@MainActivity, R.color.colorToolbarWhite))
-            )
-          }
-          binding.container.toolbarLayout.apply {
-            title.visibility = View.GONE
-            searchToolbar.visibility = View.VISIBLE
-          }
-          showKeyboard()
+          searchNavigation()
         }
+
         R.id.nav_word_detail -> {
-          showBackBtn = true
-          supportActionBar?.apply {
-            setHomeAsUpIndicator(R.drawable.ic_arrow_back_white)
-            setBackgroundDrawable(
-              ColorDrawable(ContextCompat.getColor(this@MainActivity, R.color.colorPrimary))
-            )
-          }
-          binding.container.toolbarLayout.apply {
-            title.visibility = View.GONE
-            searchToolbar.visibility = View.GONE
-          }
+          wordNavigation()
         }
       }
     }
+  }
+
+  private fun homeNavigation() {
+    showBackBtn = false
+    supportActionBar?.apply {
+      setHomeAsUpIndicator(R.drawable.ic_menu_white)
+      setBackgroundDrawable(
+        ColorDrawable(ContextCompat.getColor(this@MainActivity, R.color.colorPrimary))
+      )
+    }
+    binding.container.toolbarLayout.apply {
+      title.text = getString(R.string.app_name)
+      title.visibility = View.VISIBLE
+      searchToolbar.visibility = View.GONE
+    }
+    binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+  }
+
+  private fun searchNavigation() {
+    showBackBtn = true
+    supportActionBar?.apply {
+      setHomeAsUpIndicator(R.drawable.ic_arrow_back_grey)
+      setBackgroundDrawable(
+        ColorDrawable(ContextCompat.getColor(this@MainActivity, R.color.colorToolbarWhite))
+      )
+    }
+    binding.container.toolbarLayout.apply {
+      title.visibility = View.GONE
+      searchToolbar.visibility = View.VISIBLE
+    }
+    showKeyboard()
+    binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+  }
+
+  private fun wordNavigation() {
+    showBackBtn = true
+    supportActionBar?.apply {
+      setHomeAsUpIndicator(R.drawable.ic_arrow_back_white)
+      setBackgroundDrawable(
+        ColorDrawable(ContextCompat.getColor(this@MainActivity, R.color.colorPrimary))
+      )
+    }
+    binding.container.toolbarLayout.apply {
+      title.visibility = View.GONE
+      searchToolbar.visibility = View.GONE
+    }
+    binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
   }
 
   private fun setupSearchEditText() {
