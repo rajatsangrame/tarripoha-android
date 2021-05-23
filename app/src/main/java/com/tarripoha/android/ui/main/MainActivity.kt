@@ -8,8 +8,8 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import android.view.inputmethod.EditorInfo
 import androidx.core.content.ContextCompat
+import androidx.core.view.GravityCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.*
 import androidx.lifecycle.ViewModelProvider
@@ -18,11 +18,11 @@ import androidx.navigation.findNavController
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.tarripoha.android.TPApp
 import com.tarripoha.android.R
-import com.tarripoha.android.R.color
-import com.tarripoha.android.databinding.LayoutToolbarWithNavigationBinding
+import com.tarripoha.android.databinding.ActivityMainBinding
 import com.tarripoha.android.di.component.DaggerMainActivityComponent
 import com.tarripoha.android.di.component.MainActivityComponent
 import com.tarripoha.android.ui.BaseActivity
+import com.tarripoha.android.ui.main.drawer.SideNavItem
 import com.tarripoha.android.util.TPUtils
 import com.tarripoha.android.util.ViewModelFactory
 import com.tarripoha.android.util.toggleVisibility
@@ -37,8 +37,9 @@ class MainActivity : BaseActivity() {
   lateinit var factory: ViewModelFactory
   private lateinit var navController: NavController
   private lateinit var viewModel: MainViewModel
-  private lateinit var binding: LayoutToolbarWithNavigationBinding
+  private lateinit var binding: ActivityMainBinding
   private var compositeDisposable = CompositeDisposable()
+  private var showBackBtn = false
 
   companion object {
     private const val SEARCH_DEBOUNCE_TIME_IN_MS = 300L
@@ -53,7 +54,7 @@ class MainActivity : BaseActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    binding = LayoutToolbarWithNavigationBinding.inflate(layoutInflater)
+    binding = ActivityMainBinding.inflate(layoutInflater)
     setContentView(binding.root)
     getDependency()
     viewModel = ViewModelProvider(this, factory).get(MainViewModel::class.java)
@@ -69,12 +70,16 @@ class MainActivity : BaseActivity() {
   override fun onOptionsItemSelected(item: MenuItem): Boolean {
     return when (item.itemId) {
       android.R.id.home -> {
-        hideKeyboard(binding.toolbarLayout.searchEt)
-        super.onBackPressed()
+        if (!showBackBtn) {
+          binding.drawerLayout.openDrawer(GravityCompat.START)
+        } else {
+          hideKeyboard(binding.container.toolbarLayout.searchEt)
+          super.onBackPressed()
+        }
         true
       }
       R.id.menu_search -> {
-        binding.toolbarLayout.searchEt.text = null
+        binding.container.toolbarLayout.searchEt.text = null
         navController.navigate(R.id.action_HomeFragment_to_SearchFragment)
         true
       }
@@ -96,6 +101,15 @@ class MainActivity : BaseActivity() {
     super.onDestroy()
   }
 
+  fun closeDrawer(item: SideNavItem) {
+    binding.drawerLayout.closeDrawer(GravityCompat.START)
+    when (item.itemName) {
+      getString(R.string.add) -> {
+        // no-op
+      }
+    }
+  }
+
   //endregion
 
   //region Helper functions
@@ -111,42 +125,43 @@ class MainActivity : BaseActivity() {
   }
 
   private fun setupToolbar() {
-    setSupportActionBar(binding.toolbarLayout.toolbar)
+    setSupportActionBar(binding.container.toolbarLayout.toolbar)
     supportActionBar?.apply {
       title = null
-      setDisplayHomeAsUpEnabled(false)
+      setDisplayHomeAsUpEnabled(true)
     }
   }
 
   private fun getDependency() {
     val component: MainActivityComponent = DaggerMainActivityComponent
-        .builder()
-        .applicationComponent(
-            TPApp.get(this)
-                .getComponent()
-        )
-        .build()
+      .builder()
+      .applicationComponent(
+        TPApp.get(this)
+          .getComponent()
+      )
+      .build()
     component.injectMainActivity(this)
   }
 
   private fun setupObservers() {
     viewModel.getUserMessage()
-        .observe(this, Observer {
-          TPUtils.showSnackBar(this, it)
-        })
+      .observe(this, Observer {
+        TPUtils.showSnackBar(this, it)
+      })
   }
 
   private fun handleNavigation() {
     navController.addOnDestinationChangedListener { _, destination, _ ->
       when (destination.id) {
         R.id.nav_home -> {
+          showBackBtn = false
           supportActionBar?.apply {
-            setDisplayHomeAsUpEnabled(false)
+            setHomeAsUpIndicator(R.drawable.ic_menu_white)
             setBackgroundDrawable(
-                ColorDrawable(ContextCompat.getColor(this@MainActivity, color.colorPrimary))
+              ColorDrawable(ContextCompat.getColor(this@MainActivity, R.color.colorPrimary))
             )
           }
-          binding.toolbarLayout.apply {
+          binding.container.toolbarLayout.apply {
             title.text = getString(R.string.app_name)
             title.visibility = View.VISIBLE
             searchToolbar.visibility = View.GONE
@@ -154,29 +169,28 @@ class MainActivity : BaseActivity() {
         }
 
         R.id.nav_search -> {
+          showBackBtn = true
           supportActionBar?.apply {
-            setDisplayHomeAsUpEnabled(true)
             setHomeAsUpIndicator(R.drawable.ic_arrow_back_grey)
             setBackgroundDrawable(
-                ColorDrawable(ContextCompat.getColor(this@MainActivity, color.colorToolbarWhite))
+              ColorDrawable(ContextCompat.getColor(this@MainActivity, R.color.colorToolbarWhite))
             )
           }
-          binding.toolbarLayout.apply {
+          binding.container.toolbarLayout.apply {
             title.visibility = View.GONE
             searchToolbar.visibility = View.VISIBLE
           }
           showKeyboard()
         }
         R.id.nav_word_detail -> {
+          showBackBtn = true
           supportActionBar?.apply {
-            setDisplayHomeAsUpEnabled(true)
             setHomeAsUpIndicator(R.drawable.ic_arrow_back_white)
             setBackgroundDrawable(
-                ColorDrawable(ContextCompat.getColor(this@MainActivity, color.colorPrimary))
+              ColorDrawable(ContextCompat.getColor(this@MainActivity, R.color.colorPrimary))
             )
           }
-          binding.toolbarLayout.apply {
-            title.visibility = View.GONE
+          binding.container.toolbarLayout.apply {
             title.visibility = View.GONE
             searchToolbar.visibility = View.GONE
           }
@@ -187,25 +201,25 @@ class MainActivity : BaseActivity() {
 
   private fun setupSearchEditText() {
 
-    binding.toolbarLayout.searchEt.apply {
+    binding.container.toolbarLayout.searchEt.apply {
       val d = RxTextView.textChanges(this)
-          .subscribeOn(AndroidSchedulers.mainThread())
-          .debounce(SEARCH_DEBOUNCE_TIME_IN_MS, TimeUnit.MILLISECONDS)
-          .observeOn(AndroidSchedulers.mainThread())
-          .subscribe {
-            viewModel.setQuery(it.toString())
-          }
+        .subscribeOn(AndroidSchedulers.mainThread())
+        .debounce(SEARCH_DEBOUNCE_TIME_IN_MS, TimeUnit.MILLISECONDS)
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe {
+          viewModel.setQuery(it.toString())
+        }
       compositeDisposable.add(d)
       doAfterTextChanged {
         it?.let { editable ->
-          binding.toolbarLayout.clearBtn.toggleVisibility(editable)
+          binding.container.toolbarLayout.clearBtn.toggleVisibility(editable)
         }
       }
     }
   }
 
   private fun setupListeners() {
-    binding.toolbarLayout.apply {
+    binding.container.toolbarLayout.apply {
       clearBtn.setOnClickListener {
         showKeyboard()
         searchEt.text = null
@@ -215,7 +229,7 @@ class MainActivity : BaseActivity() {
   }
 
   private fun showKeyboard() {
-    TPUtils.showKeyboard(context = this, view = binding.toolbarLayout.searchEt)
+    TPUtils.showKeyboard(context = this, view = binding.container.toolbarLayout.searchEt)
   }
 
   //endregion

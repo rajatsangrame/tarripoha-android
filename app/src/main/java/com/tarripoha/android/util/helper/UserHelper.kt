@@ -19,4 +19,6 @@ object UserHelper {
   }
 
   fun getUser() = user
+
+  fun isLoggedIn(): Boolean = user != null
 }
