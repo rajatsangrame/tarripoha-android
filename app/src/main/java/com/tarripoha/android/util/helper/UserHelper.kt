@@ -20,5 +20,9 @@ object UserHelper {
 
   fun getUser() = user
 
+  fun getName(): String? = user?.name
+
+  fun getPhone(): String? = user?.phone
+
   fun isLoggedIn(): Boolean = user != null
 }

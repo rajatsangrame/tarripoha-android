@@ -13,16 +13,16 @@ import androidx.core.view.GravityCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.*
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import com.jakewharton.rxbinding2.widget.RxTextView
-import com.tarripoha.android.TPApp
 import com.tarripoha.android.R
+import com.tarripoha.android.TPApp
 import com.tarripoha.android.databinding.ActivityMainBinding
 import com.tarripoha.android.di.component.DaggerMainActivityComponent
 import com.tarripoha.android.di.component.MainActivityComponent
 import com.tarripoha.android.ui.BaseActivity
+import com.tarripoha.android.ui.login.LoginActivity
 import com.tarripoha.android.ui.main.drawer.SideNavItem
 import com.tarripoha.android.util.TPUtils
 import com.tarripoha.android.util.ViewModelFactory
@@ -47,7 +47,12 @@ class MainActivity : BaseActivity() {
     private const val TAG = "MainActivity"
 
     fun startMe(context: Context) {
-      context.startActivity(Intent(context, MainActivity::class.java))
+      val intent = Intent(context, MainActivity::class.java)
+      intent.addFlags(
+        Intent.FLAG_ACTIVITY_CLEAR_TOP or
+            Intent.FLAG_ACTIVITY_CLEAR_TASK
+      )
+      context.startActivity(intent)
     }
   }
 
@@ -102,10 +107,24 @@ class MainActivity : BaseActivity() {
     super.onDestroy()
   }
 
-  fun closeDrawer(item: SideNavItem) {
-    binding.drawerLayout.closeDrawer(GravityCompat.START)
+  fun onDrawerClick(item: SideNavItem) {
     when (item.itemName) {
-      getString(R.string.add) -> {
+      getString(R.string.saved) -> {
+        // no-op
+      }
+      getString(R.string.login_register) -> {
+        LoginActivity.startMe(this)
+      }
+      getString(R.string.settings) -> {
+        // no-op
+      }
+      getString(R.string.share) -> {
+        // no-op
+      }
+      getString(R.string.rate_us) -> {
+        // no-op
+      }
+      getString(R.string.user) -> {
         // no-op
       }
     }

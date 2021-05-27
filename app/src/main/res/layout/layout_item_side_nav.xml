@@ -8,10 +8,7 @@
     android:clickable="true"
     android:focusable="true"
     android:orientation="horizontal"
-    android:paddingBottom="@dimen/margin_extra_large"
-    android:paddingEnd="@dimen/margin_bottom_sheet"
-    android:paddingStart="@dimen/margin_bottom_sheet"
-    android:paddingTop="@dimen/margin_extra_large"
+    android:padding="@dimen/margin_extra_large"
     >
 
   <ImageView
@@ -24,12 +21,12 @@
       />
 
   <TextView
+      style="@style/AppTheme.TextDesc"
       android:id="@+id/tv_nav_text"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="center_vertical"
       android:text="@string/copy"
-      android:textColor="@color/colorGrey"
       />
 
 </LinearLayout>

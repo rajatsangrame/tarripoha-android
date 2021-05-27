@@ -4,12 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.tarripoha.android.R
 import com.tarripoha.android.databinding.FragmentSideNavBinding
 import com.tarripoha.android.ui.main.MainActivity
+import com.tarripoha.android.util.TPUtils
 import com.tarripoha.android.util.helper.UserHelper
 
 class SideNavFragment : Fragment() {
@@ -20,8 +20,7 @@ class SideNavFragment : Fragment() {
   }
 
   private fun onItemClick(position: Int, item: SideNavItem) {
-    Toast.makeText(requireContext(), "" + item.itemName, Toast.LENGTH_LONG).show()
-    (activity as MainActivity).closeDrawer(item)
+    (activity as MainActivity).onDrawerClick(item)
   }
 
   override fun onCreateView(
@@ -45,20 +44,34 @@ class SideNavFragment : Fragment() {
       adapter = sideNavAdapter
     }
     sideNavAdapter.setNavItemsData(prepareNavItems())
+    binding.loginLayout.setOnClickListener {
+      (activity as MainActivity).onDrawerClick(SideNavItem(getString(R.string.login_register), -1))
+    }
+    binding.userLayout.setOnClickListener {
+      (activity as MainActivity).onDrawerClick(SideNavItem(getString(R.string.user), -1))
+    }
   }
 
   private fun prepareNavItems(): List<SideNavItem> {
     val isUserLoggedIn = UserHelper.isLoggedIn()
     val menuItemsList = ArrayList<SideNavItem>()
     menuItemsList.apply {
-      add(SideNavItem(1, "Saved", R.drawable.ic_add_grey))
-      add(SideNavItem(2, "Rate Us", R.drawable.ic_add_grey))
-      add(SideNavItem(3, "Share", R.drawable.ic_add_grey))
-      add(SideNavItem(5, "Settings", R.drawable.ic_add_grey))
+      add(SideNavItem(getString(R.string.saved), R.drawable.ic_save_black))
+      add(SideNavItem(getString(R.string.settings), R.drawable.ic_add_grey))
+      add(SideNavItem(getString(R.string.rate_us), R.drawable.ic_add_grey))
+      add(SideNavItem(getString(R.string.share), R.drawable.ic_share_black))
     }
-    if (!isUserLoggedIn) {
-      menuItemsList.add(SideNavItem(5, "Logout", R.drawable.ic_add_grey))
+    // Maintain the order here
+    if (isUserLoggedIn) {
+      menuItemsList.add(SideNavItem(getString(R.string.logout), R.drawable.ic_add_grey))
+      binding.userLayout.visibility = View.VISIBLE
+      binding.loginLayout.visibility = View.GONE
+    } else {
+      binding.loginLayout.visibility = View.VISIBLE
+      binding.userLayout.visibility = View.GONE
     }
+    binding.versionTv.text =
+      getString(R.string.version, TPUtils.getAppVersionName(requireContext()))
     return menuItemsList
   }
 }
