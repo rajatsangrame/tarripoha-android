@@ -18,6 +18,7 @@ import com.tarripoha.android.R
 import com.tarripoha.android.databinding.LayoutTextInputWithButtonBinding
 import com.tarripoha.android.ui.main.MainActivity
 import com.tarripoha.android.util.TPUtils
+import com.tarripoha.android.util.helper.PreferenceHelper
 import com.tarripoha.android.util.isValidNumber
 import com.tarripoha.android.util.setTextWithVisibility
 import com.tarripoha.android.util.toggleIsEnable
@@ -46,7 +47,7 @@ class LoginFragment : Fragment() {
     savedInstanceState: Bundle?
   ): View {
     binding = LayoutTextInputWithButtonBinding
-        .inflate(LayoutInflater.from(requireContext()), container, false)
+      .inflate(LayoutInflater.from(requireContext()), container, false)
     return binding.root
   }
 
@@ -106,24 +107,24 @@ class LoginFragment : Fragment() {
 
   private fun setupObservers() {
     viewModel.getIsCodeSent()
-        .observe(viewLifecycleOwner, Observer {
-          it?.let {
-            if (it) navigateToOtpVerifyFragment()
-          }
-        })
+      .observe(viewLifecycleOwner, Observer {
+        it?.let {
+          if (it) navigateToOtpVerifyFragment()
+        }
+      })
     viewModel.getShowProgress()
-        .observe(viewLifecycleOwner, Observer {
-          it.let {
-            if (it == null || !it) {
-              binding.progressBar.visibility = View.GONE
-              val d = ContextCompat.getDrawable(requireContext(), R.drawable.ic_arrow_forward_white)
-              binding.actionBtn.setImageDrawable(d)
-            } else {
-              binding.actionBtn.setImageDrawable(null)
-              binding.progressBar.visibility = View.VISIBLE
-            }
+      .observe(viewLifecycleOwner, Observer {
+        it.let {
+          if (it == null || !it) {
+            binding.progressBar.visibility = View.GONE
+            val d = ContextCompat.getDrawable(requireContext(), R.drawable.ic_arrow_forward_white)
+            binding.actionBtn.setImageDrawable(d)
+          } else {
+            binding.actionBtn.setImageDrawable(null)
+            binding.progressBar.visibility = View.VISIBLE
           }
-        })
+        }
+      })
   }
 
   private fun showKeyboard() {
@@ -135,7 +136,7 @@ class LoginFragment : Fragment() {
   private fun validateNumber(): Boolean {
     binding.inputEt.text?.let {
       val valid = it.trim()
-          .isValidNumber()
+        .isValidNumber()
       if (!valid) {
         binding.inputEt.error = getString(R.string.msg_number_not_valid)
       }
@@ -148,8 +149,8 @@ class LoginFragment : Fragment() {
     binding.inputEt.text?.let {
       if (validateNumber()) {
         processLogin(
-            it.toString()
-                .trim()
+          it.toString()
+            .trim()
         )
         TPUtils.hideKeyboard(context = requireContext(), view = binding.inputEt)
       }
@@ -161,8 +162,8 @@ class LoginFragment : Fragment() {
   ) {
     val phone = "+91$number"
     viewModel.processLogin(
-        phone = phone,
-        activity = requireActivity()
+      phone = phone,
+      activity = requireActivity()
     )
   }
 
@@ -180,7 +181,7 @@ class LoginFragment : Fragment() {
         processLogin()
       }
       optionalTv.setOnClickListener {
-        //Skip
+        PreferenceHelper.put<Boolean>(PreferenceHelper.KEY_LOGIN_SKIP, true)
         MainActivity.startMe(requireContext())
         activity?.finish()
       }

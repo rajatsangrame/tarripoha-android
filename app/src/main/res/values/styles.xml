@@ -24,12 +24,14 @@
     <item name="android:fontFamily">@font/roboto_bold</item>
   </style>
 
-  <style name="AppTheme.TextNormal" parent="TextAppearance.AppCompat.Title">
-    <item name="android:fontFamily">@font/roboto_regular</item>
+  <style name="AppTheme.TextDesc" parent="AppTheme">
+    <item name="android:fontFamily">@font/varela_round_regular</item>
+    <item name="android:textColor">@color/colorGrey</item>
   </style>
 
-  <style name="AppTheme.Regular" parent="TextAppearance.AppCompat.Title">
+  <style name="AppTheme.TextLabel" parent="AppTheme">
     <item name="android:fontFamily">@font/varela_round_regular</item>
+    <item name="android:textColor">@color/colorBlack</item>
   </style>
 
   <style name="BottomSheet" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
