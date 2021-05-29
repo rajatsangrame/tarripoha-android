@@ -36,8 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_small"
         android:text="@string/msg_new_word_plank"
-        android:textColor="@color/colorGrey"
-        android:textSize="@dimen/text_normal"
+        style="@style/AppTheme.TextDesc"
         />
 
   </LinearLayout>

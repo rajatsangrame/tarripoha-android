@@ -11,9 +11,10 @@
       android:id="@+id/login_layout"
       android:layout_width="match_parent"
       android:layout_height="80dp"
-      android:background="?attr/selectableItemBackground"
+      android:background="@color/colorGrey"
       android:clickable="true"
       android:focusable="true"
+      android:foreground="?attr/selectableItemBackground"
       android:gravity="center|start"
       android:orientation="vertical"
       android:padding="@dimen/margin_extra_large"
@@ -28,8 +29,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/login_register"
+        android:textSize="@dimen/text_large"
         tools:visibility="visible"
-        style="@style/AppTheme.TextDesc"
+        style="@style/AppTheme.TextLabel"
         />
 
   </LinearLayout>
@@ -38,9 +40,10 @@
       android:id="@+id/user_layout"
       android:layout_width="match_parent"
       android:layout_height="80dp"
-      android:background="?attr/selectableItemBackground"
+      android:background="@color/colorGrey"
       android:clickable="true"
       android:focusable="true"
+      android:foreground="?attr/selectableItemBackground"
       android:gravity="center|start"
       android:orientation="vertical"
       android:padding="@dimen/margin_extra_large"
@@ -54,8 +57,9 @@
         android:id="@+id/name_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="@dimen/text_large"
         tools:text="@string/user"
-        style="@style/AppTheme.TextDesc"
+        style="@style/AppTheme.TextLabel"
         />
 
     <TextView
@@ -63,8 +67,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_small"
+        android:textSize="@dimen/text_large"
         tools:text="@string/mobile_number"
-        style="@style/AppTheme.TextDesc"
+        style="@style/AppTheme.TextLabel"
         />
 
   </LinearLayout>

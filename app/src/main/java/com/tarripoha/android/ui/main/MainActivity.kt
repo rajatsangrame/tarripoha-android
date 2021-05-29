@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.os.Handler
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -108,26 +109,29 @@ class MainActivity : BaseActivity() {
   }
 
   fun onDrawerClick(item: SideNavItem) {
-    when (item.itemName) {
-      getString(R.string.saved) -> {
-        // no-op
+    binding.drawerLayout.closeDrawer(GravityCompat.START)
+    Handler().postDelayed({
+      when (item.itemName) {
+        getString(R.string.saved) -> {
+          // no-op
+        }
+        getString(R.string.login_register) -> {
+          LoginActivity.startMe(this)
+        }
+        getString(R.string.settings) -> {
+          // no-op
+        }
+        getString(R.string.share) -> {
+          // no-op
+        }
+        getString(R.string.rate_us) -> {
+          // no-op
+        }
+        getString(R.string.user) -> {
+          // no-op
+        }
       }
-      getString(R.string.login_register) -> {
-        LoginActivity.startMe(this)
-      }
-      getString(R.string.settings) -> {
-        // no-op
-      }
-      getString(R.string.share) -> {
-        // no-op
-      }
-      getString(R.string.rate_us) -> {
-        // no-op
-      }
-      getString(R.string.user) -> {
-        // no-op
-      }
-    }
+    }, 300)
   }
 
   //endregion

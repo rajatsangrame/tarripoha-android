@@ -27,16 +27,16 @@
         android:id="@+id/name_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorBlack"
         android:textSize="@dimen/text_extra_large"
         tools:text="@string/word"
+        style="@style/AppTheme.TextLabel"
         />
 
     <TextView
         android:id="@+id/meaning_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorGrey"
+        style="@style/AppTheme.TextDesc"
         android:textSize="@dimen/text_normal"
         tools:text="@string/meaning"
         />

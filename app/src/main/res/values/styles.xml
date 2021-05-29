@@ -5,7 +5,7 @@
     <item name="colorPrimary">@color/colorPrimary</item>
     <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
     <item name="colorAccent">@color/colorAccent</item>
-    <item name="android:fontFamily">@font/varela_round_regular</item>
+    <item name="android:fontFamily">@font/montserrat_medium</item>
   </style>
 
   <style name="AppTheme.NoActionBar">
@@ -20,17 +20,27 @@
     <item name="android:windowContentOverlay">@null</item>
   </style>
 
-  <style name="AppTheme.TextBold" parent="TextAppearance.AppCompat.Title">
-    <item name="android:fontFamily">@font/roboto_bold</item>
+  <style name="AppTheme.TextTitle" parent="TextAppearance.AppCompat.Title">
+    <item name="android:fontFamily">@font/montserrat_extra_bold</item>
   </style>
 
   <style name="AppTheme.TextDesc" parent="AppTheme">
-    <item name="android:fontFamily">@font/varela_round_regular</item>
+    <item name="android:fontFamily">@font/montserrat_medium</item>
+    <item name="android:textColor">@color/colorGrey</item>
+  </style>
+
+  <style name="AppTheme.TextDescBlack" parent="AppTheme">
+    <item name="android:fontFamily">@font/montserrat_medium</item>
+    <item name="android:textColor">@color/colorBlack</item>
+  </style>
+
+  <style name="AppTheme.TextDescItalic" parent="AppTheme">
+    <item name="android:fontFamily">@font/montserrat_medium_italic</item>
     <item name="android:textColor">@color/colorGrey</item>
   </style>
 
   <style name="AppTheme.TextLabel" parent="AppTheme">
-    <item name="android:fontFamily">@font/varela_round_regular</item>
+    <item name="android:fontFamily">@font/montserrat_bold</item>
     <item name="android:textColor">@color/colorBlack</item>
   </style>
 
@@ -62,8 +72,8 @@
   </style>
 
   <style name="Alert.MaterialComponents.Body" parent="@style/MaterialAlertDialog.MaterialComponents.Body.Text">
-    <item name="fontFamily">@font/varela_round_regular</item>
-    <item name="android:fontFamily">@font/varela_round_regular</item>
+    <item name="fontFamily">@font/montserrat_medium</item>
+    <item name="android:fontFamily">@font/montserrat_medium</item>
   </style>
 
 </resources>
