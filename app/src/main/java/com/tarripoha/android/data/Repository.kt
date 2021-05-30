@@ -160,7 +160,7 @@ class Repository(
             }
             .addOnFailureListener { e ->
                 failure(e)
-                Log.w(TAG, "Error adding document", e)
+                Log.e(TAG, "Error adding document", e)
             }
 
         checkFirebaseConnection(
@@ -184,7 +184,7 @@ class Repository(
             }
             .addOnFailureListener { e ->
                 failure(e)
-                Log.w(TAG, "Error adding document", e)
+                Log.e(TAG, "Error adding document", e)
             }
 
         checkFirebaseConnection(
@@ -196,26 +196,20 @@ class Repository(
 
     fun likeComment(
         comment: Comment,
-        userId: String,
-        success: (MutableList<String>) -> Unit,
+        likes: List<String>,
+        success: () -> Unit,
         failure: (Exception) -> Unit,
         connectionStatus: (Boolean) -> Unit
     ) {
-        val likes: MutableList<String> = comment.likes ?: mutableListOf()
-        if (likes.isEmpty()) {
-            likes.add(userId)
-        } else if (likes.contains(userId)) {
-            likes.remove(userId)
-        }
         commentRef.document(comment.id)
             .update("likes", likes)
             .addOnSuccessListener {
-                success(likes)
+                success()
                 Log.d(TAG, "likeComment: DocumentSnapshot added with ID: ${comment.id}")
             }
             .addOnFailureListener { e ->
                 failure(e)
-                Log.w(TAG, "Error adding document", e)
+                Log.e(TAG, "Error adding document", e)
             }
 
         checkFirebaseConnection(

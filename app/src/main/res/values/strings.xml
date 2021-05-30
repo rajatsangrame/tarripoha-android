@@ -44,6 +44,8 @@
     <string name="version">Version %1$s</string>
     <string name="logout">Logout</string>
     <string name="donate">Donate</string>
+    <string name="like">%1$s Like</string>
+    <string name="likes">%1$s Likes</string>
 
     <string name="sample_time">12:35 PM</string>
     <string name="sample_likes">2 Likes</string>

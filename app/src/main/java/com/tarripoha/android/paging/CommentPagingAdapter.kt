@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.firebase.ui.firestore.paging.FirestorePagingAdapter
 import com.firebase.ui.firestore.paging.FirestorePagingOptions
@@ -64,7 +65,7 @@ class CommentPagingAdapter(
                     commentTv.text = comment.comment
                     avatarTv.text = user[0].toString()
                     showLikeButton(comment, likeIv)
-                    binding.totalLikesTv.toggleVisibility(list = comment.likes, reverse = false)
+                    showTotalLikes(comment, totalLikesTv)
                     val time = TPUtils.getTime(itemView.context, comment.timestamp)
                     timestampTv.setTextWithVisibility(time)
                     likeIv.setOnClickListener {
@@ -97,10 +98,12 @@ class CommentPagingAdapter(
     }
 
     /**
-     * @param commentUser User who posted comment
+     * @param comment User who posted comment
+     * @param likeIv View to be updated
      * @return Visibility weather like button should be shown for comment
      *
-     * NOTE: If user is not logged in show like and display Login msg.
+     * 1. If user is not logged in show like and display Login msg.
+     * 2. Update the tint color if user has already like the comment
      */
     private fun showLikeButton(comment: Comment, likeIv: ImageView) {
         val likes = comment.likes
@@ -116,6 +119,20 @@ class CommentPagingAdapter(
                 likeIv.setColorFilter(ContextCompat.getColor(likeIv.context, R.color.colorGrey))
             }
             likeIv.visibility = View.VISIBLE
+        }
+    }
+
+    private fun showTotalLikes(comment: Comment, view: TextView) {
+        val likes = comment.likes
+        val context = view.context
+        if (likes.isNullOrEmpty()) {
+            view.visibility = View.GONE
+        } else if (likes.size == 1) {
+            view.text = context.getString(R.string.like, likes.size.toString())
+            view.visibility = View.VISIBLE
+        } else {
+            view.text = context.getString(R.string.likes, likes.size.toString())
+            view.visibility = View.VISIBLE
         }
     }
 

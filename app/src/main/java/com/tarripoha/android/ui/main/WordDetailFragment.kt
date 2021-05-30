@@ -200,11 +200,19 @@ class WordDetailFragment : Fragment() {
                 when (clickMode) {
                     ClickMode.LongCLick -> showCommentMenu(comment)
                     ClickMode.LikeButton -> {
-                        if (!UserHelper.isLoggedIn()) {
+                        val userId = UserHelper.getPhone()
+                        if (userId.isNullOrEmpty()) {
                             viewModel.setUserMessage(getString(R.string.error_login))
+                            return
                         }
-                        viewModel.likeComment(comment) {
-                            comment.likes = it
+                        val likes: MutableList<String> = comment.likes ?: mutableListOf()
+                        if (likes.isEmpty()) {
+                            likes.add(userId)
+                        } else if (likes.contains(userId)) {
+                            likes.remove(userId)
+                        }
+                        viewModel.likeComment(comment, likes) {
+                            comment.likes = likes
                             commentAdapter.notifyItemChanged(position)
                             //commentAdapter.notifyDataSetChanged()
                         }

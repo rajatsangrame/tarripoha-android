@@ -227,19 +227,15 @@ class MainViewModel @Inject constructor(
 
     fun likeComment(
         comment: Comment,
-        callback: (MutableList<String>) -> Unit
+        likes: List<String>,
+        callback: () -> Unit
     ) {
         if (!checkNetworkAndShowError()) {
             return
         }
-        val userId = UserHelper.getPhone()
-        if (userId.isNullOrEmpty()) {
-            setUserMessage(getString(R.string.error_login))
-            return
-        }
         repository.likeComment(
             comment = comment,
-            userId = userId,
+            likes = likes,
             success = callback,
             failure = {
                 setUserMessage(getString(R.string.error_unable_to_process))
