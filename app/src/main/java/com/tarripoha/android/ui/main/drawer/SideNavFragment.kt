@@ -72,12 +72,16 @@ class SideNavFragment : Fragment() {
             menuItemsList.add(
                 SideNavItem(
                     getString(R.string.logout),
-                    R.drawable.ic_add_grey,
+                    R.drawable.ic_logout_grey,
                     R.color.colorRed
                 )
             )
-            binding.userLayout.visibility = View.VISIBLE
-            binding.loginLayout.visibility = View.GONE
+            binding.apply {
+                userLayout.visibility = View.VISIBLE
+                loginLayout.visibility = View.GONE
+                nameTv.text = UserHelper.getName()
+                phoneTv.text = UserHelper.getPhone()
+            }
         } else {
             binding.loginLayout.visibility = View.VISIBLE
             binding.userLayout.visibility = View.GONE

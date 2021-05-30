@@ -17,7 +17,6 @@ import com.tarripoha.android.ui.BaseViewHolder
 import com.tarripoha.android.util.TPUtils
 import com.tarripoha.android.util.helper.UserHelper
 import com.tarripoha.android.util.setTextWithVisibility
-import com.tarripoha.android.util.toggleVisibility
 
 /**
  * Ref:
@@ -64,7 +63,7 @@ class CommentPagingAdapter(
                     userTv.text = user
                     commentTv.text = comment.comment
                     avatarTv.text = user[0].toString()
-                    showLikeButton(comment, likeIv)
+                    setLikeButton(comment, likeIv)
                     showTotalLikes(comment, totalLikesTv)
                     val time = TPUtils.getTime(itemView.context, comment.timestamp)
                     timestampTv.setTextWithVisibility(time)
@@ -98,41 +97,36 @@ class CommentPagingAdapter(
     }
 
     /**
-     * @param comment User who posted comment
-     * @param likeIv View to be updated
-     * @return Visibility weather like button should be shown for comment
-     *
-     * 1. If user is not logged in show like and display Login msg.
-     * 2. Update the tint color if user has already like the comment
+     * Update the tint color if user has already liked the comment
      */
-    private fun showLikeButton(comment: Comment, likeIv: ImageView) {
+    private fun setLikeButton(comment: Comment, likeIv: ImageView) {
         val likes = comment.likes
-        if (UserHelper.isLoggedIn() && UserHelper.isLoggedInUser(comment.userId)) {
-            likeIv.visibility = View.GONE
-        } else if (likes.isNullOrEmpty()) {
+        if (likes.isNullOrEmpty()) {
             likeIv.setColorFilter(ContextCompat.getColor(likeIv.context, R.color.colorGrey))
-            likeIv.visibility = View.VISIBLE
         } else {
             if (likes.contains(UserHelper.getPhone())) {
                 likeIv.setColorFilter(ContextCompat.getColor(likeIv.context, R.color.colorBlack))
             } else {
                 likeIv.setColorFilter(ContextCompat.getColor(likeIv.context, R.color.colorGrey))
             }
-            likeIv.visibility = View.VISIBLE
         }
     }
 
     private fun showTotalLikes(comment: Comment, view: TextView) {
         val likes = comment.likes
         val context = view.context
-        if (likes.isNullOrEmpty()) {
-            view.visibility = View.GONE
-        } else if (likes.size == 1) {
-            view.text = context.getString(R.string.like, likes.size.toString())
-            view.visibility = View.VISIBLE
-        } else {
-            view.text = context.getString(R.string.likes, likes.size.toString())
-            view.visibility = View.VISIBLE
+        when {
+            likes.isNullOrEmpty() -> {
+                view.visibility = View.GONE
+            }
+            likes.size == 1 -> {
+                view.text = context.getString(R.string.like, likes.size.toString())
+                view.visibility = View.VISIBLE
+            }
+            else -> {
+                view.text = context.getString(R.string.likes, likes.size.toString())
+                view.visibility = View.VISIBLE
+            }
         }
     }
 

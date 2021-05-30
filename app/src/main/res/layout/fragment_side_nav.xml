@@ -67,9 +67,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_small"
-        android:textSize="@dimen/text_large"
         tools:text="@string/mobile_number"
-        style="@style/AppTheme.TextLabelWhite"
+        style="@style/AppTheme.TextDesc"
         />
 
   </LinearLayout>

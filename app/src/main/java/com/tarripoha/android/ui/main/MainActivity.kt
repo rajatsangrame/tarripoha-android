@@ -141,7 +141,7 @@ class MainActivity : BaseActivity() {
                     MaterialAlertDialogBuilder(this, R.style.AlertDialogTheme)
                         .showDialog(
                             message = getString(R.string.msg_confirm_logout),
-                            positiveText = getString(R.string.delete),
+                            positiveText = getString(R.string.logout),
                             positiveListener = {
                                 LoginHelper.logoutUser()
                                 LoginActivity.startMe(this)
