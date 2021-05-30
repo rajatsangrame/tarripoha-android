@@ -8,25 +8,22 @@
     android:clickable="true"
     android:focusable="true"
     android:orientation="horizontal"
-    android:padding="@dimen/margin_extra_large"
-    >
+    android:padding="@dimen/margin_extra_large">
 
-  <ImageView
-      android:id="@+id/iv_nav_option"
-      android:layout_width="@dimen/icon_size"
-      android:layout_height="@dimen/icon_size"
-      android:layout_marginEnd="@dimen/margin_extra_large"
-      android:src="@drawable/ic_copy_black"
-      app:tint="@color/colorGrey"
-      />
+    <ImageView
+        android:id="@+id/iv_nav_option"
+        android:layout_width="@dimen/icon_size"
+        android:layout_height="@dimen/icon_size"
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:src="@drawable/ic_copy_black"
+        app:tint="@color/colorGrey" />
 
-  <TextView
-      style="@style/AppTheme.TextDesc"
-      android:id="@+id/tv_nav_text"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_gravity="center_vertical"
-      android:text="@string/copy"
-      />
+    <TextView
+        android:id="@+id/tv_nav_text"
+        style="@style/AppTheme.TextDesc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:text="@string/copy" />
 
 </LinearLayout>

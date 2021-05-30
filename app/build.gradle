@@ -1,162 +1,162 @@
 plugins {
-  id 'com.android.application'
-  id 'kotlin-android'
-  id 'kotlin-kapt'
-  id 'kotlin-parcelize'
-  id 'com.google.firebase.crashlytics'
-  id 'com.google.gms.google-services'
-  id 'com.google.firebase.firebase-perf'
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'kotlin-parcelize'
+    id 'com.google.firebase.crashlytics'
+    id 'com.google.gms.google-services'
+    id 'com.google.firebase.firebase-perf'
 }
 
 android {
-  compileSdkVersion 29
-  buildToolsVersion "29.0.3"
+    compileSdkVersion 30
+    buildToolsVersion "30.0.3"
 
-  defaultConfig {
-    applicationId "com.tarripoha.android"
-    minSdkVersion 21
-    multiDexEnabled true
-    targetSdkVersion 29
-    versionCode 20210416
-    versionName "0.5.0"
+    defaultConfig {
+        applicationId "com.tarripoha.android"
+        minSdkVersion 21
+        multiDexEnabled true
+        targetSdkVersion 30
+        versionCode 20210416
+        versionName "0.5.0"
 
-    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-  }
-
-  buildTypes {
-    debug {
-      applicationIdSuffix ".debug"
-      //buildConfigField("String", "AuthKey", AuthKey)
-      debuggable true
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
-    release {
-      minifyEnabled false
-      debuggable false
-      proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-      //buildConfigField("String", "AuthKey", AuthKey)
+
+    buildTypes {
+        debug {
+            applicationIdSuffix ".debug"
+            //buildConfigField("String", "AuthKey", AuthKey)
+            debuggable true
+        }
+        release {
+            minifyEnabled false
+            debuggable false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            //buildConfigField("String", "AuthKey", AuthKey)
+        }
     }
-  }
-  compileOptions {
-    sourceCompatibility JavaVersion.VERSION_1_8
-    targetCompatibility JavaVersion.VERSION_1_8
-  }
-  kotlinOptions {
-    jvmTarget = JavaVersion.VERSION_1_8.toString()
-  }
-  buildFeatures {
-    dataBinding = true
-    viewBinding = true
-  }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
+    buildFeatures {
+        dataBinding = true
+        viewBinding = true
+    }
 }
 ext {
-  appcompat_verison = '1.2.0'
-  constraint_layout_version = '2.0.4'
-  dagger2 = "2.27"
-  espresso_version = '3.3.0'
-  firebase_version = "26.8.0"
-  firebase_ui = "7.1.1"
-  fragment_ktx = "1.3.1"
-  glide_version = "4.11.0"
-  gson_verison = '2.8.6'
-  junit_version = '4.13.2'
-  junit_runner_version = '1.3.0'
-  junit_ext_version = '1.1.2'
-  lifecycle_version = '2.3.0'
-  material_version = '1.3.0'
-  navigation = "2.3.4"
-  okhttp_version = "4.8.1"
-  paging = "2.1.2"
-  recycler_view_version = '1.1.0'
-  room_version = '2.2.6'
-  retrofit_version = "2.9.0"
-  retrofit_rx_java = "2.3.0"
-  rx_java = "2.2.10"
-  rx_android = "2.1.1"
-  rx_binding = "2.0.0"
-  swiperefreshlayout = "1.1.0"
+    appcompat_verison = '1.2.0'
+    constraint_layout_version = '2.0.4'
+    dagger2 = "2.27"
+    espresso_version = '3.3.0'
+    firebase_version = "26.8.0"
+    firebase_ui = "7.1.1"
+    fragment_ktx = "1.3.1"
+    glide_version = "4.11.0"
+    gson_verison = '2.8.6'
+    junit_version = '4.13.2'
+    junit_runner_version = '1.3.0'
+    junit_ext_version = '1.1.2'
+    lifecycle_version = '2.3.0'
+    material_version = '1.3.0'
+    navigation = "2.3.4"
+    okhttp_version = "4.8.1"
+    paging = "2.1.2"
+    recycler_view_version = '1.1.0'
+    room_version = '2.2.6'
+    retrofit_version = "2.9.0"
+    retrofit_rx_java = "2.3.0"
+    rx_java = "2.2.10"
+    rx_android = "2.1.1"
+    rx_binding = "2.0.0"
+    swiperefreshlayout = "1.1.0"
 }
 dependencies {
-  implementation fileTree(dir: "libs", include: ["*.jar"])
-  implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
-  // Testing
-  testImplementation "junit:junit:$junit_version"
-  androidTestImplementation "androidx.test.ext:junit:$junit_ext_version"
-  androidTestImplementation "androidx.test:rules:$junit_runner_version"
-  androidTestImplementation "androidx.test:runner:$junit_runner_version"
-  androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
-  androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
-  androidTestImplementation "androidx.test.espresso:espresso-contrib:$espresso_version"
-  implementation "androidx.test.espresso:espresso-idling-resource:$espresso_version"
+    // Testing
+    testImplementation "junit:junit:$junit_version"
+    androidTestImplementation "androidx.test.ext:junit:$junit_ext_version"
+    androidTestImplementation "androidx.test:rules:$junit_runner_version"
+    androidTestImplementation "androidx.test:runner:$junit_runner_version"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
+    androidTestImplementation "androidx.test.espresso:espresso-contrib:$espresso_version"
+    implementation "androidx.test.espresso:espresso-idling-resource:$espresso_version"
 
-  // AndroidX and Material
-  implementation "androidx.appcompat:appcompat:$appcompat_verison"
-  implementation "androidx.recyclerview:recyclerview:$recycler_view_version"
-  implementation "androidx.constraintlayout:constraintlayout:$constraint_layout_version"
-  implementation "com.google.android.material:material:$material_version"
+    // AndroidX and Material
+    implementation "androidx.appcompat:appcompat:$appcompat_verison"
+    implementation "androidx.recyclerview:recyclerview:$recycler_view_version"
+    implementation "androidx.constraintlayout:constraintlayout:$constraint_layout_version"
+    implementation "com.google.android.material:material:$material_version"
 
-  // Fragment & Navigation Ktx
-  implementation "androidx.fragment:fragment-ktx:$fragment_ktx"
-  implementation "androidx.navigation:navigation-fragment-ktx:$navigation"
-  implementation "androidx.navigation:navigation-ui-ktx:$navigation"
+    // Fragment & Navigation Ktx
+    implementation "androidx.fragment:fragment-ktx:$fragment_ktx"
+    implementation "androidx.navigation:navigation-fragment-ktx:$navigation"
+    implementation "androidx.navigation:navigation-ui-ktx:$navigation"
 
-  // Room
-  implementation "androidx.room:room-runtime:$room_version"
-  kapt "androidx.room:room-compiler:$room_version"
-  implementation "androidx.room:room-rxjava2:$room_version"
+    // Room
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+    implementation "androidx.room:room-rxjava2:$room_version"
 
-  // Lifecycle components
-  implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
-  implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
-  implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
+    // Lifecycle components
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
 
-  // Gson
-  implementation "com.google.code.gson:gson:$gson_verison"
+    // Gson
+    implementation "com.google.code.gson:gson:$gson_verison"
 
-  // Retrofit
-  implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
-  implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
-  implementation "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
-  implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit_version"
+    // Retrofit
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit_version"
 
-  // Glide
-  implementation "com.github.bumptech.glide:glide:$glide_version"
-  kapt "com.github.bumptech.glide:compiler:$glide_version"
+    // Glide
+    implementation "com.github.bumptech.glide:glide:$glide_version"
+    kapt "com.github.bumptech.glide:compiler:$glide_version"
 
-  // RxJava
-  implementation "io.reactivex.rxjava2:rxjava:$rx_java"
-  implementation "io.reactivex.rxjava2:rxandroid:$rx_android"
+    // RxJava
+    implementation "io.reactivex.rxjava2:rxjava:$rx_java"
+    implementation "io.reactivex.rxjava2:rxandroid:$rx_android"
 
-  // Dagger2
-  implementation "com.google.dagger:dagger:$dagger2"
-  implementation "com.google.dagger:dagger-android:$dagger2"
-  kapt "com.google.dagger:dagger-compiler:$dagger2"
-  kapt "com.google.dagger:dagger-android-processor:$dagger2"
+    // Dagger2
+    implementation "com.google.dagger:dagger:$dagger2"
+    implementation "com.google.dagger:dagger-android:$dagger2"
+    kapt "com.google.dagger:dagger-compiler:$dagger2"
+    kapt "com.google.dagger:dagger-android-processor:$dagger2"
 
-  // Firebase
-  implementation platform("com.google.firebase:firebase-bom:$firebase_version")
-  implementation 'com.google.firebase:firebase-analytics-ktx'
-  implementation 'com.google.firebase:firebase-crashlytics-ktx'
-  implementation 'com.google.firebase:firebase-config-ktx'
-  implementation 'com.google.firebase:firebase-database-ktx'
-  implementation 'com.google.firebase:firebase-perf-ktx'
-  implementation 'com.google.firebase:firebase-messaging-ktx'
-  implementation 'com.google.firebase:firebase-auth-ktx'
-  implementation 'com.google.firebase:firebase-firestore-ktx'
+    // Firebase
+    implementation platform("com.google.firebase:firebase-bom:$firebase_version")
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'com.google.firebase:firebase-crashlytics-ktx'
+    implementation 'com.google.firebase:firebase-config-ktx'
+    implementation 'com.google.firebase:firebase-database-ktx'
+    implementation 'com.google.firebase:firebase-perf-ktx'
+    implementation 'com.google.firebase:firebase-messaging-ktx'
+    implementation 'com.google.firebase:firebase-auth-ktx'
+    implementation 'com.google.firebase:firebase-firestore-ktx'
 
-  // Swipe Refresh
-  implementation "androidx.swiperefreshlayout:swiperefreshlayout:$swiperefreshlayout"
+    // Swipe Refresh
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:$swiperefreshlayout"
 
-  // RxBinding
-  implementation "com.jakewharton.rxbinding2:rxbinding:$rx_binding"
+    // RxBinding
+    implementation "com.jakewharton.rxbinding2:rxbinding:$rx_binding"
 
-  // Core KTX
-  implementation "androidx.core:core-ktx:1.3.2"
+    // Core KTX
+    implementation "androidx.core:core-ktx:1.3.2"
 
-  implementation "androidx.browser:browser:1.3.0"
+    implementation "androidx.browser:browser:1.3.0"
 
-  // Firebase Ui
-  implementation "com.firebaseui:firebase-ui-firestore:$firebase_ui"
+    // Firebase Ui
+    implementation "com.firebaseui:firebase-ui-firestore:$firebase_ui"
 
-  implementation "androidx.paging:paging-runtime-ktx:$paging"
+    implementation "androidx.paging:paging-runtime-ktx:$paging"
 }

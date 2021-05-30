@@ -25,178 +25,181 @@ import javax.inject.Inject
  */
 
 class LoginViewModel @Inject constructor(
-  var repository: Repository,
-  app: Application
+    var repository: Repository,
+    app: Application
 ) : BaseViewModel(app) {
 
-  private var phoneNumber: String? = null
-  private var storedVerificationId: String? = null
-  private var resendToken: ForceResendingToken? = null
-  private val isCodeSent = MutableLiveData<Boolean>()
-  private val createNewUser = MutableLiveData<Boolean>()
+    private var phoneNumber: String? = null
+    private var storedVerificationId: String? = null
+    private var resendToken: ForceResendingToken? = null
+    private val isCodeSent = MutableLiveData<Boolean>()
+    private val isNewUserCreated = MutableLiveData<Boolean>()
 
-  fun getIsCodeSent() = isCodeSent
+    fun getIsCodeSent() = isCodeSent
 
-  fun getCreateNewUser() = createNewUser
+    fun getIsNewUserCreated() = isNewUserCreated
 
-  fun processLogin(
-    phone: String,
-    activity: Activity,
-  ) {
-    if (!isInternetConnected()) {
-      return
-    }
-    Log.i(TAG, "processLogin: $phone")
-
-    setShowProgress(true)
-    LoginHelper.processOtpLogin(
-        phone = phone,
-        activity = activity,
-        callbacks = object : OnVerificationStateChangedCallbacks() {
-          override fun onVerificationCompleted(p0: PhoneAuthCredential) {
-            Log.i(TAG, "onVerificationCompleted: $phone $p0")
-            setShowProgress(false)
-          }
-
-          override fun onVerificationFailed(e: FirebaseException) {
-            Log.e(TAG, "onVerificationFailed: $phone ${e.message}")
-            setShowProgress(false)
-            setUserMessage(getString(R.string.error_otp_verification_failed))
-            if (e is FirebaseAuthInvalidCredentialsException) {
-              // Invalid request
-            } else if (e is FirebaseTooManyRequestsException) {
-              // The SMS quota for the project has been exceeded
-            }
-          }
-
-          override fun onCodeSent(
-            id: String,
-            token: ForceResendingToken
-          ) {
-            Log.i(TAG, "onCodeSent")
-            setShowProgress(false)
-            phoneNumber = phone
-            storedVerificationId = id
-            resendToken = token
-            isCodeSent.value = true
-            super.onCodeSent(id, token)
-          }
-        }
-    )
-  }
-
-  fun verifyOtp(
-    otp: String,
-    activity: Activity
-  ) {
-    if (storedVerificationId == null) {
-      setUserMessage(getString(R.string.error_unknown))
-      return
-    }
-    setShowProgress(true)
-    LoginHelper.verifyOtp(storedVerificationId!!, otp, activity) { task ->
-      if (task.isSuccessful) {
-        val user = task.result?.user
-        Log.d(TAG, "verifyOtp: success ${user.toString()}")
-        fetchUserInfo()
-      } else {
-        setShowProgress(false)
-        Log.e(TAG, "verifyOtp: failure", task.exception)
-        if (task.exception is FirebaseAuthInvalidCredentialsException) {
-          setUserMessage(getString(R.string.error_incorrect_otp))
-        }
-      }
-    }
-  }
-
-  private fun fetchUserInfo() {
-    if (!isInternetConnected()) {
-      setShowProgress(false)
-      return
-    }
-    Log.i(TAG, "fetchUserInfo: ")
-    if (phoneNumber == null) {
-      setUserMessage(getString(R.string.error_unknown))
-      setShowProgress(false)
-      return
-    }
-    repository.fetchUserInfo(
-        phone = phoneNumber!!, success = {
-      fetchUserInfoResponse(it)
-    }, failure = {
-      setShowProgress(false)
-      setUserMessage(getString(R.string.error_unable_to_fetch))
-    }, connectionStatus = {
-      if (!it) setShowProgress(false)
-    })
-  }
-
-  private fun fetchUserInfoResponse(
-    snapshot: DataSnapshot,
-  ) {
-    Log.i(TAG, "fetchUserInfoResponse: ")
-    try {
-      if (snapshot.childrenCount > 0) {
-        if (snapshot.getValue(User::class.java) != null
-        ) {
-          setShowProgress(false)
-          val user: User = snapshot.getValue(User::class.java)!!
-          val isDirty = user.dirty
-          if (isDirty != null && isDirty) {
-            setUserMessage(getString(R.string.msg_user_blocked, user.name))
+    fun processLogin(
+        phone: String,
+        activity: Activity,
+    ) {
+        if (!isInternetConnected()) {
             return
-          }
-          Log.i(TAG, "fetchUserInfoResponse: user found ${user.phone}")
-          this.setUser(user)
         }
-      } else {
-        setShowProgress(false)
-        createNewUser.value = true
-      }
-    } catch (e: Exception) {
-      setShowProgress(false)
-      Log.e(TAG, "fetchAllResponse: ${e.localizedMessage}")
+        Log.i(TAG, "processLogin: $phone")
+
+        setShowProgress(true)
+        LoginHelper.processOtpLogin(
+            phone = phone,
+            activity = activity,
+            callbacks = object : OnVerificationStateChangedCallbacks() {
+                override fun onVerificationCompleted(p0: PhoneAuthCredential) {
+                    Log.i(TAG, "onVerificationCompleted: $phone $p0")
+                    setShowProgress(false)
+                }
+
+                override fun onVerificationFailed(e: FirebaseException) {
+                    Log.e(TAG, "onVerificationFailed: $phone ${e.message}")
+                    setShowProgress(false)
+                    setUserMessage(getString(R.string.error_otp_verification_failed))
+                    if (e is FirebaseAuthInvalidCredentialsException) {
+                        // Invalid request
+                    } else if (e is FirebaseTooManyRequestsException) {
+                        // The SMS quota for the project has been exceeded
+                    }
+                }
+
+                override fun onCodeSent(
+                    id: String,
+                    token: ForceResendingToken
+                ) {
+                    Log.i(TAG, "onCodeSent")
+                    setShowProgress(false)
+                    phoneNumber = phone
+                    storedVerificationId = id
+                    resendToken = token
+                    isCodeSent.value = true
+                    super.onCodeSent(id, token)
+                }
+            }
+        )
     }
-  }
 
-  fun createUser(
-    name: String,
-    email: String
-  ) {
-    if (!isInternetConnected()) {
-      return
+    fun verifyOtp(
+        otp: String,
+        activity: Activity
+    ) {
+        if (storedVerificationId == null) {
+            setUserMessage(getString(R.string.error_unknown))
+            return
+        }
+        setShowProgress(true)
+        LoginHelper.verifyOtp(storedVerificationId!!, otp, activity) { task ->
+            if (task.isSuccessful) {
+                val user = task.result?.user
+                Log.d(TAG, "verifyOtp: success ${user.toString()}")
+                fetchUserInfo()
+            } else {
+                setShowProgress(false)
+                Log.e(TAG, "verifyOtp: failure", task.exception)
+                if (task.exception is FirebaseAuthInvalidCredentialsException) {
+                    setUserMessage(getString(R.string.error_incorrect_otp))
+                }
+            }
+        }
     }
-    if (phoneNumber.isNullOrEmpty() || name.isEmpty() || email.isEmpty()) {
-      setUserMessage(getString(R.string.error_unknown))
-      return
+
+    private fun fetchUserInfo() {
+        if (!isInternetConnected()) {
+            setShowProgress(false)
+            return
+        }
+        Log.i(TAG, "fetchUserInfo: ")
+        if (phoneNumber == null) {
+            setUserMessage(getString(R.string.error_unknown))
+            setShowProgress(false)
+            return
+        }
+        repository.fetchUserInfo(
+            phone = phoneNumber!!, success = {
+                fetchUserInfoResponse(it)
+            }, failure = {
+                setShowProgress(false)
+                setUserMessage(getString(R.string.error_unable_to_fetch))
+            }, connectionStatus = {
+                if (!it) setShowProgress(false)
+            })
     }
-    val user = User(
-        id = TPUtils.getRandomUuid(),
-        name = name, phone = phoneNumber!!, email = email, timestamp = System.currentTimeMillis()
-    )
-    repository.createUser(
-        phone = phoneNumber!!,
-        user = user,
-        success = {
-          setUserMessage(getString(R.string.msg_user_created, user.name))
-          this.setUser(user)
-        }, failure = {
-      setUserMessage(getString(R.string.error_unable_to_fetch))
-    }, connectionStatus = {
 
-    })
-  }
+    private fun fetchUserInfoResponse(
+        snapshot: DataSnapshot,
+    ) {
+        Log.i(TAG, "fetchUserInfoResponse: ")
+        try {
+            if (snapshot.childrenCount > 0) {
+                if (snapshot.getValue(User::class.java) != null
+                ) {
+                    setShowProgress(false)
+                    val user: User = snapshot.getValue(User::class.java)!!
+                    val isDirty = user.dirty
+                    if (isDirty != null && isDirty) {
+                        setUserMessage(getString(R.string.msg_user_blocked, user.name))
+                        return
+                    }
+                    Log.i(TAG, "fetchUserInfoResponse: user found ${user.phone}")
+                    this.setUser(user)
+                }
+            } else {
+                setShowProgress(false)
+                isNewUserCreated.value = true
+            }
+        } catch (e: Exception) {
+            setShowProgress(false)
+            Log.e(TAG, "fetchAllResponse: ${e.localizedMessage}")
+        }
+    }
 
-  fun resetLoginParams() {
-    phoneNumber = null
-    storedVerificationId = null
-    resendToken = null
-    isCodeSent.value = false
-    createNewUser.value = false
-    setShowProgress(null)
-  }
+    fun createUser(
+        name: String,
+        email: String
+    ) {
+        if (!isInternetConnected()) {
+            return
+        }
+        if (phoneNumber.isNullOrEmpty() || name.isEmpty() || email.isEmpty()) {
+            setUserMessage(getString(R.string.error_unknown))
+            return
+        }
+        val user = User(
+            id = TPUtils.getRandomUuid(),
+            name = name,
+            phone = phoneNumber!!,
+            email = email,
+            timestamp = System.currentTimeMillis()
+        )
+        repository.createUser(
+            phone = phoneNumber!!,
+            user = user,
+            success = {
+                setUserMessage(getString(R.string.msg_user_created, user.name))
+                this.setUser(user)
+            }, failure = {
+                setUserMessage(getString(R.string.error_unable_to_fetch))
+            }, connectionStatus = {
 
-  companion object {
-    private const val TAG = "LoginViewModel"
-  }
+            })
+    }
+
+    fun resetLoginParams() {
+        phoneNumber = null
+        storedVerificationId = null
+        resendToken = null
+        isCodeSent.value = false
+        isNewUserCreated.value = false
+        setShowProgress(null)
+    }
+
+    companion object {
+        private const val TAG = "LoginViewModel"
+    }
 }
