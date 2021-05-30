@@ -102,12 +102,27 @@ class CommentPagingAdapter(
     private fun setLikeButton(comment: Comment, likeIv: ImageView) {
         val likes = comment.likes
         if (likes.isNullOrEmpty()) {
-            likeIv.setColorFilter(ContextCompat.getColor(likeIv.context, R.color.colorGrey))
+            likeIv.setImageDrawable(
+                ContextCompat.getDrawable(
+                    likeIv.context,
+                    R.drawable.ic_like_border_black
+                )
+            )
         } else {
             if (likes.contains(UserHelper.getPhone())) {
-                likeIv.setColorFilter(ContextCompat.getColor(likeIv.context, R.color.colorBlack))
+                likeIv.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        likeIv.context,
+                        R.drawable.ic_like_black
+                    )
+                )
             } else {
-                likeIv.setColorFilter(ContextCompat.getColor(likeIv.context, R.color.colorGrey))
+                likeIv.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        likeIv.context,
+                        R.drawable.ic_like_border_black
+                    )
+                )
             }
         }
     }

@@ -102,6 +102,16 @@ class WordDetailFragment : Fragment() {
         setupUI()
     }
 
+    override fun onStart() {
+        super.onStart()
+        commentAdapter.startListening()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        commentAdapter.stopListening()
+    }
+
     override fun onDestroy() {
         viewModel.apply {
             setWordDetail(null)
@@ -206,15 +216,17 @@ class WordDetailFragment : Fragment() {
                             return
                         }
                         val likes: MutableList<String> = comment.likes ?: mutableListOf()
-                        if (likes.isEmpty()) {
-                            likes.add(userId)
-                        } else if (likes.contains(userId)) {
-                            likes.remove(userId)
+                        when {
+                            likes.contains(userId) -> {
+                                likes.remove(userId)
+                            }
+                            else -> {
+                                likes.add(userId)
+                            }
                         }
                         viewModel.likeComment(comment, likes) {
                             comment.likes = likes
-                            commentAdapter.notifyItemChanged(position)
-                            //commentAdapter.notifyDataSetChanged()
+                            commentAdapter.refresh()
                         }
                     }
                 }
