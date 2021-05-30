@@ -43,7 +43,7 @@ class LoginViewModel @Inject constructor(
         phone: String,
         activity: Activity,
     ) {
-        if (!isInternetConnected()) {
+        if (!checkNetworkAndShowError()) {
             return
         }
         Log.i(TAG, "processLogin: $phone")
@@ -110,7 +110,7 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun fetchUserInfo() {
-        if (!isInternetConnected()) {
+        if (!checkNetworkAndShowError()) {
             setShowProgress(false)
             return
         }
@@ -163,7 +163,7 @@ class LoginViewModel @Inject constructor(
         name: String,
         email: String
     ) {
-        if (!isInternetConnected()) {
+        if (!checkNetworkAndShowError()) {
             return
         }
         if (phoneNumber.isNullOrEmpty() || name.isEmpty() || email.isEmpty()) {

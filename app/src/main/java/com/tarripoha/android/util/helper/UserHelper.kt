@@ -9,20 +9,28 @@ import com.tarripoha.android.util.toJsonString
  */
 object UserHelper {
 
-  private var user: User? = null
+    private var user: User? = null
 
-  fun setUser(user: User?) {
-    this.user = user
-    user?.let {
-      PreferenceHelper.put<String>(PreferenceHelper.KEY_USER, it.toJsonString())
+    fun setUser(user: User?) {
+        this.user = user
+        user?.let {
+            PreferenceHelper.put<String>(PreferenceHelper.KEY_USER, it.toJsonString())
+        }
     }
-  }
 
-  fun getUser() = user
+    fun getUser() = user
 
-  fun getName(): String? = user?.name
+    fun getName(): String? = user?.name
 
-  fun getPhone(): String? = user?.phone
+    fun getPhone(): String? = user?.phone
 
-  fun isLoggedIn(): Boolean = user != null
+    fun isLoggedIn(): Boolean = user != null
+
+    fun isLoggedInUser(phone: String): Boolean {
+        user?.let {
+            return@isLoggedInUser it.phone == phone
+        }
+        return false
+    }
+
 }
