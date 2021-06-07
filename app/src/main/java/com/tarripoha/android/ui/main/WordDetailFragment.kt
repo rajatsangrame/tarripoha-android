@@ -215,16 +215,20 @@ class WordDetailFragment : Fragment() {
                             viewModel.setUserMessage(getString(R.string.error_login))
                             return
                         }
-                        val likes: MutableList<String> = comment.likes ?: mutableListOf()
+                        val likes: MutableMap<String, Boolean> =
+                            comment.likes ?: mutableMapOf()
+                        var like: Boolean
                         when {
                             likes.contains(userId) -> {
-                                likes.remove(userId)
+                                // Opp of likes[userId]
+                                like = !likes[userId]!!
                             }
                             else -> {
-                                likes.add(userId)
+                                like = true
                             }
                         }
-                        viewModel.likeComment(comment, likes) {
+                        likes[userId] = like
+                        viewModel.likeComment(comment, like, userId) {
                             comment.likes = likes
                             commentAdapter.refresh()
                         }

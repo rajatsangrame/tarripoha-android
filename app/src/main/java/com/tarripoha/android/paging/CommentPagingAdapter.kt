@@ -109,7 +109,9 @@ class CommentPagingAdapter(
                 )
             )
         } else {
-            if (likes.contains(UserHelper.getPhone())) {
+            val userId = UserHelper.getPhone()
+            if (likes.containsKey(userId) && likes[userId] == true) {
+                // LIKE = TRUE
                 likeIv.setImageDrawable(
                     ContextCompat.getDrawable(
                         likeIv.context,
@@ -129,17 +131,27 @@ class CommentPagingAdapter(
 
     private fun showTotalLikes(comment: Comment, view: TextView) {
         val likes = comment.likes
+        if (likes.isNullOrEmpty()) {
+            view.visibility = View.GONE
+            return
+        }
         val context = view.context
-        when {
-            likes.isNullOrEmpty() -> {
+        var count = 0
+        likes.forEach {
+            if (it.value) {
+                count++
+            }
+        }
+        when (count) {
+            0 -> {
                 view.visibility = View.GONE
             }
-            likes.size == 1 -> {
-                view.text = context.getString(R.string.like, likes.size.toString())
+            1 -> {
+                view.text = context.getString(R.string.like, count.toString())
                 view.visibility = View.VISIBLE
             }
             else -> {
-                view.text = context.getString(R.string.likes, likes.size.toString())
+                view.text = context.getString(R.string.likes, count.toString())
                 view.visibility = View.VISIBLE
             }
         }

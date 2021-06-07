@@ -196,13 +196,14 @@ class Repository(
 
     fun likeComment(
         comment: Comment,
-        likes: List<String>,
+        like: Boolean,
+        userId: String,
         success: () -> Unit,
         failure: (Exception) -> Unit,
         connectionStatus: (Boolean) -> Unit
     ) {
         commentRef.document(comment.id)
-            .update("likes", likes)
+            .update(mapOf("likes.${userId}" to like))
             .addOnSuccessListener {
                 success()
                 Log.d(TAG, "likeComment: DocumentSnapshot added with ID: ${comment.id}")

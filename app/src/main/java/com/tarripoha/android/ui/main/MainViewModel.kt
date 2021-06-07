@@ -227,7 +227,8 @@ class MainViewModel @Inject constructor(
 
     fun likeComment(
         comment: Comment,
-        likes: List<String>,
+        like: Boolean,
+        userId: String,
         callback: () -> Unit
     ) {
         if (!checkNetworkAndShowError()) {
@@ -235,7 +236,8 @@ class MainViewModel @Inject constructor(
         }
         repository.likeComment(
             comment = comment,
-            likes = likes,
+            like = like,
+            userId = userId,
             success = callback,
             failure = {
                 setUserMessage(getString(R.string.error_unable_to_process))
