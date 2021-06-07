@@ -4,11 +4,15 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.tarripoha.android.ui.main.MainViewModel;
 
 import static com.google.firebase.firestore.Query.Direction.ASCENDING;
 import static com.tarripoha.android.paging.Constants.*;
 
-public class FirestoreCommentListRepositoryCallback implements CommentListViewModel.CommentListRepository,
+/**
+ * Ref: https://github.com/alexmamo/FirestoreRealtimePagination
+ */
+public class FirestoreCommentListRepositoryCallback implements MainViewModel.CommentListRepository,
         CommentListLiveData.OnLastVisibleCommentCallback, CommentListLiveData.OnLastCommentReachedCallback {
     private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
     private CollectionReference productsRef = firebaseFirestore.collection(COMMENT_COLLECTION);

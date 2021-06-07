@@ -4,13 +4,13 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.*
 import com.google.firebase.database.DataSnapshot
-import com.tarripoha.android.data.Repository
-import com.tarripoha.android.data.db.Word
-import com.tarripoha.android.ui.BaseViewModel
 import com.tarripoha.android.R
+import com.tarripoha.android.data.Repository
 import com.tarripoha.android.data.db.Comment
-import com.tarripoha.android.util.helper.UserHelper
-import java.lang.Exception
+import com.tarripoha.android.data.db.Word
+import com.tarripoha.android.paging.CommentListLiveData
+import com.tarripoha.android.paging.FirestoreCommentListRepositoryCallback
+import com.tarripoha.android.ui.BaseViewModel
 import javax.inject.Inject
 
 /**
@@ -29,6 +29,17 @@ class MainViewModel @Inject constructor(
     private val query: MutableLiveData<String> = MutableLiveData()
     private val wordCount: MutableLiveData<Int> = MutableLiveData()
     private var fetchMode: FetchMode = FetchMode.Popular
+
+    private val productListRepository: CommentListRepository =
+        FirestoreCommentListRepositoryCallback()
+
+    fun getProductListLiveData(): CommentListLiveData {
+        return productListRepository.getCommentListLiveData()
+    }
+
+    interface CommentListRepository {
+        fun getCommentListLiveData(): CommentListLiveData
+    }
 
     // region WordDetailFragment Variable
 

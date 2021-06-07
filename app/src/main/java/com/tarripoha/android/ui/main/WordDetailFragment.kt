@@ -22,6 +22,8 @@ import com.tarripoha.android.TPApp
 import com.tarripoha.android.data.db.Comment
 import com.tarripoha.android.data.db.Word
 import com.tarripoha.android.databinding.FragmentWordDetailBinding
+import com.tarripoha.android.paging.CommentAdapter
+import com.tarripoha.android.paging.CommentListLiveData
 import com.tarripoha.android.paging.CommentPagingAdapter
 import com.tarripoha.android.paging.CommentPagingAdapter.ClickMode
 import com.tarripoha.android.paging.CommentPagingAdapter.OnCommentClickListener
@@ -29,12 +31,8 @@ import com.tarripoha.android.ui.OptionsBottomFragment
 import com.tarripoha.android.ui.OptionsBottomFragment.Option
 import com.tarripoha.android.ui.OptionsBottomFragment.OptionCLickListener
 import com.tarripoha.android.ui.main.MainViewModel.FetchMode
-import com.tarripoha.android.util.TPUtils
+import com.tarripoha.android.util.*
 import com.tarripoha.android.util.helper.UserHelper
-import com.tarripoha.android.util.setTextWithVisibility
-import com.tarripoha.android.util.showDialog
-import com.tarripoha.android.util.toJsonString
-import com.tarripoha.android.util.toggleVisibility
 
 class WordDetailFragment : Fragment() {
 
@@ -46,7 +44,8 @@ class WordDetailFragment : Fragment() {
 
     private lateinit var factory: ViewModelProvider.Factory
     private lateinit var binding: FragmentWordDetailBinding
-    private lateinit var commentAdapter: CommentPagingAdapter
+    //private lateinit var commentAdapter: CommentPagingAdapter
+    private lateinit var commentAdapter: CommentAdapter
     private val viewModel by activityViewModels<MainViewModel> {
         factory
     }
@@ -104,16 +103,18 @@ class WordDetailFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        commentAdapter.startListening()
+        //commentAdapter.startListening()
     }
 
     override fun onStop() {
         super.onStop()
-        commentAdapter.stopListening()
+        //commentAdapter.stopListening()
     }
 
     override fun onDestroy() {
         viewModel.apply {
+            // TODO: Reset this just before navigation to this fragment
+            // WE are not sure this will be called for sure
             setWordDetail(null)
             setRefreshComment(null)
         }
@@ -162,7 +163,7 @@ class WordDetailFragment : Fragment() {
         }
         if (!isWordDetailSet()) return
         val word = viewModel.getWordDetail().value!!
-        setupAdapter(getOption(word))
+        //setupAdapter(getOption(word))
     }
 
     private fun getOption(word: Word): FirestorePagingOptions<Comment> {
@@ -201,7 +202,7 @@ class WordDetailFragment : Fragment() {
 
     private fun setupAdapter(options: FirestorePagingOptions<Comment>) {
 
-        commentAdapter = CommentPagingAdapter(options = options, object : OnCommentClickListener {
+        val commentAdapter = CommentPagingAdapter(options = options, object : OnCommentClickListener {
             override fun onClick(
                 comment: Comment,
                 clickMode: ClickMode,
@@ -226,7 +227,7 @@ class WordDetailFragment : Fragment() {
                         }
                         viewModel.likeComment(comment, likes) {
                             comment.likes = likes
-                            commentAdapter.refresh()
+                            //commentAdapter.refresh()
                         }
                     }
                 }
@@ -234,7 +235,7 @@ class WordDetailFragment : Fragment() {
         }) { state ->
             Log.i(TAG, "setupAdapter: $state")
             if (state == LOADED) {
-                if (commentAdapter.itemCount != 0) {
+                if (/*commentAdapter.itemCount != 0*/true) {
                     binding.noCommentLayout.visibility = View.GONE
                 } else {
                     binding.noCommentLayout.visibility = View.VISIBLE
@@ -276,7 +277,7 @@ class WordDetailFragment : Fragment() {
         viewModel.getRefreshComment()
             .observe(viewLifecycleOwner) {
                 it?.let {
-                    commentAdapter.refresh()
+                    //commentAdapter.refresh()
                 }
             }
     }
@@ -407,6 +408,29 @@ class WordDetailFragment : Fragment() {
     private fun setupListeners() {
         binding.postCommentBtn.setOnClickListener {
             postComment()
+        }
+    }
+
+    private fun getProducts() {
+        val commentListLiveData: CommentListLiveData = viewModel.getProductListLiveData()
+        if (commentListLiveData != null) {
+            commentListLiveData.observe(this) { operation ->
+                when (operation.type) {
+                    R.string.added -> {
+                        val addedProduct: Comment = operation.comment
+                        //addProduct(addedProduct)
+                    }
+                    R.string.modified -> {
+                        val modifiedProduct: Comment = operation.comment
+                        //modifyProduct(modifiedProduct)
+                    }
+                    R.string.removed -> {
+                        val removedProduct: Comment = operation.comment
+                        //removeProduct(removedProduct)
+                    }
+                }
+                commentAdapter.notifyDataSetChanged()
+            }
         }
     }
 

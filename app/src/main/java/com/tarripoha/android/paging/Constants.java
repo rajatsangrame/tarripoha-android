@@ -1,7 +1,7 @@
 package com.tarripoha.android.paging;
 
 public interface Constants {
-    String COMMENT_COLLECTION = "products";
-    String COMMENT_NAME_PROPERTY = "name";
+    String COMMENT_COLLECTION = "comment";
+    String COMMENT_NAME_PROPERTY = "timestamp";
     int LIMIT = 15;
 }
