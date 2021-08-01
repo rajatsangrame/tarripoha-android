@@ -43,7 +43,7 @@ abstract class BaseViewModel(val app: Application) : ViewModel() {
 
     fun getContext(): Context = app.applicationContext
 
-    fun setUser(user: User) {
+    fun setUser(user: User?) {
         this.user.value = user
     }
 

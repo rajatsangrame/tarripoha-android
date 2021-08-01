@@ -2,12 +2,8 @@ package com.tarripoha.android.ui.login
 
 import android.app.Activity
 import com.google.android.gms.tasks.OnCompleteListener
-import com.google.firebase.auth.AuthResult
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.PhoneAuthOptions
-import com.google.firebase.auth.PhoneAuthProvider
+import com.google.firebase.auth.*
 import com.google.firebase.auth.PhoneAuthProvider.OnVerificationStateChangedCallbacks
-import com.tarripoha.android.util.helper.PreferenceHelper
 import java.util.concurrent.TimeUnit
 
 object LoginHelper {
@@ -46,7 +42,6 @@ object LoginHelper {
 
     fun logoutUser() {
         auth.signOut()
-        PreferenceHelper.clear()
     }
 
 }

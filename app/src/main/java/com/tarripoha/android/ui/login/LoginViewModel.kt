@@ -25,7 +25,7 @@ import javax.inject.Inject
  */
 
 class LoginViewModel @Inject constructor(
-    var repository: Repository,
+    private var repository: Repository,
     app: Application
 ) : BaseViewModel(app) {
 
@@ -34,10 +34,13 @@ class LoginViewModel @Inject constructor(
     private var resendToken: ForceResendingToken? = null
     private val isCodeSent = MutableLiveData<Boolean>()
     private val isNewUserCreated = MutableLiveData<Boolean>()
+    private val isDirtyAccount = MutableLiveData<Boolean>()
 
     fun getIsCodeSent() = isCodeSent
 
     fun getIsNewUserCreated() = isNewUserCreated
+
+    fun getIsDirtyAccount() = isDirtyAccount
 
     fun processLogin(
         phone: String,
@@ -144,6 +147,7 @@ class LoginViewModel @Inject constructor(
                     val isDirty = user.dirty
                     if (isDirty != null && isDirty) {
                         setUserMessage(getString(R.string.msg_user_blocked, user.name))
+                        isDirtyAccount.value = true
                         return
                     }
                     Log.i(TAG, "fetchUserInfoResponse: user found ${user.phone}")
@@ -196,6 +200,7 @@ class LoginViewModel @Inject constructor(
         resendToken = null
         isCodeSent.value = false
         isNewUserCreated.value = false
+        isDirtyAccount.value = false
         setShowProgress(null)
     }
 

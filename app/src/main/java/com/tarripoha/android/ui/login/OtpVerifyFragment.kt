@@ -123,6 +123,12 @@ class OtpVerifyFragment : Fragment() {
                     if (it) navigateToCreateUserFragment()
                 }
             })
+        viewModel.getIsDirtyAccount()
+            .observe(viewLifecycleOwner, Observer {
+                it?.let {
+                    if (it) findNavController().popBackStack()
+                }
+            })
         viewModel.getShowProgress()
             .observe(viewLifecycleOwner, Observer {
                 it.let {
