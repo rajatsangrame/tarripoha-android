@@ -185,7 +185,7 @@ class MainActivity : BaseActivity() {
                     .getComponent()
             )
             .build()
-        component.injectMainActivity(this)
+        component.injectActivity(this)
     }
 
     private fun setupObservers() {

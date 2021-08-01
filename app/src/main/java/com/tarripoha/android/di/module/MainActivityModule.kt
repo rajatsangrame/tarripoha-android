@@ -8,7 +8,7 @@ import dagger.Module
  * http://github.com/rajatsangrame
  */
 @Module
-class MainActivityModule(var mainActivity: MainActivity) {
+class MainActivityModule(var activity: MainActivity) {
 
 //    @Provides
 //    @MainActivityScope

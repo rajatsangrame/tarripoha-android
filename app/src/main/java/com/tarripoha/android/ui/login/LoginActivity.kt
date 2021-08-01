@@ -68,7 +68,7 @@ class LoginActivity : BaseActivity() {
                     .getComponent()
             )
             .build()
-        component.injectLoginActivity(this)
+        component.injectActivity(this)
     }
 
     private fun setupUi() {

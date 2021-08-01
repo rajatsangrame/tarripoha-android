@@ -13,10 +13,10 @@ import dagger.Provides
 @Module
 class ContextModule(var context: Context) {
 
-  @ApplicationContext
-  @ApplicationScope
-  @Provides
-  fun context(): Context {
-    return context.applicationContext
-  }
+    @ApplicationContext
+    @ApplicationScope
+    @Provides
+    fun context(): Context {
+        return context.applicationContext
+    }
 }

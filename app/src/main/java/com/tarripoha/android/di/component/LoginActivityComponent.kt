@@ -12,5 +12,5 @@ import dagger.Component
 @Component(modules = [LoginActivityModule::class], dependencies = [ApplicationComponent::class])
 @MainActivityScope
 interface LoginActivityComponent {
-  fun injectLoginActivity(loginActivity: LoginActivity)
+    fun injectActivity(activity: LoginActivity)
 }

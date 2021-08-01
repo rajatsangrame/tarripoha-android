@@ -12,5 +12,5 @@ import dagger.Component
 @Component(modules = [MainActivityModule::class], dependencies = [ApplicationComponent::class])
 @MainActivityScope
 interface MainActivityComponent {
-  fun injectMainActivity(mainActivity: MainActivity)
+    fun injectActivity(activity: MainActivity)
 }

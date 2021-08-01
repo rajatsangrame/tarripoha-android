@@ -8,14 +8,4 @@ import dagger.Module
  * http://github.com/rajatsangrame
  */
 @Module
-class LoginActivityModule(var loginActivity: LoginActivity) {
-
-//    @Provides
-//    @MainActivityScope
-//    fun getAdapter(): TrackAdapter {
-//        val trackAdapter = TrackAdapter()
-//        trackAdapter.setHasStableIds(true)
-//        return trackAdapter
-//    }
-
-}
+class LoginActivityModule(var activity: LoginActivity)

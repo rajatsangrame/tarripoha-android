@@ -1,5 +1,6 @@
 package com.tarripoha.android.di.module
 
+import com.tarripoha.android.ui.startup.StartupActivity
 import dagger.Module
 
 /**
@@ -7,4 +8,4 @@ import dagger.Module
  * http://github.com/rajatsangrame
  */
 @Module
-class StartupActivityModule(var activityModule: StartupActivityModule)
+class StartupActivityModule(var activity: StartupActivity)

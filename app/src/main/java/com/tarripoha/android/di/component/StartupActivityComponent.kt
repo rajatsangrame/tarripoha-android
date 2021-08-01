@@ -12,5 +12,5 @@ import dagger.Component
 @Component(modules = [StartupActivityModule::class], dependencies = [ApplicationComponent::class])
 @StartupActivityScope
 interface StartupActivityComponent {
-  fun injectActivity(activityModule: StartupActivity)
+    fun injectActivity(activity: StartupActivity)
 }
