@@ -8,8 +8,6 @@ import com.tarripoha.android.data.Repository
 import com.tarripoha.android.data.db.Word
 import com.tarripoha.android.ui.BaseViewModel
 import com.tarripoha.android.R
-import com.tarripoha.android.data.db.Comment
-import com.tarripoha.android.util.helper.UserHelper
 import java.lang.Exception
 import javax.inject.Inject
 
@@ -28,14 +26,6 @@ class MainViewModel @Inject constructor(
     private val searchWords: MutableLiveData<List<Word>> = MutableLiveData()
     private val query: MutableLiveData<String> = MutableLiveData()
     private val wordCount: MutableLiveData<Int> = MutableLiveData()
-    private var fetchMode: FetchMode = FetchMode.Popular
-
-    // region WordDetailFragment Variable
-
-    private val wordDetail: MutableLiveData<Word> = MutableLiveData()
-    private val refreshComment: MutableLiveData<Boolean> = MutableLiveData()
-
-    // endregion
 
     fun getWordCount() = wordCount
 
@@ -54,24 +44,6 @@ class MainViewModel @Inject constructor(
     fun setSearchWords(words: List<Word>?) {
         searchWords.value = words
     }
-
-    fun setWordDetail(word: Word?) {
-        wordDetail.value = word
-    }
-
-    fun getWordDetail() = wordDetail
-
-    fun setRefreshComment(refresh: Boolean?) {
-        refreshComment.value = refresh
-    }
-
-    fun getRefreshComment() = refreshComment
-
-    fun setFetchMode(mode: FetchMode) {
-        fetchMode = mode
-    }
-
-    fun getFetchMode() = fetchMode
 
     // Helper Functions
 
@@ -186,74 +158,7 @@ class MainViewModel @Inject constructor(
         setSearchWords(wordList)
     }
 
-    fun postComment(comment: Comment) {
-        if (!checkNetworkAndShowError()) {
-            return
-        }
-        comment.localStatus = true
-        repository.postComment(
-            comment = comment,
-            success = {
-                setRefreshComment(true)
-            },
-            failure = {
-                setUserMessage(getString(R.string.error_unable_to_process))
-            },
-            connectionStatus = {
-
-            }
-        )
-    }
-
-    fun deleteComment(
-        comment: Comment
-    ) {
-        if (!checkNetworkAndShowError()) {
-            return
-        }
-        repository.deleteComment(
-            comment = comment,
-            success = {
-                setRefreshComment(true)
-            },
-            failure = {
-                setUserMessage(getString(R.string.error_unable_to_process))
-            },
-            connectionStatus = {
-
-            }
-        )
-    }
-
-    fun likeComment(
-        comment: Comment,
-        like: Boolean,
-        userId: String,
-        callback: () -> Unit
-    ) {
-        if (!checkNetworkAndShowError()) {
-            return
-        }
-        repository.likeComment(
-            comment = comment,
-            like = like,
-            userId = userId,
-            success = callback,
-            failure = {
-                setUserMessage(getString(R.string.error_unable_to_process))
-            },
-            connectionStatus = {
-
-            }
-        )
-    }
-
     // endregion
-
-    sealed class FetchMode {
-        object Popular : FetchMode()
-        object Recent : FetchMode()
-    }
 
     companion object {
         private const val TAG = "MainViewModel"

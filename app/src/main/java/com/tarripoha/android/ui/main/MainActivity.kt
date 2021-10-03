@@ -205,10 +205,6 @@ class MainActivity : BaseActivity() {
                 R.id.nav_search -> {
                     searchNavigation()
                 }
-
-                R.id.nav_word_detail -> {
-                    wordNavigation()
-                }
             }
         }
     }

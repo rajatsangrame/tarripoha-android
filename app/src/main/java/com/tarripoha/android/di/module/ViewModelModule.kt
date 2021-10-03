@@ -6,6 +6,7 @@ import com.tarripoha.android.di.ViewModelKey
 import com.tarripoha.android.ui.login.LoginViewModel
 import com.tarripoha.android.ui.main.MainViewModel
 import com.tarripoha.android.ui.startup.StartupViewModel
+import com.tarripoha.android.ui.word.WordViewModel
 import com.tarripoha.android.util.ViewModelFactory
 import dagger.Binds
 import dagger.Module
@@ -35,5 +36,10 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(StartupViewModel::class)
     abstract fun provideStartupViewModel(viewModel: StartupViewModel?): ViewModel?
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(WordViewModel::class)
+    abstract fun provideWordDetailViewModel(viewModel: WordViewModel?): ViewModel?
 
 }

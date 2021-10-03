@@ -1,12 +1,13 @@
-package com.tarripoha.android.ui.main
+package com.tarripoha.android.ui.word
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.view.inputmethod.EditorInfo
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doAfterTextChanged
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.paging.PagedList.Config.Builder
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,52 +23,103 @@ import com.tarripoha.android.TPApp
 import com.tarripoha.android.data.db.Comment
 import com.tarripoha.android.data.db.Word
 import com.tarripoha.android.databinding.FragmentWordDetailBinding
+import com.tarripoha.android.di.component.DaggerWordActivityComponent
+import com.tarripoha.android.di.component.WordActivityComponent
 import com.tarripoha.android.paging.CommentPagingAdapter
 import com.tarripoha.android.paging.CommentPagingAdapter.ClickMode
 import com.tarripoha.android.paging.CommentPagingAdapter.OnCommentClickListener
 import com.tarripoha.android.ui.OptionsBottomFragment
 import com.tarripoha.android.ui.OptionsBottomFragment.Option
 import com.tarripoha.android.ui.OptionsBottomFragment.OptionCLickListener
-import com.tarripoha.android.ui.main.MainViewModel.FetchMode
-import com.tarripoha.android.util.TPUtils
 import com.tarripoha.android.util.helper.UserHelper
-import com.tarripoha.android.util.setTextWithVisibility
-import com.tarripoha.android.util.showDialog
-import com.tarripoha.android.util.toJsonString
-import com.tarripoha.android.util.toggleVisibility
+import com.tarripoha.android.ui.word.WordViewModel.FetchMode
+import com.tarripoha.android.util.*
+import javax.inject.Inject
 
-class WordDetailFragment : Fragment() {
+class WordDetailActivity : AppCompatActivity() {
 
     // region Variables
 
     companion object {
         private const val TAG = "WordDetailFragment"
+        private const val KEY_WORD_DETAIL = "word_detail"
+        private const val KEY_WORD = "word"
+        private const val KEY_IS_EXTERNAL_SHARE = "is_external_share"
+
+        fun startMe(
+            context: Context,
+            wordDetail: Word?,
+            isExternalShare: Boolean = false,
+            word: String? = null
+        ) {
+            val intent = Intent(context, WordDetailActivity::class.java)
+            intent.putExtra(KEY_WORD_DETAIL, wordDetail)
+            intent.putExtra(KEY_IS_EXTERNAL_SHARE, isExternalShare)
+            intent.putExtra(KEY_WORD, word)
+            context.startActivity(intent)
+        }
     }
 
-    private lateinit var factory: ViewModelProvider.Factory
+    @Inject
+    lateinit var factory: ViewModelFactory
     private lateinit var binding: FragmentWordDetailBinding
     private lateinit var commentAdapter: CommentPagingAdapter
-    private val viewModel by activityViewModels<MainViewModel> {
-        factory
-    }
+    private lateinit var viewModel: WordViewModel
 
     // endregion
 
-    // region Fragment Related Methods
+    // region Activity Related Methods
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        setHasOptionsMenu(true)
         super.onCreate(savedInstanceState)
+
+        binding = FragmentWordDetailBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        getDependency()
+        viewModel = ViewModelProvider(this, factory).get(WordViewModel::class.java)
+
+        if (intent.hasExtra(KEY_IS_EXTERNAL_SHARE)) {
+            val isExternalShare = intent?.getBooleanExtra(KEY_IS_EXTERNAL_SHARE, false)!!
+            when {
+                isExternalShare -> {
+                    // handle External Share
+                }
+                intent.hasExtra(KEY_WORD_DETAIL) -> {
+                    val word = intent?.getParcelableExtra<Word>(KEY_WORD_DETAIL)
+                    viewModel.setWordDetail(word)
+                    setupUI()
+                }
+                else -> {
+                    viewModel.setUserMessage(getString(R.string.error_unknown))
+                }
+            }
+        } else {
+            viewModel.setUserMessage(getString(R.string.error_unknown))
+        }
     }
 
-    override fun onPrepareOptionsMenu(menu: Menu) {
+    private fun getDependency() {
+        val component: WordActivityComponent = DaggerWordActivityComponent
+            .builder()
+            .applicationComponent(
+                TPApp.get(this)
+                    .getComponent()
+            )
+            .build()
+        component.injectActivity(this)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater: MenuInflater = menuInflater
+        inflater.inflate(R.menu.menu_main, menu)
         menu.apply {
             findItem(R.id.menu_more).isVisible = true
             findItem(R.id.menu_search).isVisible = false
             findItem(R.id.menu_info).isVisible = false
         }
-        super.onPrepareOptionsMenu(menu)
+        return true
     }
+
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.menu_more) {
@@ -75,31 +127,6 @@ class WordDetailFragment : Fragment() {
             return true
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentWordDetailBinding
-            .inflate(LayoutInflater.from(requireContext()), container, false)
-        return binding.root
-    }
-
-    /**
-     * Called when fragment's activity is created.
-     * 1. Setup UI for the activity. See [setupUI].
-     *
-     * @param savedInstanceState Saved data on config or state change.
-     */
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        factory =
-            ViewModelProvider.AndroidViewModelFactory(TPApp.get(requireContext()))
-        if (!isWordDetailSet()) return
-
-        setupUI()
     }
 
     override fun onStart() {
@@ -125,6 +152,7 @@ class WordDetailFragment : Fragment() {
     // region Helper Methods
 
     private fun setupUI() {
+        title = null
         setupRecyclerView()
         setupListeners()
         setupObservers()
@@ -154,7 +182,7 @@ class WordDetailFragment : Fragment() {
 
     private fun setupRecyclerView() {
         val linearLayoutManager = LinearLayoutManager(
-            context, RecyclerView.VERTICAL, false
+            this, RecyclerView.VERTICAL, false
         )
         linearLayoutManager.reverseLayout = true
         binding.commentRv.apply {
@@ -188,7 +216,7 @@ class WordDetailFragment : Fragment() {
             .build()
 
         return FirestorePagingOptions.Builder<Comment>()
-            .setLifecycleOwner(viewLifecycleOwner)
+            .setLifecycleOwner(this)
             .setQuery(
                 baseQuery, config
             ) {
@@ -272,13 +300,13 @@ class WordDetailFragment : Fragment() {
 
     private fun setupObservers() {
         viewModel.getWordDetail()
-            .observe(viewLifecycleOwner) {
+            .observe(this) {
                 it?.let { word ->
                     setupUi(word)
                 }
             }
         viewModel.getRefreshComment()
-            .observe(viewLifecycleOwner) {
+            .observe(this) {
                 it?.let {
                     commentAdapter.refresh()
                 }
@@ -341,7 +369,10 @@ class WordDetailFragment : Fragment() {
                     Log.d(TAG, "onClick: $option} ${comment.comment}")
                     when (option) {
                         Option.Delete -> {
-                            MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
+                            MaterialAlertDialogBuilder(
+                                this@WordDetailActivity,
+                                R.style.AlertDialogTheme
+                            )
                                 .showDialog(
                                     message = getString(R.string.msg_confirm_delete),
                                     positiveText = getString(R.string.delete),
@@ -354,7 +385,7 @@ class WordDetailFragment : Fragment() {
                 }
             }
         )
-        bottomSheet.show(parentFragmentManager, OptionsBottomFragment.TAG)
+        bottomSheet.show(supportFragmentManager, OptionsBottomFragment.TAG)
     }
 
     private fun getCommentOptions(comment: Comment): List<Option> {
@@ -388,7 +419,7 @@ class WordDetailFragment : Fragment() {
                 }
             }
         )
-        bottomSheet.show(parentFragmentManager, OptionsBottomFragment.TAG)
+        bottomSheet.show(supportFragmentManager, OptionsBottomFragment.TAG)
     }
 
     private fun getWordOptions(): List<Option> {

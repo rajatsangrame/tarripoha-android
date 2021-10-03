@@ -1,4 +1,4 @@
-package com.tarripoha.android.ui.add
+package com.tarripoha.android.ui.word
 
 import android.content.Intent
 import android.os.Bundle

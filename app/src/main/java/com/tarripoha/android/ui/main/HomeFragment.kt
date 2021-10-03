@@ -10,146 +10,147 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.*
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tarripoha.android.TPApp
 import com.tarripoha.android.data.db.Word
 import com.tarripoha.android.databinding.FragmentHomeBinding
-import com.tarripoha.android.ui.add.WordActivity
+import com.tarripoha.android.ui.word.WordActivity
 import com.tarripoha.android.util.ItemClickListener
-import com.tarripoha.android.R
+import com.tarripoha.android.ui.word.WordDetailActivity
 
 class HomeFragment : Fragment() {
 
-  // region Variables
+    // region Variables
 
-  companion object {
-    private const val REQUEST_CODE_WORD = 101
-  }
-
-  private lateinit var factory: ViewModelProvider.Factory
-  private lateinit var binding: FragmentHomeBinding
-  private lateinit var wordAdapter: WordAdapter
-  private val viewModel by activityViewModels<MainViewModel> {
-    factory
-  }
-
-  // endregion
-
-  // region Fragment Related Methods
-
-  override fun onCreateView(
-    inflater: LayoutInflater,
-    container: ViewGroup?,
-    savedInstanceState: Bundle?
-  ): View {
-    binding = FragmentHomeBinding
-        .inflate(LayoutInflater.from(requireContext()), container, false)
-    return binding.root
-  }
-
-  /**
-   * Called when fragment's activity is created.
-   * 1. Setup UI for the activity. See [setupUI].
-   *
-   * @param savedInstanceState Saved data on config or state change.
-   */
-  override fun onActivityCreated(savedInstanceState: Bundle?) {
-    super.onActivityCreated(savedInstanceState)
-    factory =
-      ViewModelProvider.AndroidViewModelFactory(TPApp.get(requireContext()))
-
-    setupUI()
-    fetchAllWord()
-  }
-
-  override fun onActivityResult(
-    requestCode: Int,
-    resultCode: Int,
-    data: Intent?
-  ) {
-    if (requestCode == REQUEST_CODE_WORD && resultCode == AppCompatActivity.RESULT_OK) {
-      val word = data?.getParcelableExtra<Word>(WordActivity.KEY_WORD)
-      if (word is Word) {
-        viewModel.addNewWord(word)
-      }
+    companion object {
+        private const val REQUEST_CODE_WORD = 101
     }
-    super.onActivityResult(requestCode, resultCode, data)
 
-  }
+    private lateinit var factory: ViewModelProvider.Factory
+    private lateinit var binding: FragmentHomeBinding
+    private lateinit var wordAdapter: WordAdapter
+    private val viewModel by activityViewModels<MainViewModel> {
+        factory
+    }
 
-  // endregion
+    // endregion
 
-  // region Helper Methods
+    // region Fragment Related Methods
 
-  private fun setupUI() {
-    setupRecyclerView()
-    setupListeners()
-    setupObservers()
-  }
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = FragmentHomeBinding
+            .inflate(LayoutInflater.from(requireContext()), container, false)
+        return binding.root
+    }
 
-  private fun setupRecyclerView() {
-    val linearLayoutManager = LinearLayoutManager(
-        context, RecyclerView.VERTICAL, false
-    )
-    wordAdapter =
-      WordAdapter(words = ArrayList(), itemClickListener = object : ItemClickListener<Word> {
-        override fun onClick(
-          position: Int,
-          data: Word
-        ) {
-          viewModel.setWordDetail(word = data)
-          findNavController().navigate(R.id.action_HomeFragment_to_WordDetailFragment)
+    /**
+     * Called when fragment's activity is created.
+     * 1. Setup UI for the activity. See [setupUI].
+     *
+     * @param savedInstanceState Saved data on config or state change.
+     */
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        factory =
+            ViewModelProvider.AndroidViewModelFactory(TPApp.get(requireContext()))
+
+        setupUI()
+        fetchAllWord()
+    }
+
+    override fun onActivityResult(
+        requestCode: Int,
+        resultCode: Int,
+        data: Intent?
+    ) {
+        if (requestCode == REQUEST_CODE_WORD && resultCode == AppCompatActivity.RESULT_OK) {
+            val word = data?.getParcelableExtra<Word>(WordActivity.KEY_WORD)
+            if (word is Word) {
+                viewModel.addNewWord(word)
+            }
         }
-      })
-    val scrollListener = object : RecyclerView.OnScrollListener() {
-      override fun onScrolled(
-        recyclerView: RecyclerView,
-        dx: Int,
-        dy: Int
-      ) {
-        val position = linearLayoutManager.findFirstCompletelyVisibleItemPosition()
-        binding.layout.swipeRefreshLayout.isEnabled = position <= 0
-      }
-    }
-    binding.layout.withSwipeRv.apply {
-      layoutManager = linearLayoutManager
-      adapter = wordAdapter
-      addOnScrollListener(scrollListener)
-    }
-  }
+        super.onActivityResult(requestCode, resultCode, data)
 
-  private fun setupObservers() {
-    viewModel.apply {
-      isRefreshing()
-          .observe(viewLifecycleOwner, Observer {
-            it?.let {
-              binding.layout.swipeRefreshLayout.isRefreshing = it
+    }
+
+    // endregion
+
+    // region Helper Methods
+
+    private fun setupUI() {
+        setupRecyclerView()
+        setupListeners()
+        setupObservers()
+    }
+
+    private fun setupRecyclerView() {
+        val linearLayoutManager = LinearLayoutManager(
+            context, RecyclerView.VERTICAL, false
+        )
+        wordAdapter =
+            WordAdapter(words = ArrayList(), itemClickListener = object : ItemClickListener<Word> {
+                override fun onClick(
+                    position: Int,
+                    data: Word
+                ) {
+                    WordDetailActivity.startMe(
+                        context = requireContext(),
+                        wordDetail = data
+                    )
+                }
+            })
+        val scrollListener = object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(
+                recyclerView: RecyclerView,
+                dx: Int,
+                dy: Int
+            ) {
+                val position = linearLayoutManager.findFirstCompletelyVisibleItemPosition()
+                binding.layout.swipeRefreshLayout.isEnabled = position <= 0
             }
-          })
-      getAllWords()
-          .observe(viewLifecycleOwner, Observer {
-            it?.let {
-              wordAdapter.setWordList(it)
-            }
-          })
+        }
+        binding.layout.withSwipeRv.apply {
+            layoutManager = linearLayoutManager
+            adapter = wordAdapter
+            addOnScrollListener(scrollListener)
+        }
     }
-  }
 
-  private fun fetchAllWord() {
-    viewModel.fetchAllWord()
-  }
-
-  // endregion
-
-  // region Click Related Methods
-
-  private fun setupListeners() {
-    binding.layout.swipeRefreshLayout.setOnRefreshListener {
-      fetchAllWord()
+    private fun setupObservers() {
+        viewModel.apply {
+            isRefreshing()
+                .observe(viewLifecycleOwner, Observer {
+                    it?.let {
+                        binding.layout.swipeRefreshLayout.isRefreshing = it
+                    }
+                })
+            getAllWords()
+                .observe(viewLifecycleOwner, Observer {
+                    it?.let {
+                        wordAdapter.setWordList(it)
+                    }
+                })
+        }
     }
-  }
 
-  // endregion
+    private fun fetchAllWord() {
+        viewModel.fetchAllWord()
+    }
+
+    // endregion
+
+    // region Click Related Methods
+
+    private fun setupListeners() {
+        binding.layout.swipeRefreshLayout.setOnRefreshListener {
+            fetchAllWord()
+        }
+    }
+
+    // endregion
 }
