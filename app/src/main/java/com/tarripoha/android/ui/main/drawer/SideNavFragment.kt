@@ -65,7 +65,7 @@ class SideNavFragment : Fragment() {
             add(SideNavItem(getString(R.string.settings), R.drawable.ic_settings_grey))
             add(SideNavItem(getString(R.string.rate_us), R.drawable.ic_star_grey))
             add(SideNavItem(getString(R.string.share), R.drawable.ic_share_black))
-            add(SideNavItem(getString(R.string.donate), R.drawable.ic_donate_grey))
+            add(SideNavItem(getString(R.string.support), R.drawable.ic_donate_grey))
         }
         // Maintain the order here
         if (isUserLoggedIn) {

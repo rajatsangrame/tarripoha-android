@@ -135,7 +135,7 @@ class MainActivity : BaseActivity() {
                 getString(R.string.share) -> {
                     // no-op
                 }
-                getString(R.string.donate) -> {
+                getString(R.string.support) -> {
                     // no-op
                 }
                 getString(R.string.logout) -> {
