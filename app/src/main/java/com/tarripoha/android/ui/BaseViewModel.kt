@@ -59,6 +59,10 @@ abstract class BaseViewModel(val app: Application) : ViewModel() {
         return false
     }
 
+    fun isUserLogin(): Boolean {
+        return UserHelper.isLoggedIn()
+    }
+
     fun checkNetworkAndShowError(): Boolean {
         if (!TPUtils.isNetworkAvailable(getContext())) {
             setUserMessage(getString(R.string.error_no_internet))

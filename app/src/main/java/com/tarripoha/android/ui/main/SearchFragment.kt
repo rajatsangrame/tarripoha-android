@@ -13,6 +13,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.tarripoha.android.R
 import com.tarripoha.android.TPApp
 import com.tarripoha.android.data.db.Word
 import com.tarripoha.android.databinding.FragmentSearchBinding
@@ -118,12 +119,16 @@ class SearchFragment : Fragment() {
                     position: Int,
                     data: Word
                 ) {
-                    TPUtils.hideKeyboard(requireContext(), binding.root)
                     if (data.type == Word.TYPE_NEW_WORD) {
-                        val intent = Intent(context, WordActivity::class.java)
-                        intent.putExtra(WordActivity.KEY_WORD, data)
-                        startActivityForResult(intent, REQUEST_CODE_WORD)
+                        if (viewModel.isUserLogin()) {
+                            val intent = Intent(context, WordActivity::class.java)
+                            intent.putExtra(WordActivity.KEY_WORD, data)
+                            startActivityForResult(intent, REQUEST_CODE_WORD)
+                        } else {
+                            viewModel.setUserMessage(getString(R.string.error_login))
+                        }
                     } else {
+                        TPUtils.hideKeyboard(requireContext(), binding.root)
                         WordDetailActivity.startMe(
                             context = requireContext(),
                             wordDetail = data
