@@ -19,243 +19,139 @@ import javax.inject.Inject
  */
 
 class WordViewModel @Inject constructor(
-  var repository: Repository,
-  app: Application
+    var repository: Repository,
+    app: Application
 ) : BaseViewModel(app) {
 
-  private val isRefreshing: MutableLiveData<Boolean> = MutableLiveData()
-  private val words: MutableLiveData<List<Word>> = MutableLiveData()
-  private val searchWords: MutableLiveData<List<Word>> = MutableLiveData()
-  private val query: MutableLiveData<String> = MutableLiveData()
-  private val wordCount: MutableLiveData<Int> = MutableLiveData()
-  private var fetchMode: FetchMode = FetchMode.Popular
 
-  // region WordDetailFragment Variable
+    // region Variable
 
-  private val wordDetail: MutableLiveData<Word> = MutableLiveData()
-  private val refreshComment: MutableLiveData<Boolean> = MutableLiveData()
+    private var fetchMode: FetchMode = FetchMode.Popular
+    private val isRefreshing: MutableLiveData<Boolean> = MutableLiveData()
+    private val wordDetail: MutableLiveData<Word> = MutableLiveData()
+    private val refreshComment: MutableLiveData<Boolean> = MutableLiveData()
 
-  // endregion
+    // endregion
 
-  fun getWordCount() = wordCount
-
-  fun isRefreshing() = isRefreshing
-
-  fun getAllWords() = words
-
-  fun getQuery() = query
-
-  fun setQuery(query: String?) {
-    this.query.value = query
-  }
-
-  fun getSearchWords() = searchWords
-
-  fun setSearchWords(words: List<Word>?) {
-    searchWords.value = words
-  }
-
-  fun setWordDetail(word: Word?) {
-    wordDetail.value = word
-  }
-
-  fun getWordDetail() = wordDetail
-
-  fun setRefreshComment(refresh: Boolean?) {
-    refreshComment.value = refresh
-  }
-
-  fun getRefreshComment() = refreshComment
-
-  fun setFetchMode(mode: FetchMode) {
-    fetchMode = mode
-  }
-
-  fun getFetchMode() = fetchMode
-
-  // Helper Functions
-
-  fun addNewWord(word: Word) {
-    if (!checkNetworkAndShowError()) {
-      return
+    fun setRefreshing(refresh: Boolean?) {
+        isRefreshing.value = refresh
     }
-    isRefreshing.value = true
-    repository.addNewWord(
-      word = word,
-      success = {
-        isRefreshing.value = false
-        setUserMessage(getString(R.string.succ_data_added))
-      },
-      failure = {
-        isRefreshing.value = false
-        setUserMessage(getString(R.string.error_unable_to_process))
-      },
-      connectionStatus = {
-        if (!it) isRefreshing.value = false
-      }
-    )
-  }
 
-  fun fetchAllWord() {
-    if (!checkNetworkAndShowError()) {
-      return
+    fun isRefreshing() = isRefreshing
+
+
+    fun setWordDetail(word: Word?) {
+        wordDetail.value = word
     }
-    isRefreshing.value = true
-    repository.fetchAllWords(
-      success = { snapshot ->
-        fetchAllResponse(snapshot = snapshot)
-      },
-      failure = {
-        isRefreshing.value = false
-        setUserMessage(getString(R.string.error_unable_to_fetch))
-      },
-      connectionStatus = {
-        if (!it) isRefreshing.value = false
-      }
-    )
-  }
 
-  private fun fetchAllResponse(
-    snapshot: DataSnapshot
-  ) {
-    val wordList: MutableList<Word> = mutableListOf()
-    snapshot.children.forEach {
+    fun getWordDetail() = wordDetail
 
-      try {
-        if (it.getValue(Word::class.java) != null) {
-          val word: Word = it.getValue(Word::class.java)!!
-          val isDirty = word.dirty
-          if (isDirty == null || !isDirty) {
-            wordList.add(word)
-          } else {
-            Log.i(TAG, "fetchAllResponse: ${word.name} found dirty")
-          }
+    fun setRefreshComment(refresh: Boolean?) {
+        refreshComment.value = refresh
+    }
+
+    fun getRefreshComment() = refreshComment
+
+    fun setFetchMode(mode: FetchMode) {
+        fetchMode = mode
+    }
+
+    fun getFetchMode() = fetchMode
+
+    // Helper Functions
+
+    fun updateWord(word: Word) {
+        if (!checkNetworkAndShowError()) {
+            return
         }
-      } catch (e: Exception) {
-        Log.e(TAG, "fetchAllResponse: ${e.localizedMessage}")
-      }
+        isRefreshing.value = true
+        repository.addNewWord(
+            word = word,
+            success = {
+                isRefreshing.value = false
+                setWordDetail(word)
+                setUserMessage(getString(R.string.succ_data_added))
+            },
+            failure = {
+                isRefreshing.value = false
+                setUserMessage(getString(R.string.error_unable_to_process))
+            },
+            connectionStatus = {
+                if (!it) isRefreshing.value = false
+            }
+        )
     }
-    words.value = wordList
-    wordCount.value = wordList.size
-    isRefreshing.value = false
-  }
 
-  fun search(query: String) {
-    if (!checkNetworkAndShowError()) {
-      return
-    }
-    repository.searchWord(
-      word = query,
-      success = { snapshot ->
-        searchResponse(query = query, snapshot = snapshot)
-      },
-      failure = {
-        setUserMessage(getString(R.string.error_unable_to_fetch))
-      },
-      connectionStatus = {
-
-      })
-  }
-
-  private fun searchResponse(
-    query: String,
-    snapshot: DataSnapshot
-  ) {
-    Log.d(TAG, "searchResponse: query $query size ${query.length}")
-    val wordList: MutableList<Word> = mutableListOf()
-    var wordFound = false
-    snapshot.children.forEach {
-      try {
-        if (it.getValue(Word::class.java) != null) {
-          val w: Word = it.getValue(Word::class.java)!!
-          val isDirty = w.dirty
-          if (isDirty == null || !isDirty) {
-            wordList.add(w)
-          } else {
-            Log.i(TAG, "searchResponse: ${w.name} found dirty")
-          }
-          if (w.name == query) {
-            wordFound = true
-          }
+    fun postComment(comment: Comment) {
+        if (!checkNetworkAndShowError()) {
+            return
         }
-      } catch (e: Exception) {
-        Log.e(TAG, "searchResponse: ${e.localizedMessage}")
-      }
+        comment.localStatus = true
+        repository.postComment(
+            comment = comment,
+            success = {
+                setRefreshComment(true)
+            },
+            failure = {
+                setUserMessage(getString(R.string.error_unable_to_process))
+            },
+            connectionStatus = {
+
+            }
+        )
     }
-    if (!wordFound) wordList.add(Word.getNewWord(name = query))
-    setSearchWords(wordList)
-  }
 
-  fun postComment(comment: Comment) {
-    if (!checkNetworkAndShowError()) {
-      return
+    fun deleteComment(
+        comment: Comment
+    ) {
+        if (!checkNetworkAndShowError()) {
+            return
+        }
+        repository.deleteComment(
+            comment = comment,
+            success = {
+                setRefreshComment(true)
+            },
+            failure = {
+                setUserMessage(getString(R.string.error_unable_to_process))
+            },
+            connectionStatus = {
+
+            }
+        )
     }
-    comment.localStatus = true
-    repository.postComment(
-      comment = comment,
-      success = {
-        setRefreshComment(true)
-      },
-      failure = {
-        setUserMessage(getString(R.string.error_unable_to_process))
-      },
-      connectionStatus = {
 
-      }
-    )
-  }
+    fun likeComment(
+        comment: Comment,
+        like: Boolean,
+        userId: String,
+        callback: () -> Unit
+    ) {
+        if (!checkNetworkAndShowError()) {
+            return
+        }
+        repository.likeComment(
+            comment = comment,
+            like = like,
+            userId = userId,
+            success = callback,
+            failure = {
+                setUserMessage(getString(R.string.error_unable_to_process))
+            },
+            connectionStatus = {
 
-  fun deleteComment(
-    comment: Comment
-  ) {
-    if (!checkNetworkAndShowError()) {
-      return
+            }
+        )
     }
-    repository.deleteComment(
-      comment = comment,
-      success = {
-        setRefreshComment(true)
-      },
-      failure = {
-        setUserMessage(getString(R.string.error_unable_to_process))
-      },
-      connectionStatus = {
 
-      }
-    )
-  }
+    // endregion
 
-  fun likeComment(
-    comment: Comment,
-    like: Boolean,
-    userId: String,
-    callback: () -> Unit
-  ) {
-    if (!checkNetworkAndShowError()) {
-      return
+    sealed class FetchMode {
+        object Popular : FetchMode()
+        object Recent : FetchMode()
     }
-    repository.likeComment(
-      comment = comment,
-      like = like,
-      userId = userId,
-      success = callback,
-      failure = {
-        setUserMessage(getString(R.string.error_unable_to_process))
-      },
-      connectionStatus = {
 
-      }
-    )
-  }
-
-  // endregion
-
-  sealed class FetchMode {
-    object Popular : FetchMode()
-    object Recent : FetchMode()
-  }
-
-  companion object {
-    private const val TAG = "MainViewModel"
-  }
+    companion object {
+        private const val TAG = "MainViewModel"
+    }
 }

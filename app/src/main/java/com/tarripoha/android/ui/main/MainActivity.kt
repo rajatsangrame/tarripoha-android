@@ -76,6 +76,10 @@ class MainActivity : BaseActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater: MenuInflater = menuInflater
         inflater.inflate(R.menu.menu_main, menu)
+        menu.apply {
+            findItem(R.id.menu_search).isVisible = true
+            findItem(R.id.menu_info).isVisible = true
+        }
         return true
     }
 
@@ -238,21 +242,6 @@ class MainActivity : BaseActivity() {
             searchToolbar.visibility = View.VISIBLE
         }
         showKeyboard()
-        binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
-    }
-
-    private fun wordNavigation() {
-        showBackBtn = true
-        supportActionBar?.apply {
-            setHomeAsUpIndicator(R.drawable.ic_arrow_back_white)
-            setBackgroundDrawable(
-                ColorDrawable(ContextCompat.getColor(this@MainActivity, R.color.colorPrimary))
-            )
-        }
-        binding.container.toolbarLayout.apply {
-            title.visibility = View.GONE
-            searchToolbar.visibility = View.GONE
-        }
         binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
     }
 

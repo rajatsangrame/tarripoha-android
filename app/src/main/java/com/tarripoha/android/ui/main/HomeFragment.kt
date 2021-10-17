@@ -15,17 +15,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.tarripoha.android.TPApp
 import com.tarripoha.android.data.db.Word
 import com.tarripoha.android.databinding.FragmentHomeBinding
-import com.tarripoha.android.ui.word.WordActivity
 import com.tarripoha.android.util.ItemClickListener
 import com.tarripoha.android.ui.word.WordDetailActivity
 
 class HomeFragment : Fragment() {
 
     // region Variables
-
-    companion object {
-        private const val REQUEST_CODE_WORD = 101
-    }
 
     private lateinit var factory: ViewModelProvider.Factory
     private lateinit var binding: FragmentHomeBinding
@@ -61,21 +56,6 @@ class HomeFragment : Fragment() {
 
         setupUI()
         fetchAllWord()
-    }
-
-    override fun onActivityResult(
-        requestCode: Int,
-        resultCode: Int,
-        data: Intent?
-    ) {
-        if (requestCode == REQUEST_CODE_WORD && resultCode == AppCompatActivity.RESULT_OK) {
-            val word = data?.getParcelableExtra<Word>(WordActivity.KEY_WORD)
-            if (word is Word) {
-                viewModel.addNewWord(word)
-            }
-        }
-        super.onActivityResult(requestCode, resultCode, data)
-
     }
 
     // endregion

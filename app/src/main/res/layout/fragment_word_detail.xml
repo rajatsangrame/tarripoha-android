@@ -1,268 +1,254 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/swipe_refresh_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="match_parent">
 
-
-  <androidx.constraintlayout.widget.ConstraintLayout
-      android:id="@+id/constraintLayout"
-      android:layout_width="0dp"
-      android:layout_height="wrap_content"
-      android:paddingBottom="@dimen/margin_normal"
-      android:paddingEnd="@dimen/margin_extra_large"
-      android:paddingStart="@dimen/margin_extra_large"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="parent"
-      >
-
-    <TextView
-        android:id="@+id/word_tv"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="@dimen/margin_extra_large"
-        android:layout_weight="1"
-        android:background="@android:color/transparent"
-        android:focusable="true"
-        android:maxLines="1"
-        android:paddingBottom="@dimen/margin_normal"
-        android:textSize="@dimen/text_huge"
-        app:layout_constraintEnd_toStartOf="@+id/save_btn"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="@string/word"
-        style="@style/AppTheme.TextLabel"
-        />
-    <TextView
-        android:id="@+id/meaning_tv"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:paddingBottom="@dimen/margin_normal"
-        android:textSize="@dimen/text_large"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/word_tv"
-        tools:text="@string/meaning"
-        style="@style/AppTheme.TextDesc"
-        />
-
-    <TextView
-        android:id="@+id/eng_meaning_tv"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:paddingBottom="@dimen/margin_normal"
-        android:textSize="@dimen/text_large"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/meaning_tv"
-        tools:text="@string/eng_meaning"
-        tools:visibility="visible"
-        style="@style/AppTheme.TextDescItalic"
-        />
-
-    <TextView
-        android:id="@+id/added_by_tv"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:paddingBottom="@dimen/margin_normal"
-        android:textSize="@dimen/text_normal"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/eng_meaning_tv"
-        tools:text="@string/added_by_user"
-        tools:visibility="visible"
-        style="@style/AppTheme.TextDescItalic"
-        />
-
-    <ImageView
-        android:id="@+id/save_btn"
-        android:layout_width="@dimen/icon_size"
-        android:layout_height="wrap_content"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:clickable="true"
-        android:focusable="true"
-        android:src="@drawable/ic_save_border_black"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/word_tv"
-        app:tint="@color/colorBlack"
-        />
-
-    <ImageView
-        android:id="@+id/like_btn"
-        android:layout_width="@dimen/icon_size"
-        android:layout_height="@dimen/icon_size"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:clickable="true"
-        android:focusable="true"
-        android:src="@drawable/ic_like_border_black"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/added_by_tv"
-        />
-
-    <ImageView
-        android:id="@+id/share_btn"
-        android:layout_width="@dimen/icon_size"
-        android:layout_height="@dimen/icon_size"
-        android:layout_marginStart="@dimen/margin_extra_large"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:clickable="true"
-        android:focusable="true"
-        android:src="@drawable/ic_share_black"
-        app:layout_constraintBottom_toBottomOf="@+id/like_btn"
-        app:layout_constraintStart_toEndOf="@+id/like_btn"
-        app:layout_constraintTop_toTopOf="@+id/like_btn"
-        />
-
-    <LinearLayout
-        android:id="@+id/linearLayout2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_normal"
-        android:orientation="horizontal"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/added_by_tv"
-        >
-
-      <TextView
-          android:id="@+id/like_count_tv"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_marginEnd="@dimen/margin_extra_large"
-          android:text="12 Likes"
-          android:visibility="gone"
-          tools:visibility="gone"
-          />
-
-      <TextView
-          android:id="@+id/comment_count_tv"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="1 Comment"
-          android:visibility="gone"
-          tools:visibility="gone"
-          />
-
-    </LinearLayout>
-
-  </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-  <View
-      android:id="@+id/divider2"
-      android:layout_width="match_parent"
-      android:layout_height="1dp"
-      android:background="@color/colorLightGrey"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
-      />
-
-  <androidx.recyclerview.widget.RecyclerView
-      android:id="@+id/comment_rv"
-      android:layout_width="0dp"
-      android:layout_height="0dp"
-      android:overScrollMode="never"
-      android:scrollbars="none"
-      app:layout_constraintBottom_toTopOf="@+id/divider1"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/divider2"
-      tools:listitem="@layout/layout_item_comment"
-      />
-
-  <LinearLayout
-      android:id="@+id/no_comment_layout"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:orientation="vertical"
-      android:visibility="gone"
-      app:layout_constraintBottom_toTopOf="@+id/divider1"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/divider2"
-      tools:visibility="visible"
-      >
-
-    <ImageView
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:layout_gravity="center"
-        android:src="@drawable/ic_emoji_normal"
-        />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_normal"
-        android:text="@string/error_no_quotes"
-        style="@style/AppTheme.TextDesc"
-        />
-
-  </LinearLayout>
-
-  <View
-      android:id="@+id/divider1"
-      android:layout_width="match_parent"
-      android:layout_height="1dp"
-      android:background="@color/colorLightGrey"
-      app:layout_constraintBottom_toTopOf="@+id/linearLayout"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      />
-
-  <com.google.android.material.appbar.AppBarLayout
-      android:id="@+id/linearLayout"
-      android:layout_width="0dp"
-      android:layout_height="?android:attr/actionBarSize"
-      android:background="@color/colorPureWhite"
-      app:layout_constraintBottom_toBottomOf="parent"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      >
-
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:paddingBottom="@dimen/margin_large"
-        android:paddingEnd="@dimen/margin_extra_large"
-        android:paddingStart="@dimen/margin_extra_large"
-        android:paddingTop="@dimen/margin_large"
-        >
-
-      <EditText
-          android:id="@+id/comment_et"
-          android:layout_width="0dp"
-          android:layout_height="match_parent"
-          android:layout_weight="1"
-          android:background="@android:color/transparent"
-          android:focusable="true"
-          android:hint="@string/add_quotes"
-          android:imeOptions="actionDone"
-          android:inputType="text|textNoSuggestions"
-          />
-
-      <ImageView
-          android:id="@+id/post_comment_btn"
-          android:layout_width="@dimen/icon_size"
-          android:layout_height="@dimen/icon_size"
-          android:layout_gravity="center"
-          android:layout_marginStart="@dimen/margin_extra_large"
-          android:background="?attr/selectableItemBackgroundBorderless"
-          android:clickable="true"
-          android:focusable="true"
-          android:src="@drawable/ic_send_grey"
-          />
-
-    </LinearLayout>
+        android:layout_height="match_parent">
 
 
-  </com.google.android.material.appbar.AppBarLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/margin_extra_large"
+            android:paddingEnd="@dimen/margin_extra_large"
+            android:paddingBottom="@dimen/margin_normal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/word_tv"
+                style="@style/AppTheme.TextLabel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/margin_extra_large"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:focusable="true"
+                android:maxLines="1"
+                android:paddingBottom="@dimen/margin_normal"
+                android:textSize="@dimen/text_huge"
+                app:layout_constraintEnd_toStartOf="@+id/save_btn"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="@string/word" />
+
+            <TextView
+                android:id="@+id/meaning_tv"
+                style="@style/AppTheme.TextDesc"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/margin_normal"
+                android:textSize="@dimen/text_large"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/word_tv"
+                tools:text="@string/meaning" />
+
+            <TextView
+                android:id="@+id/eng_meaning_tv"
+                style="@style/AppTheme.TextDescItalic"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/margin_normal"
+                android:textSize="@dimen/text_large"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/meaning_tv"
+                tools:text="@string/eng_meaning"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/added_by_tv"
+                style="@style/AppTheme.TextDescItalic"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/margin_normal"
+                android:textSize="@dimen/text_normal"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/eng_meaning_tv"
+                tools:text="@string/added_by_user"
+                tools:visibility="visible" />
+
+            <ImageView
+                android:id="@+id/save_btn"
+                android:layout_width="@dimen/icon_size"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"
+                android:src="@drawable/ic_save_border_black"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/word_tv"
+                app:tint="@color/colorBlack" />
+
+            <ImageView
+                android:id="@+id/like_btn"
+                android:layout_width="@dimen/icon_size"
+                android:layout_height="@dimen/icon_size"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"
+                android:src="@drawable/ic_like_border_black"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/added_by_tv" />
+
+            <ImageView
+                android:id="@+id/share_btn"
+                android:layout_width="@dimen/icon_size"
+                android:layout_height="@dimen/icon_size"
+                android:layout_marginStart="@dimen/margin_extra_large"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"
+                android:src="@drawable/ic_share_black"
+                app:layout_constraintBottom_toBottomOf="@+id/like_btn"
+                app:layout_constraintStart_toEndOf="@+id/like_btn"
+                app:layout_constraintTop_toTopOf="@+id/like_btn" />
+
+            <LinearLayout
+                android:id="@+id/linearLayout2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_normal"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/added_by_tv">
+
+                <TextView
+                    android:id="@+id/like_count_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/margin_extra_large"
+                    android:text="12 Likes"
+                    android:visibility="gone"
+                    tools:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/comment_count_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1 Comment"
+                    android:visibility="gone"
+                    tools:visibility="gone" />
+
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <View
+            android:id="@+id/divider2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorLightGrey"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/comment_rv"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:overScrollMode="never"
+            android:scrollbars="none"
+            app:layout_constraintBottom_toTopOf="@+id/divider1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/divider2"
+            tools:listitem="@layout/layout_item_comment" />
+
+        <LinearLayout
+            android:id="@+id/no_comment_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@+id/divider1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/divider2"
+            tools:visibility="visible">
+
+            <ImageView
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_emoji_normal" />
+
+            <TextView
+                style="@style/AppTheme.TextDesc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_normal"
+                android:text="@string/error_no_quotes" />
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/divider1"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorLightGrey"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="0dp"
+            android:layout_height="?android:attr/actionBarSize"
+            android:background="@color/colorPureWhite"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:paddingStart="@dimen/margin_extra_large"
+                android:paddingTop="@dimen/margin_large"
+                android:paddingEnd="@dimen/margin_extra_large"
+                android:paddingBottom="@dimen/margin_large">
+
+                <EditText
+                    android:id="@+id/comment_et"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:focusable="true"
+                    android:hint="@string/add_quotes"
+                    android:imeOptions="actionDone"
+                    android:inputType="text|textNoSuggestions" />
+
+                <ImageView
+                    android:id="@+id/post_comment_btn"
+                    android:layout_width="@dimen/icon_size"
+                    android:layout_height="@dimen/icon_size"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="@dimen/margin_extra_large"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:src="@drawable/ic_send_grey" />
+
+            </LinearLayout>
+
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

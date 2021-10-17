@@ -1,11 +1,13 @@
 package com.tarripoha.android.ui.word
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.view.inputmethod.EditorInfo
+import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.ViewModelProvider
@@ -13,7 +15,7 @@ import androidx.paging.PagedList.Config.Builder
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.firebase.ui.firestore.paging.FirestorePagingOptions
-import com.firebase.ui.firestore.paging.LoadingState.LOADED
+import com.firebase.ui.firestore.paging.LoadingState.*
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
@@ -66,6 +68,16 @@ class WordDetailActivity : AppCompatActivity() {
     private lateinit var commentAdapter: CommentPagingAdapter
     private lateinit var viewModel: WordViewModel
 
+    private val resultLauncher =
+        registerForActivityResult(StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val word = result.data?.getParcelableExtra<Word>(WordActivity.KEY_WORD)
+                if (word is Word) {
+                    viewModel.updateWord(word)
+                }
+            }
+        }
+
     // endregion
 
     // region Activity Related Methods
@@ -114,17 +126,17 @@ class WordDetailActivity : AppCompatActivity() {
         inflater.inflate(R.menu.menu_main, menu)
         menu.apply {
             findItem(R.id.menu_more).isVisible = true
-            findItem(R.id.menu_search).isVisible = false
-            findItem(R.id.menu_info).isVisible = false
         }
         return true
     }
 
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.menu_more) {
-            showWordMenu()
-            return true
+        when (item.itemId) {
+            R.id.menu_more -> {
+                showWordMenu()
+                return true
+            }
         }
         return super.onOptionsItemSelected(item)
     }
@@ -265,12 +277,15 @@ class WordDetailActivity : AppCompatActivity() {
             }
         }) { state ->
             Log.i(TAG, "setupAdapter: $state")
-            if (state == LOADED) {
+            if (state == LOADED || state == FINISHED) {
                 if (commentAdapter.itemCount != 0) {
                     binding.noCommentLayout.visibility = View.GONE
                 } else {
                     binding.noCommentLayout.visibility = View.VISIBLE
                 }
+                viewModel.setRefreshing(false)
+            } else if (state == LOADING_MORE || state == LOADING_MORE) {
+                viewModel.setRefreshing(true)
             }
         }
 
@@ -299,6 +314,12 @@ class WordDetailActivity : AppCompatActivity() {
     }
 
     private fun setupObservers() {
+        viewModel.isRefreshing()
+            .observe(this) {
+                it?.let {
+                    binding.swipeRefreshLayout.isRefreshing = it
+                }
+            }
         viewModel.getWordDetail()
             .observe(this) {
                 it?.let { word ->
@@ -318,7 +339,6 @@ class WordDetailActivity : AppCompatActivity() {
             wordTv.text = word.name
             meaningTv.text = word.meaning
             engMeaningTv.setTextWithVisibility(word.eng)
-            noCommentLayout.toggleVisibility(list = word.comments)
         }
     }
 
@@ -415,7 +435,18 @@ class WordDetailActivity : AppCompatActivity() {
             callback = object : OptionCLickListener {
                 override fun onClick(option: Option) {
                     Log.d(TAG, "onClick: $option}")
-                    // no-op
+                    when (option) {
+                        Option.Edit -> {
+                            if (!isWordDetailSet()) return
+                            val word = viewModel.getWordDetail().value!!
+                            val intent = WordActivity.getIntent(
+                                context = this@WordDetailActivity,
+                                word = word,
+                                mode = WordActivity.KEY_MODE_EDIT
+                            )
+                            resultLauncher.launch(intent)
+                        }
+                    }
                 }
             }
         )
@@ -442,6 +473,9 @@ class WordDetailActivity : AppCompatActivity() {
     private fun setupListeners() {
         binding.postCommentBtn.setOnClickListener {
             postComment()
+        }
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            setupUI()
         }
     }
 

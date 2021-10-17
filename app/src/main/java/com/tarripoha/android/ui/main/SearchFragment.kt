@@ -1,13 +1,13 @@
 package com.tarripoha.android.ui.main
 
-import android.content.Intent
+import android.app.Activity
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.*
@@ -28,7 +28,6 @@ class SearchFragment : Fragment() {
 
     companion object {
         private const val TAG = "SearchFragment"
-        private const val REQUEST_CODE_WORD = 101
     }
 
     private lateinit var factory: ViewModelProvider.Factory
@@ -37,6 +36,16 @@ class SearchFragment : Fragment() {
     private val viewModel by activityViewModels<MainViewModel> {
         factory
     }
+
+    private val resultLauncher =
+        registerForActivityResult(StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val word = result.data?.getParcelableExtra<Word>(WordActivity.KEY_WORD)
+                if (word is Word) {
+                    viewModel.addNewWord(word)
+                }
+            }
+        }
 
     // endregion
 
@@ -76,21 +85,6 @@ class SearchFragment : Fragment() {
         setupUI()
     }
 
-    override fun onActivityResult(
-        requestCode: Int,
-        resultCode: Int,
-        data: Intent?
-    ) {
-        if (requestCode == REQUEST_CODE_WORD && resultCode == AppCompatActivity.RESULT_OK) {
-            val word = data?.getParcelableExtra<Word>(WordActivity.KEY_WORD)
-            if (word is Word) {
-                viewModel.addNewWord(word)
-            }
-        }
-        super.onActivityResult(requestCode, resultCode, data)
-
-    }
-
     override fun onDestroy() {
         viewModel.apply {
             setQuery(null)
@@ -121,9 +115,12 @@ class SearchFragment : Fragment() {
                 ) {
                     if (data.type == Word.TYPE_NEW_WORD) {
                         if (viewModel.isUserLogin()) {
-                            val intent = Intent(context, WordActivity::class.java)
-                            intent.putExtra(WordActivity.KEY_WORD, data)
-                            startActivityForResult(intent, REQUEST_CODE_WORD)
+                            val intent = WordActivity.getIntent(
+                                context = requireContext(),
+                                word = data,
+                                mode = WordActivity.KEY_MODE_NEW
+                            )
+                            resultLauncher.launch(intent)
                         } else {
                             viewModel.setUserMessage(getString(R.string.error_login))
                         }
