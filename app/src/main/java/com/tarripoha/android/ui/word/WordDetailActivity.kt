@@ -10,6 +10,7 @@ import android.view.inputmethod.EditorInfo
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doAfterTextChanged
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.paging.PagedList.Config.Builder
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -314,6 +315,11 @@ class WordDetailActivity : AppCompatActivity() {
     }
 
     private fun setupObservers() {
+        viewModel.getUserMessage()
+            .observe(this, Observer {
+                TPUtils.showSnackBar(this, it)
+            })
+
         viewModel.isRefreshing()
             .observe(this) {
                 it?.let {

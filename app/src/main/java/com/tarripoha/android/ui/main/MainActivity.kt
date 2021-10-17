@@ -31,6 +31,7 @@ import com.tarripoha.android.ui.main.drawer.SideNavItem
 import com.tarripoha.android.util.TPUtils
 import com.tarripoha.android.util.ViewModelFactory
 import com.tarripoha.android.util.helper.PreferenceHelper
+import com.tarripoha.android.util.helper.UserHelper
 import com.tarripoha.android.util.showDialog
 import com.tarripoha.android.util.toggleVisibility
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -148,6 +149,7 @@ class MainActivity : BaseActivity() {
                             message = getString(R.string.msg_confirm_logout),
                             positiveText = getString(R.string.logout),
                             positiveListener = {
+                                UserHelper.setUser(null)
                                 LoginHelper.logoutUser()
                                 PreferenceHelper.clear()
                                 LoginActivity.startMe(this)
