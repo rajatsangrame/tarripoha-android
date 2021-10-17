@@ -8,6 +8,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.gson.Gson
+import com.tarripoha.android.R
 import com.tarripoha.android.TPApp
 import com.tarripoha.android.ui.BaseActivity
 import com.tarripoha.android.data.model.User
@@ -85,6 +86,7 @@ class StartupActivity : BaseActivity() {
                 user?.let {
                     val dirty = it.dirty
                     if (dirty != null && dirty) {
+                        viewModel.setUserMessage(getString(R.string.msg_user_blocked))
                         LoginHelper.logoutUser()
                         PreferenceHelper.clear()
                         LoginActivity.startMe(this)

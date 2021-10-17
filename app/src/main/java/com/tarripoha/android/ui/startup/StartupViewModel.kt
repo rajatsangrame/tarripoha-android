@@ -48,10 +48,6 @@ class StartupViewModel @Inject constructor(
                 if (snapshot.getValue(User::class.java) != null
                 ) {
                     val user: User = snapshot.getValue(User::class.java)!!
-                    val isDirty = user.dirty
-                    if (isDirty != null && isDirty) {
-                        setUserMessage(getString(R.string.msg_user_blocked, user.name))
-                    }
                     Log.i(TAG, "fetchUserInfoResponse: user found ${user.phone}")
                     this.setUser(user)
                 }
