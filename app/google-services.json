@@ -15,14 +15,6 @@
       },
       "oauth_client": [
         {
-          "client_id": "314511864781-jk4u5g1b5hc17ullfa4ogs99lko09vbn.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.tarripoha.android",
-            "certificate_hash": "1610ce2a03e561860e238f1fb69b3310aa808ec1"
-          }
-        },
-        {
           "client_id": "314511864781-fibjijktkqgjdolkokkmtkcenbbuecmh.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -52,11 +44,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "314511864781-vv4ic1jifqje1rfofn1uqf4bm1ufdrb8.apps.googleusercontent.com",
+          "client_id": "314511864781-b8qrlb3l72rg90e0jgpn543lvp4f83rk.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.tarripoha.android.debug",
-            "certificate_hash": "1610ce2a03e561860e238f1fb69b3310aa808ec1"
+            "certificate_hash": "3cfdf6f3bbf5cfe0ff4e9174933ba782a3240746"
           }
         },
         {

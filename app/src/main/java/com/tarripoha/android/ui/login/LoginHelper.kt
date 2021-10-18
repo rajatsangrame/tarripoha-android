@@ -19,7 +19,7 @@ object LoginHelper {
         activity: Activity,
         callbacks: OnVerificationStateChangedCallbacks
     ) {
-        auth.languageCode = "en"
+        auth.setLanguageCode("en")
         val options = PhoneAuthOptions.newBuilder(auth)
             .setPhoneNumber(phone)
             .setTimeout(PHONE_AUTH_TIMEOUT, TimeUnit.SECONDS)

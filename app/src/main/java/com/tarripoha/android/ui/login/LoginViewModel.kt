@@ -67,8 +67,10 @@ class LoginViewModel @Inject constructor(
                     setUserMessage(getString(R.string.error_otp_verification_failed))
                     if (e is FirebaseAuthInvalidCredentialsException) {
                         // Invalid request
+                        Log.e(TAG, "onVerificationFailed: FirebaseAuthInvalidCredentialsException")
                     } else if (e is FirebaseTooManyRequestsException) {
                         // The SMS quota for the project has been exceeded
+                        Log.e(TAG, "onVerificationFailed: FirebaseTooManyRequestsException")
                     }
                 }
 
