@@ -26,8 +26,8 @@ import com.tarripoha.android.TPApp
 import com.tarripoha.android.data.db.Comment
 import com.tarripoha.android.data.db.Word
 import com.tarripoha.android.databinding.FragmentWordDetailBinding
-import com.tarripoha.android.di.component.DaggerWordActivityComponent
-import com.tarripoha.android.di.component.WordActivityComponent
+import com.tarripoha.android.di.component.DaggerWordDetailActivityComponent
+import com.tarripoha.android.di.component.WordDetailActivityComponent
 import com.tarripoha.android.paging.CommentPagingAdapter
 import com.tarripoha.android.paging.CommentPagingAdapter.ClickMode
 import com.tarripoha.android.paging.CommentPagingAdapter.OnCommentClickListener
@@ -72,9 +72,16 @@ class WordDetailActivity : AppCompatActivity() {
     private val resultLauncher =
         registerForActivityResult(StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
-                val word = result.data?.getParcelableExtra<Word>(WordActivity.KEY_WORD)
+                val word = result.data?.getParcelableExtra<Word>(KEY_WORD)
                 if (word is Word) {
-                    viewModel.updateWord(word)
+                    val user = viewModel.getPrefUser()
+                    if (!word.name.isNullOrEmpty() && user != null && user.id != null) {
+                        word.updateUserRelatedData(user)
+                        word.updated = System.currentTimeMillis()
+                        viewModel.updateWord(word)
+                    } else {
+                        viewModel.setUserMessage(getString(R.string.error_unknown))
+                    }
                 }
             }
         }
@@ -112,7 +119,7 @@ class WordDetailActivity : AppCompatActivity() {
     }
 
     private fun getDependency() {
-        val component: WordActivityComponent = DaggerWordActivityComponent
+        val component: WordDetailActivityComponent = DaggerWordDetailActivityComponent
             .builder()
             .applicationComponent(
                 TPApp.get(this)
@@ -445,10 +452,10 @@ class WordDetailActivity : AppCompatActivity() {
                         Option.Edit -> {
                             if (!isWordDetailSet()) return
                             val word = viewModel.getWordDetail().value!!
-                            val intent = WordActivityNew.getIntent(
+                            val intent = WordActivity.getIntent(
                                 context = this@WordDetailActivity,
                                 word = word,
-                                mode = WordActivityNew.KEY_MODE_EDIT
+                                mode = WordActivity.KEY_MODE_EDIT
                             )
                             resultLauncher.launch(intent)
                         }

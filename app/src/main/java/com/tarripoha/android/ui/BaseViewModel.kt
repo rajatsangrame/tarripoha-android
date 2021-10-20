@@ -49,7 +49,7 @@ abstract class BaseViewModel(val app: Application) : ViewModel() {
 
     fun getUser() = user
 
-    fun getUserName(): String? = UserHelper.getUser()?.name
+    fun getPrefUser() = UserHelper.getUser()
 
     fun isUserAdmin(): Boolean {
         UserHelper.getUser()

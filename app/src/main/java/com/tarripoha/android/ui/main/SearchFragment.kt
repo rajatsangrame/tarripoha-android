@@ -18,7 +18,6 @@ import com.tarripoha.android.TPApp
 import com.tarripoha.android.data.db.Word
 import com.tarripoha.android.databinding.FragmentSearchBinding
 import com.tarripoha.android.ui.word.WordActivity
-import com.tarripoha.android.ui.word.WordActivityNew
 import com.tarripoha.android.ui.word.WordDetailActivity
 import com.tarripoha.android.util.ItemClickListener
 import com.tarripoha.android.util.TPUtils
@@ -43,7 +42,14 @@ class SearchFragment : Fragment() {
             if (result.resultCode == Activity.RESULT_OK) {
                 val word = result.data?.getParcelableExtra<Word>(WordActivity.KEY_WORD)
                 if (word is Word) {
-                    viewModel.addNewWord(word)
+                    val user = viewModel.getPrefUser()
+                    if (!word.name.isNullOrEmpty() && user != null && user.id != null) {
+                        word.updateUserRelatedData(user)
+                        word.timestamp = System.currentTimeMillis()
+                        viewModel.addNewWord(word)
+                    } else {
+                        viewModel.setUserMessage(getString(R.string.error_unknown))
+                    }
                 }
             }
         }
@@ -116,10 +122,10 @@ class SearchFragment : Fragment() {
                 ) {
                     if (data.type == Word.TYPE_NEW_WORD) {
                         if (viewModel.isUserLogin()) {
-                            val intent = WordActivityNew.getIntent(
+                            val intent = WordActivity.getIntent(
                                 context = requireContext(),
                                 word = data,
-                                mode = WordActivityNew.KEY_MODE_NEW
+                                mode = WordActivity.KEY_MODE_NEW
                             )
                             resultLauncher.launch(intent)
                         } else {

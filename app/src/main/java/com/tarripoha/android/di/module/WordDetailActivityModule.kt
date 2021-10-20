@@ -8,7 +8,7 @@ import dagger.Module
  * http://github.com/rajatsangrame
  */
 @Module
-class WordActivityModule(var activity: WordDetailActivity) {
+class WordDetailActivityModule(var activity: WordDetailActivity) {
 
 //    @Provides
 //    @MainActivityScope
