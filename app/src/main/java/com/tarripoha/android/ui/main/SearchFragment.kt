@@ -18,6 +18,7 @@ import com.tarripoha.android.TPApp
 import com.tarripoha.android.data.db.Word
 import com.tarripoha.android.databinding.FragmentSearchBinding
 import com.tarripoha.android.ui.word.WordActivity
+import com.tarripoha.android.ui.word.WordActivityNew
 import com.tarripoha.android.ui.word.WordDetailActivity
 import com.tarripoha.android.util.ItemClickListener
 import com.tarripoha.android.util.TPUtils
@@ -115,10 +116,10 @@ class SearchFragment : Fragment() {
                 ) {
                     if (data.type == Word.TYPE_NEW_WORD) {
                         if (viewModel.isUserLogin()) {
-                            val intent = WordActivity.getIntent(
+                            val intent = WordActivityNew.getIntent(
                                 context = requireContext(),
                                 word = data,
-                                mode = WordActivity.KEY_MODE_NEW
+                                mode = WordActivityNew.KEY_MODE_NEW
                             )
                             resultLauncher.launch(intent)
                         } else {

@@ -23,6 +23,7 @@ data class Word(
   val name: String,
   val meaning: String,
   var eng: String? = null,
+  var otherDesc: String? = null,
   var type: String? = null,
   var addedBy: String? = null,
   var popular: Double? = null,

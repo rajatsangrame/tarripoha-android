@@ -445,10 +445,10 @@ class WordDetailActivity : AppCompatActivity() {
                         Option.Edit -> {
                             if (!isWordDetailSet()) return
                             val word = viewModel.getWordDetail().value!!
-                            val intent = WordActivity.getIntent(
+                            val intent = WordActivityNew.getIntent(
                                 context = this@WordDetailActivity,
                                 word = word,
-                                mode = WordActivity.KEY_MODE_EDIT
+                                mode = WordActivityNew.KEY_MODE_EDIT
                             )
                             resultLauncher.launch(intent)
                         }
