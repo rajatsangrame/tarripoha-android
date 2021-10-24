@@ -8,6 +8,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.gson.Gson
+import com.tarripoha.android.GlobalVar
 import com.tarripoha.android.R
 import com.tarripoha.android.TPApp
 import com.tarripoha.android.ui.BaseActivity
@@ -43,6 +44,14 @@ class StartupActivity : BaseActivity() {
         val userString: String = PreferenceHelper.get<String>(PreferenceHelper.KEY_USER, "")
         val loginSkip: Boolean =
             PreferenceHelper.get<Boolean>(PreferenceHelper.KEY_LOGIN_SKIP, false)
+
+        val lang =
+            mutableListOf(
+                getString(R.string.select_language),
+                getString(R.string.marathi),
+                getString(R.string.hindi)
+            )
+        GlobalVar.loadLanguage(lang)
 
         var user: User? = null
         userString.let {

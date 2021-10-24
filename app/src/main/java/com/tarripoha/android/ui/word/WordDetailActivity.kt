@@ -304,7 +304,7 @@ class WordDetailActivity : AppCompatActivity() {
         if (!isWordDetailSet()) return
         val word = viewModel.getWordDetail().value!!
         binding.commentEt.apply {
-            hint = getString(R.string.add_quotes, word.name)
+            hint = getString(R.string.write_quote, word.name)
             setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     val result = postComment()

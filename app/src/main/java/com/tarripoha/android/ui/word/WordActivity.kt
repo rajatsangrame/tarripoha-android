@@ -7,10 +7,14 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -23,6 +27,7 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.tarripoha.android.GlobalVar
 import com.tarripoha.android.R
 import com.tarripoha.android.data.db.Word
 import com.tarripoha.android.ui.word.ui.theme.TarriPohaTheme
@@ -71,12 +76,12 @@ fun LoginScreen(word: Word?, displayMode: String) {
 
     val activity = (LocalContext.current as Activity)
 
-    var btnText = activity.getString(R.string.add)
+    var btnText = activity.getString(R.string.request)
     val title = if (displayMode == WordActivity.KEY_MODE_EDIT) {
         btnText = activity.getString(R.string.save)
         activity.getString(R.string.edit)
     } else {
-        activity.getString(R.string.add_new_word)
+        activity.getString(R.string.request_new_word)
     }
 
     val name = remember { mutableStateOf(word?.name ?: "") }
@@ -86,6 +91,7 @@ fun LoginScreen(word: Word?, displayMode: String) {
     val scope = rememberCoroutineScope()
     val scaffoldState = rememberScaffoldState()
     val localFocusManager = LocalFocusManager.current
+    var lang: String? = word?.lang
 
     Column(
         modifier = Modifier
@@ -118,7 +124,17 @@ fun LoginScreen(word: Word?, displayMode: String) {
                 })
             )
 
-            Spacer(modifier = Modifier.padding(16.dp))
+            TopSpacing()
+
+            LanguageSelection(
+                displayMode = displayMode,
+                lang = lang,
+                callback = {
+                    lang = it
+                }
+            )
+
+            Spacer(modifier = Modifier.padding(top = 16.dp))
 
             TextField(
                 modifier = Modifier.fillMaxWidth(),
@@ -138,7 +154,7 @@ fun LoginScreen(word: Word?, displayMode: String) {
                 })
             )
 
-            Spacer(modifier = Modifier.padding(16.dp))
+            TopSpacing()
 
             TextField(
                 modifier = Modifier.fillMaxWidth(),
@@ -151,7 +167,6 @@ fun LoginScreen(word: Word?, displayMode: String) {
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Text,
                     autoCorrect = false,
-                    capitalization = KeyboardCapitalization.Sentences,
                     imeAction = ImeAction.Next
                 ),
                 keyboardActions = KeyboardActions(onNext = {
@@ -159,7 +174,7 @@ fun LoginScreen(word: Word?, displayMode: String) {
                 })
             )
 
-            Spacer(modifier = Modifier.padding(16.dp))
+            TopSpacing()
 
             TextField(
                 modifier = Modifier
@@ -182,7 +197,7 @@ fun LoginScreen(word: Word?, displayMode: String) {
                 })
             )
 
-            Spacer(modifier = Modifier.padding(16.dp))
+            TopSpacing()
 
         }
 
@@ -209,11 +224,21 @@ fun LoginScreen(word: Word?, displayMode: String) {
                                 )
                             }
                             return@Button
+                        } else if (displayMode != WordActivity.KEY_MODE_EDIT &&
+                            (lang.isNullOrEmpty() || lang == activity.getString(R.string.select_language))
+                        ) {
+                            scope.launch {
+                                scaffoldState.snackbarHostState.showSnackbar(
+                                    message = activity.getString(R.string.msg_select_language)
+                                )
+                            }
+                            return@Button
                         }
                         val edit = word?.edit(
                             meaning = meaning.value.trim(),
                             engMeaning = engMeaning.value.trim(),
-                            otherDesc = desc.value.trim()
+                            otherDesc = desc.value.trim(),
+                            lang = lang
                         )
                         val intent = Intent()
                         intent.putExtra(WordActivity.KEY_WORD, edit)
@@ -240,3 +265,57 @@ fun ShowSnackbar(message: String) {
         Text(text = message)
     }
 }
+
+@Composable
+fun TopSpacing(top: Int = 16) {
+    Spacer(modifier = Modifier.padding(top = top.dp))
+}
+
+@Composable
+fun LanguageSelection(displayMode: String, lang: String?, callback: (String) -> Unit) {
+
+    val enable = displayMode != WordActivity.KEY_MODE_EDIT
+
+    val languages = GlobalVar.getLanguages()
+    var language by remember { mutableStateOf(lang ?: languages[0]) }
+    var expanded by remember { mutableStateOf(false) }
+
+    Box(
+        Modifier
+            .fillMaxWidth()
+            .wrapContentSize(Alignment.TopStart)
+            .border(1.dp, MaterialTheme.colors.onSurface.copy(alpha = 0.5f))
+    ) {
+        Row(
+            Modifier
+                .padding(16.dp)
+                .fillMaxWidth()
+                .clickable {
+                    expanded = !expanded
+                }
+        ) { // Anchor view
+            Text(
+                text = language,
+                modifier = Modifier.padding(end = 8.dp)
+            ) // Country name label
+            Icon(imageVector = Icons.Filled.ArrowDropDown, contentDescription = "")
+
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = {
+                    expanded = false
+                }) {
+                languages.forEach { lang ->
+                    DropdownMenuItem(onClick = {
+                        expanded = false
+                        language = lang
+                        callback(language)
+                    }) {
+                        Text(text = lang)
+                    }
+                }
+            }
+        }
+    }
+}
+

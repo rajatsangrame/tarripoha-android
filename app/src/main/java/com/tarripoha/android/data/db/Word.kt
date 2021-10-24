@@ -26,6 +26,7 @@ data class Word(
     var eng: String? = null,
     var otherDesc: String? = null,
     var type: String? = null,
+    var lang: String? = null,
     var addedByUserId: String? = null,
     var addedByUserName: String? = null,
     var popular: Double? = null,
@@ -53,12 +54,13 @@ data class Word(
         this.addedByUserName = user.name
     }
 
-    fun edit(meaning: String, engMeaning: String, otherDesc: String?): Word {
+    fun edit(meaning: String, engMeaning: String, otherDesc: String?, lang: String?): Word {
         return Word(
             name = this.name,
             meaning = meaning,
             eng = engMeaning,
             otherDesc = otherDesc,
+            lang = lang ?: this.lang,
             timestamp = this.timestamp,
             addedByUserId = this.addedByUserId,
             addedByUserName = this.addedByUserName,
