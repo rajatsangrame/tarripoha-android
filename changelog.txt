@@ -1,4 +1,11 @@
-Version 0.5.0
+Version 0.5.4 [25 Oct 2021]
+1. Fixed login issue
+2. Added language option
+3. Multiple bug fix and improvement
+
+________________________________
+Version 0.5.2 [20 Oct 2021]
+Hello World
 
 
 ________________________________
