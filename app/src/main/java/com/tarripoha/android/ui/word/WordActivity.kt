@@ -31,6 +31,8 @@ import com.tarripoha.android.GlobalVar
 import com.tarripoha.android.R
 import com.tarripoha.android.data.db.Word
 import com.tarripoha.android.ui.word.ui.theme.TarriPohaTheme
+import com.tarripoha.android.ui.word.ui.theme.colorBlack
+import com.tarripoha.android.ui.word.ui.theme.colorGrey
 import com.tarripoha.android.ui.word.ui.theme.colorPrimary
 import kotlinx.coroutines.launch
 
@@ -274,7 +276,7 @@ fun TopSpacing(top: Int = 16) {
 @Composable
 fun LanguageSelection(displayMode: String, lang: String?, callback: (String) -> Unit) {
 
-    val enable = displayMode != WordActivity.KEY_MODE_EDIT
+    val enabled = displayMode != WordActivity.KEY_MODE_EDIT
 
     val languages = GlobalVar.getLanguages()
     var language by remember { mutableStateOf(lang ?: languages[0]) }
@@ -291,13 +293,20 @@ fun LanguageSelection(displayMode: String, lang: String?, callback: (String) -> 
                 .padding(16.dp)
                 .fillMaxWidth()
                 .clickable {
-                    expanded = !expanded
+                    expanded = if (enabled) {
+                        !expanded
+                    } else {
+                        false
+                    }
                 }
         ) { // Anchor view
+            val textColor = if (enabled) colorBlack else colorGrey
             Text(
+                color = textColor,
                 text = language,
                 modifier = Modifier.padding(end = 8.dp)
-            ) // Country name label
+            )
+
             Icon(imageVector = Icons.Filled.ArrowDropDown, contentDescription = "")
 
             DropdownMenu(
@@ -306,11 +315,13 @@ fun LanguageSelection(displayMode: String, lang: String?, callback: (String) -> 
                     expanded = false
                 }) {
                 languages.forEach { lang ->
-                    DropdownMenuItem(onClick = {
-                        expanded = false
-                        language = lang
-                        callback(language)
-                    }) {
+                    DropdownMenuItem(
+                        enabled = enabled,
+                        onClick = {
+                            expanded = false
+                            language = lang
+                            callback(language)
+                        }) {
                         Text(text = lang)
                     }
                 }
