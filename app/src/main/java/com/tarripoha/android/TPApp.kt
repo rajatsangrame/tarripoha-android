@@ -15,28 +15,28 @@ import com.tarripoha.android.util.helper.PreferenceHelper
  */
 class TPApp : Application() {
 
-  private var component: ApplicationComponent? = null
+    private var component: ApplicationComponent? = null
 
-  override fun onCreate() {
-    super.onCreate()
-    component = DaggerApplicationComponent
-        .builder()
-        .applicationModule(ApplicationModule(application = this))
-        .contextModule(ContextModule(context = this))
-        .build()
+    override fun onCreate() {
+        super.onCreate()
+        component = DaggerApplicationComponent
+            .builder()
+            .applicationModule(ApplicationModule(application = this))
+            .contextModule(ContextModule(context = this))
+            .build()
 
-    PreferenceHelper.init(this)
-    PowerStone.init(this)
-  }
-
-  fun getComponent(): ApplicationComponent? {
-    return component
-  }
-
-  companion object {
-    @JvmStatic
-    fun get(context: Context): TPApp {
-      return context.applicationContext as TPApp
+        PreferenceHelper.init(this)
+        PowerStone.init(this)
     }
-  }
+
+    fun getComponent(): ApplicationComponent? {
+        return component
+    }
+
+    companion object {
+        @JvmStatic
+        fun get(context: Context): TPApp {
+            return context.applicationContext as TPApp
+        }
+    }
 }

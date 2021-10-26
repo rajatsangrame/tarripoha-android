@@ -5,27 +5,26 @@
     android:id="@+id/main_nav_graph"
     app:startDestination="@id/nav_home">
 
-  <fragment
-      android:id="@+id/nav_home"
-      android:label="HomeFragment"
-      android:name="com.tarripoha.android.ui.main.HomeFragment"
-      tools:layout="@layout/fragment_home">
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.tarripoha.android.ui.main.HomeFragment"
+        android:label="HomeFragment"
+        tools:layout="@layout/fragment_home">
 
-    <action
-        android:id="@+id/action_HomeFragment_to_SearchFragment"
-        app:destination="@+id/nav_search"
-        app:enterAnim="@anim/slide_in_right"
-        app:exitAnim="@anim/slide_out_left"
-        app:popEnterAnim="@anim/slide_in_left"
-        app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_HomeFragment_to_SearchFragment"
+            app:destination="@+id/nav_search"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
 
-  </fragment>
+    </fragment>
 
-  <fragment
-      android:id="@+id/nav_search"
-      android:label="SearchFragment"
-      android:name="com.tarripoha.android.ui.main.SearchFragment"
-      tools:layout="@layout/fragment_search">
-  </fragment>
+    <fragment
+        android:id="@+id/nav_search"
+        android:name="com.tarripoha.android.ui.main.SearchFragment"
+        android:label="SearchFragment"
+        tools:layout="@layout/fragment_search"></fragment>
 
 </navigation>

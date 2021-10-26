@@ -18,24 +18,24 @@ import androidx.room.TypeConverters
 @TypeConverters(DbTypeConverter::class)
 abstract class WordDatabase : RoomDatabase() {
 
-  abstract fun wordDao(): WordDao
+    abstract fun wordDao(): WordDao
 
-  companion object {
-    @Volatile
-    private var INSTANCE: WordDatabase? = null
+    companion object {
+        @Volatile
+        private var INSTANCE: WordDatabase? = null
 
-    fun getDataBase(context: Context): WordDatabase? {
-      if (INSTANCE == null) {
-        synchronized(Database::class) {
-          INSTANCE = Room.databaseBuilder(
-              context.applicationContext,
-              WordDatabase::class.java, "database"
-          )
-              .fallbackToDestructiveMigration()
-              .build()
+        fun getDataBase(context: Context): WordDatabase? {
+            if (INSTANCE == null) {
+                synchronized(Database::class) {
+                    INSTANCE = Room.databaseBuilder(
+                        context.applicationContext,
+                        WordDatabase::class.java, "database"
+                    )
+                        .fallbackToDestructiveMigration()
+                        .build()
+                }
+            }
+            return INSTANCE
         }
-      }
-      return INSTANCE
     }
-  }
 }

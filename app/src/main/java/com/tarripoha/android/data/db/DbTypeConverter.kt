@@ -9,21 +9,25 @@ import java.util.Date
 
 class DbTypeConverter : Serializable {
 
-  @TypeConverter fun toDate(dateLong: Long): Date {
-    return Date(dateLong)
-  }
+    @TypeConverter
+    fun toDate(dateLong: Long): Date {
+        return Date(dateLong)
+    }
 
-  @TypeConverter fun fromDate(date: Date): Long {
-    return date.time
-  }
+    @TypeConverter
+    fun fromDate(date: Date): Long {
+        return date.time
+    }
 
-  @TypeConverter fun fromString(value: String): MutableList<Comment> {
-    val listType: Type = object : TypeToken<MutableList<Comment>>() {}.type
-    return Gson().fromJson(value, listType)
-  }
+    @TypeConverter
+    fun fromString(value: String): MutableList<Comment> {
+        val listType: Type = object : TypeToken<MutableList<Comment>>() {}.type
+        return Gson().fromJson(value, listType)
+    }
 
-  @TypeConverter fun fromList(list: MutableList<Comment>): String {
-    val gson = Gson()
-    return gson.toJson(list)
-  }
+    @TypeConverter
+    fun fromList(list: MutableList<Comment>): String {
+        val gson = Gson()
+        return gson.toJson(list)
+    }
 }

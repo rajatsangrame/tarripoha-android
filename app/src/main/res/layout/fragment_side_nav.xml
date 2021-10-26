@@ -4,117 +4,109 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorWhite"
-    >
+    android:background="@color/colorWhite">
 
-  <LinearLayout
-      android:id="@+id/login_layout"
-      android:layout_width="match_parent"
-      android:layout_height="80dp"
-      android:background="@color/colorPrimary"
-      android:clickable="true"
-      android:focusable="true"
-      android:foreground="?attr/selectableItemBackground"
-      android:gravity="center|start"
-      android:orientation="vertical"
-      android:padding="@dimen/margin_extra_large"
-      android:visibility="gone"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="parent"
-      tools:visibility="visible"
-      >
+    <LinearLayout
+        android:id="@+id/login_layout"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="@color/colorPrimary"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
+        android:gravity="center|start"
+        android:orientation="vertical"
+        android:padding="@dimen/margin_extra_large"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible">
 
-    <TextView
-        android:layout_width="wrap_content"
+        <TextView
+            style="@style/AppTheme.TextLabelWhite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/login_register"
+            android:textSize="@dimen/text_large"
+            tools:visibility="visible" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/user_layout"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="@color/colorPrimary"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
+        android:gravity="center|start"
+        android:orientation="vertical"
+        android:padding="@dimen/margin_extra_large"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/name_tv"
+            style="@style/AppTheme.TextLabelWhite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_large"
+            tools:text="@string/user" />
+
+        <TextView
+            android:id="@+id/phone_tv"
+            style="@style/AppTheme.TextDesc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small"
+            tools:text="@string/mobile_number" />
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/view2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="80dp"
+        android:background="@color/colorLightGrey"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/login_layout" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_side_nav_options"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:overScrollMode="never"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view2"
+        tools:listitem="@layout/layout_item_side_nav" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout4"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/login_register"
-        android:textSize="@dimen/text_large"
-        tools:visibility="visible"
-        style="@style/AppTheme.TextLabelWhite"
-        />
+        android:orientation="vertical"
+        android:padding="@dimen/margin_extra_large"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout_editor_absoluteX="35dp">
 
-  </LinearLayout>
+        <TextView
+            android:id="@+id/version_tv"
+            style="@style/AppTheme.TextDesc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            tools:text="1.0.0"
 
-  <LinearLayout
-      android:id="@+id/user_layout"
-      android:layout_width="match_parent"
-      android:layout_height="80dp"
-      android:background="@color/colorPrimary"
-      android:clickable="true"
-      android:focusable="true"
-      android:foreground="?attr/selectableItemBackground"
-      android:gravity="center|start"
-      android:orientation="vertical"
-      android:padding="@dimen/margin_extra_large"
-      android:visibility="visible"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="parent"
-      >
-
-    <TextView
-        android:id="@+id/name_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/text_large"
-        tools:text="@string/user"
-        style="@style/AppTheme.TextLabelWhite"
-        />
-
-    <TextView
-        android:id="@+id/phone_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_small"
-        tools:text="@string/mobile_number"
-        style="@style/AppTheme.TextDesc"
-        />
-
-  </LinearLayout>
-
-  <View
-      android:id="@+id/view2"
-      android:layout_width="match_parent"
-      android:layout_height="1dp"
-      android:layout_marginTop="80dp"
-      android:background="@color/colorLightGrey"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="@+id/login_layout"
-      />
-
-  <androidx.recyclerview.widget.RecyclerView
-      android:id="@+id/rv_side_nav_options"
-      android:layout_width="0dp"
-      android:layout_height="0dp"
-      android:clipToPadding="false"
-      android:overScrollMode="never"
-      app:layout_constraintBottom_toTopOf="@+id/linearLayout4"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/view2"
-      tools:listitem="@layout/layout_item_side_nav"
-      />
-
-  <LinearLayout
-      android:id="@+id/linearLayout4"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:orientation="vertical"
-      android:padding="@dimen/margin_extra_large"
-      app:layout_constraintBottom_toBottomOf="parent"
-      tools:layout_editor_absoluteX="35dp"
-      >
-    <TextView
-        android:id="@+id/version_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        tools:text="1.0.0"
-        style="@style/AppTheme.TextDesc"
-
-        />
-  </LinearLayout>
+            />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

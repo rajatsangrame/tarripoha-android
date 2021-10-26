@@ -159,7 +159,9 @@ fun LoginScreen(word: Word?, displayMode: String) {
             TopSpacing()
 
             TextField(
-                modifier = Modifier.fillMaxWidth().height(100.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(100.dp),
                 value = engMeaning.value,
                 onValueChange = {
                     engMeaning.value = it

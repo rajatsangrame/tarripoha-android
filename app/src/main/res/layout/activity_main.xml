@@ -5,34 +5,30 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.word.WordActivity"
-    >
+    tools:context=".ui.word.WordActivity">
 
-  <include
-      layout="@layout/layout_toolbar_with_navigation"
-      android:id="@+id/container"
-      />
+    <include
+        android:id="@+id/container"
+        layout="@layout/layout_toolbar_with_navigation" />
 
-  <com.google.android.material.navigation.NavigationView
-      android:id="@+id/side_nav_view"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:layout_gravity="start"
-      app:layout_constraintBottom_toBottomOf="parent"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="parent"
-      >
-
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/side_nav_container"
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/side_nav_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:name="com.tarripoha.android.ui.main.drawer.SideNavFragment"
-        tools:layout="@layout/fragment_side_nav"
-        />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-  </com.google.android.material.navigation.NavigationView>
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/side_nav_container"
+            android:name="com.tarripoha.android.ui.main.drawer.SideNavFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            tools:layout="@layout/fragment_side_nav" />
+
+    </com.google.android.material.navigation.NavigationView>
 
 </androidx.drawerlayout.widget.DrawerLayout>
