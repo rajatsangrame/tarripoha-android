@@ -93,7 +93,7 @@ fun LoginScreen(word: Word?, displayMode: String) {
     val scope = rememberCoroutineScope()
     val scaffoldState = rememberScaffoldState()
     val localFocusManager = LocalFocusManager.current
-    var lang: String? = word?.lang
+    val lang = remember { mutableStateOf(word?.lang ?: "") }
 
     Column(
         modifier = Modifier
@@ -130,9 +130,9 @@ fun LoginScreen(word: Word?, displayMode: String) {
 
             LanguageSelection(
                 displayMode = displayMode,
-                lang = lang,
+                lang = lang.value,
                 callback = {
-                    lang = it
+                    lang.value = it
                 }
             )
 
@@ -159,7 +159,7 @@ fun LoginScreen(word: Word?, displayMode: String) {
             TopSpacing()
 
             TextField(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().height(100.dp),
                 value = engMeaning.value,
                 onValueChange = {
                     engMeaning.value = it
@@ -227,7 +227,7 @@ fun LoginScreen(word: Word?, displayMode: String) {
                             }
                             return@Button
                         } else if (displayMode != WordActivity.KEY_MODE_EDIT &&
-                            (lang.isNullOrEmpty() || lang == activity.getString(R.string.select_language))
+                            (lang.value.isEmpty() || lang.value == activity.getString(R.string.select_language))
                         ) {
                             scope.launch {
                                 scaffoldState.snackbarHostState.showSnackbar(
@@ -240,7 +240,7 @@ fun LoginScreen(word: Word?, displayMode: String) {
                             meaning = meaning.value.trim(),
                             engMeaning = engMeaning.value.trim(),
                             otherDesc = desc.value.trim(),
-                            lang = lang
+                            lang = lang.value
                         )
                         val intent = Intent()
                         intent.putExtra(WordActivity.KEY_WORD, edit)
@@ -274,12 +274,18 @@ fun TopSpacing(top: Int = 16) {
 }
 
 @Composable
-fun LanguageSelection(displayMode: String, lang: String?, callback: (String) -> Unit) {
+fun LanguageSelection(displayMode: String, lang: String, callback: (String) -> Unit) {
 
     val enabled = displayMode != WordActivity.KEY_MODE_EDIT
 
     val languages = GlobalVar.getLanguages()
-    var language by remember { mutableStateOf(lang ?: languages[0]) }
+    var language by remember {
+        mutableStateOf(
+            if (lang.isNotEmpty()) {
+                lang
+            } else languages[0]
+        )
+    }
     var expanded by remember { mutableStateOf(false) }
 
     Box(
