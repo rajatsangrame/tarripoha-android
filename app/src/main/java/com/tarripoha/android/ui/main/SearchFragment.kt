@@ -43,7 +43,7 @@ class SearchFragment : Fragment() {
                 val word = result.data?.getParcelableExtra<Word>(WordActivity.KEY_WORD)
                 if (word is Word) {
                     val user = viewModel.getPrefUser()
-                    if (!word.name.isNullOrEmpty() && user != null && user.id != null) {
+                    if (!word.name.isNullOrEmpty() && user?.id != null) {
                         word.updateUserRelatedData(user)
                         word.timestamp = System.currentTimeMillis()
                         viewModel.addNewWord(word)

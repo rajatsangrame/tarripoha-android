@@ -13,7 +13,8 @@ import com.tarripoha.android.R
 
 class WordAdapter(
     private var words: MutableList<Word>,
-    private val itemClickListener: ItemClickListener<Word>
+    private val itemClickListener: ItemClickListener<Word>,
+    private val gridView: Boolean = false
 ) : RecyclerView.Adapter<BaseViewHolder>() {
 
     override fun onCreateViewHolder(
@@ -44,9 +45,10 @@ class WordAdapter(
         val type = this.words[position].type
         if (type != null) {
             when (type) {
+                // Always Linear layout for new word
                 Word.TYPE_NEW_WORD -> return VIEW_TYPE_NEW_WORD
             }
-        }
+        } else if (gridView) return VIEW_TYPE_GRID
 
         return super.getItemViewType(position)
     }
@@ -107,6 +109,7 @@ class WordAdapter(
 
     companion object {
         const val VIEW_TYPE_NEW_WORD = 101
+        const val VIEW_TYPE_GRID = 102
     }
 
 }

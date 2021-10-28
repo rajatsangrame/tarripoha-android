@@ -9,8 +9,6 @@ import com.tarripoha.android.data.db.Word
 import com.tarripoha.android.ui.BaseViewModel
 import com.tarripoha.android.R
 import com.tarripoha.android.data.db.Comment
-import com.tarripoha.android.util.helper.UserHelper
-import java.lang.Exception
 import javax.inject.Inject
 
 /**
@@ -19,7 +17,7 @@ import javax.inject.Inject
  */
 
 class WordViewModel @Inject constructor(
-    var repository: Repository,
+    private val repository: Repository,
     app: Application
 ) : BaseViewModel(app) {
 
@@ -132,6 +130,65 @@ class WordViewModel @Inject constructor(
         }
         repository.likeComment(
             comment = comment,
+            like = like,
+            userId = userId,
+            success = callback,
+            failure = {
+                setUserMessage(getString(R.string.error_unable_to_process))
+            },
+            connectionStatus = {
+
+            }
+        )
+    }
+
+    fun isWordDetailSet(): Boolean {
+        if (getWordDetail().value == null) {
+            setUserMessage(getString(R.string.error_unknown))
+            return false
+        }
+        return true
+    }
+
+    fun likeWord() {
+        val user = getPrefUser()
+        if (user?.id == null) return
+        if (!isWordDetailSet()) return
+        val word = getWordDetail().value!!
+        val likes: MutableMap<String, Boolean> =
+            word.likes ?: mutableMapOf()
+        val like: Boolean = when {
+            likes.contains(user.id) -> {
+                // Opposite of likes[userId]
+                !likes[user.id]!!
+            }
+            else -> {
+                true
+            }
+        }
+        likes[user.id] = like
+        likeWord(
+            word = word,
+            userId = user.id,
+            like = like,
+            callback = {
+                word.likes = likes
+                setWordDetail(word)
+            }
+        )
+    }
+
+    fun likeWord(
+        word: Word,
+        like: Boolean,
+        userId: String,
+        callback: () -> Unit
+    ) {
+        if (!checkNetworkAndShowError()) {
+            return
+        }
+        repository.likeWord(
+            word = word,
             like = like,
             userId = userId,
             success = callback,

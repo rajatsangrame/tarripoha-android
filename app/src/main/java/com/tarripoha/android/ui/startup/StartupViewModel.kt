@@ -16,7 +16,7 @@ import javax.inject.Inject
  */
 
 class StartupViewModel @Inject constructor(
-    private var repository: Repository,
+    private val repository: Repository,
     app: Application
 ) : BaseViewModel(app) {
 

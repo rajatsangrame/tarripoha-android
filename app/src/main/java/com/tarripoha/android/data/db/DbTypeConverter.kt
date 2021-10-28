@@ -30,4 +30,24 @@ class DbTypeConverter : Serializable {
         val gson = Gson()
         return gson.toJson(list)
     }
+
+    @TypeConverter
+    fun stringToLikeMap(value: String): Map<String, Boolean> {
+        return Gson().fromJson(value, object : TypeToken<Map<String, Boolean>>() {}.type)
+    }
+
+    @TypeConverter
+    fun likeMapToString(value: Map<String, Boolean>?): String {
+        return if (value == null) "" else Gson().toJson(value)
+    }
+
+    @TypeConverter
+    fun stringToViewsMap(value: String): Map<String, Int> {
+        return Gson().fromJson(value, object : TypeToken<Map<String, Boolean>>() {}.type)
+    }
+
+    @TypeConverter
+    fun viewsMapToString(value: Map<String, Int>?): String {
+        return if (value == null) "" else Gson().toJson(value)
+    }
 }

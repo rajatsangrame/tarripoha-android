@@ -267,6 +267,31 @@ class Repository(
         )
     }
 
+    fun likeWord(
+        word: Word,
+        like: Boolean,
+        userId: String,
+        success: () -> Unit,
+        failure: (Exception) -> Unit,
+        connectionStatus: (Boolean) -> Unit
+    ) {
+        wordRef.child(word.name).child("likes").child(userId).setValue(like)
+            .addOnSuccessListener {
+                success()
+                Log.d(TAG, "likeWord: DocumentSnapshot added with ID: ${word.name}")
+            }
+            .addOnFailureListener { e ->
+                failure(e)
+                Log.e(TAG, "Error adding document", e)
+            }
+
+        checkFirebaseConnection(
+            connectionStatus = {
+                connectionStatus(it)
+            }
+        )
+    }
+
     companion object {
         private const val LIMIT_TO_FIRST = 10
         private const val TAG = "Repository"

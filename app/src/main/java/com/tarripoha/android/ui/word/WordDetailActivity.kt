@@ -9,6 +9,7 @@ import android.view.*
 import android.view.inputmethod.EditorInfo
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -75,7 +76,7 @@ class WordDetailActivity : AppCompatActivity() {
                 val word = result.data?.getParcelableExtra<Word>(KEY_WORD)
                 if (word is Word) {
                     val user = viewModel.getPrefUser()
-                    if (!word.name.isNullOrEmpty() && user != null && user.id != null) {
+                    if (!word.name.isNullOrEmpty() && user?.id != null) {
                         word.updateUserRelatedData(user)
                         word.updated = System.currentTimeMillis()
                         viewModel.updateWord(word)
@@ -180,14 +181,6 @@ class WordDetailActivity : AppCompatActivity() {
         checkPostBtnColor("")
     }
 
-    private fun isWordDetailSet(): Boolean {
-        if (viewModel.getWordDetail().value == null) {
-            viewModel.setUserMessage(getString(R.string.error_unknown))
-            return false
-        }
-        return true
-    }
-
     private fun checkPostBtnColor(query: String) {
         binding.postCommentBtn.apply {
             isEnabled = if (query.isNotEmpty()) {
@@ -208,7 +201,7 @@ class WordDetailActivity : AppCompatActivity() {
         binding.commentRv.apply {
             layoutManager = linearLayoutManager
         }
-        if (!isWordDetailSet()) return
+        if (!viewModel.isWordDetailSet()) return
         val word = viewModel.getWordDetail().value!!
         setupAdapter(getOption(word))
     }
@@ -301,7 +294,7 @@ class WordDetailActivity : AppCompatActivity() {
     }
 
     private fun setupEditText() {
-        if (!isWordDetailSet()) return
+        if (!viewModel.isWordDetailSet()) return
         val word = viewModel.getWordDetail().value!!
         binding.commentEt.apply {
             hint = getString(R.string.write_quote, word.name)
@@ -353,6 +346,24 @@ class WordDetailActivity : AppCompatActivity() {
             meaningTv.text = word.meaning
             engMeaningTv.setTextWithVisibility(word.eng)
         }
+        word.likes?.let {
+            val user = viewModel.getPrefUser()
+            if (user?.id == null) {
+                viewModel.setUserMessage(getString(R.string.error_login))
+                return@let
+            }
+            if (it[user.id] != null && it[user.id] == true) {
+                binding.likeBtn.background = ContextCompat.getDrawable(
+                    this,
+                    R.drawable.ic_like_black
+                )
+            } else {
+                binding.likeBtn.background = ContextCompat.getDrawable(
+                    this,
+                    R.drawable.ic_like_border_black
+                )
+            }
+        }
     }
 
     private fun validateComment(): Boolean {
@@ -369,7 +380,7 @@ class WordDetailActivity : AppCompatActivity() {
             viewModel.setUserMessage(getString(R.string.error_login))
             return false
         }
-        if (!isWordDetailSet()) return false
+        if (!viewModel.isWordDetailSet()) return false
         val validate = validateComment()
         if (validate) {
             val comment = binding.commentEt.text.trim()
@@ -450,7 +461,7 @@ class WordDetailActivity : AppCompatActivity() {
                     Log.d(TAG, "onClick: $option}")
                     when (option) {
                         Option.Edit -> {
-                            if (!isWordDetailSet()) return
+                            if (!viewModel.isWordDetailSet()) return
                             val word = viewModel.getWordDetail().value!!
                             val intent = WordActivity.getIntent(
                                 context = this@WordDetailActivity,
@@ -489,6 +500,9 @@ class WordDetailActivity : AppCompatActivity() {
         }
         binding.swipeRefreshLayout.setOnRefreshListener {
             setupUI()
+        }
+        binding.likeBtn.setOnClickListener {
+            viewModel.likeWord()
         }
     }
 

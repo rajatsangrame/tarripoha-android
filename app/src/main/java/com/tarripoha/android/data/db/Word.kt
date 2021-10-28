@@ -25,7 +25,7 @@ data class Word(
     val meaning: String,
     var eng: String? = null,
     var otherDesc: String? = null,
-    var type: String? = null,
+    var type: String? = null, // Local
     var lang: String? = null,
     var addedByUserId: String? = null,
     var addedByUserName: String? = null,
@@ -34,7 +34,11 @@ data class Word(
     var approved: Boolean? = null,
     var comments: List<Comment>? = null,
     var timestamp: Long? = null,
-    var updated: Long? = null
+    var updated: Long? = null,
+    var saved: Boolean? = false,
+    var likes: MutableMap<String, Boolean>? = null,
+    var views: MutableMap<String, Int>? = null
+    // Make sure to update edit method when ever extra parameter is added
 ) : Parcelable {
 
     companion object {
@@ -61,13 +65,16 @@ data class Word(
             eng = engMeaning,
             otherDesc = otherDesc,
             lang = lang ?: this.lang,
-            timestamp = this.timestamp,
             addedByUserId = this.addedByUserId,
             addedByUserName = this.addedByUserName,
             popular = this.popular,
             dirty = this.dirty,
             approved = this.approved,
-            comments = this.comments
+            comments = this.comments,
+            timestamp = this.timestamp,
+            saved = this.saved,
+            likes = this.likes,
+            views = this.views
         )
     }
 }

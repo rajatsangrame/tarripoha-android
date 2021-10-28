@@ -26,7 +26,7 @@ data class Comment(
     var userName: String? = null,
     var dirty: Boolean = false,
     var localStatus: Boolean? = null,
-    var likes: MutableMap<String, Boolean>? = null,
+    var likes: MutableMap<String, Boolean>? = null
 ) : Parcelable {
     constructor() : this(id = "", word = "", comment = "", timestamp = 0.0, userId = "")
     constructor(
