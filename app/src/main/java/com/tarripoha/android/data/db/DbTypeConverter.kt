@@ -42,12 +42,12 @@ class DbTypeConverter : Serializable {
     }
 
     @TypeConverter
-    fun stringToViewsMap(value: String): Map<String, Int> {
+    fun stringToViewsMap(value: String): MutableMap<String, List<Long>> {
         return Gson().fromJson(value, object : TypeToken<Map<String, Boolean>>() {}.type)
     }
 
     @TypeConverter
-    fun viewsMapToString(value: Map<String, Int>?): String {
+    fun viewsMapToString(value: MutableMap<String, List<Long>>?): String {
         return if (value == null) "" else Gson().toJson(value)
     }
 }

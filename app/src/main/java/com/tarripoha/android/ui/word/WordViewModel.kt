@@ -152,7 +152,10 @@ class WordViewModel @Inject constructor(
 
     fun likeWord() {
         val user = getPrefUser()
-        if (user?.id == null) return
+        if (user?.id == null) {
+            setUserMessage(getString(R.string.error_login))
+            return
+        }
         if (!isWordDetailSet()) return
         val word = getWordDetail().value!!
         val likes: MutableMap<String, Boolean> =
@@ -166,19 +169,19 @@ class WordViewModel @Inject constructor(
                 true
             }
         }
-        likes[user.id] = like
         likeWord(
             word = word,
             userId = user.id,
             like = like,
             callback = {
+                likes[user.id] = like
                 word.likes = likes
                 setWordDetail(word)
             }
         )
     }
 
-    fun likeWord(
+    private fun likeWord(
         word: Word,
         like: Boolean,
         userId: String,

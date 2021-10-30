@@ -78,6 +78,7 @@ class HomeFragment : Fragment() {
                     position: Int,
                     data: Word
                 ) {
+                    viewModel.updateViewsCount(word = data)
                     WordDetailActivity.startMe(
                         context = requireContext(),
                         wordDetail = data

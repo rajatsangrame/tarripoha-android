@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -282,6 +283,32 @@ class Repository(
             }
             .addOnFailureListener { e ->
                 failure(e)
+                Log.e(TAG, "Error adding document", e)
+            }
+
+        checkFirebaseConnection(
+            connectionStatus = {
+                connectionStatus(it)
+            }
+        )
+    }
+
+    fun updateViewsCount(
+        word: Word,
+        views: MutableList<Long>,
+        userId: String,
+        success: () -> Unit,
+        failure: (Exception) -> Unit,
+        connectionStatus: (Boolean) -> Unit
+    ) {
+        wordRef.child(word.name).child("views").child(userId).setValue(views)
+            .addOnSuccessListener {
+                success()
+                Log.d(TAG, "updateViewsCount: DocumentSnapshot added with ID: ${word.name}")
+            }
+            .addOnFailureListener { e ->
+                failure(e)
+                FirebaseCrashlytics.getInstance().recordException(e)
                 Log.e(TAG, "Error adding document", e)
             }
 

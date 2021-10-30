@@ -268,8 +268,8 @@ class WordDetailActivity : AppCompatActivity() {
                                 like = true
                             }
                         }
-                        likes[userId] = like
                         viewModel.likeComment(comment, like, userId) {
+                            likes[userId] = like
                             comment.likes = likes
                             commentAdapter.refresh()
                         }

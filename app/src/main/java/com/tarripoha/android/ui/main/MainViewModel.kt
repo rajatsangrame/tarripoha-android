@@ -4,6 +4,7 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.*
 import com.google.firebase.database.DataSnapshot
+import com.tarripoha.android.GlobalVar
 import com.tarripoha.android.data.Repository
 import com.tarripoha.android.data.db.Word
 import com.tarripoha.android.ui.BaseViewModel
@@ -156,6 +157,51 @@ class MainViewModel @Inject constructor(
         }
         if (!wordFound) wordList.add(Word.getNewWord(name = query))
         setSearchWords(wordList)
+    }
+
+    fun updateViewsCount(word: Word) {
+        val user = getPrefUser()
+        if (user?.id == null || GlobalVar.DEBUG_MODE) {
+            Log.i(
+                TAG,
+                "updateViewsCount: ignored user not logged in / debug build ${GlobalVar.DEBUG_MODE}"
+            )
+            return
+        }
+        val viewsMap = word.views ?: mutableMapOf()
+        val views = viewsMap[user.id] ?: mutableListOf()
+        views.add(System.currentTimeMillis())
+        updateViewsCount(
+            word = word,
+            views = views,
+            userId = user.id,
+            callback = {
+                // no-op
+            }
+        )
+    }
+
+    private fun updateViewsCount(
+        word: Word,
+        views: MutableList<Long>,
+        userId: String,
+        callback: () -> Unit
+    ) {
+        if (!checkNetworkAndShowError()) {
+            return
+        }
+        repository.updateViewsCount(
+            word = word,
+            views = views,
+            userId = userId,
+            success = callback,
+            failure = {
+                setUserMessage(getString(R.string.error_unable_to_process))
+            },
+            connectionStatus = {
+
+            }
+        )
     }
 
     // endregion

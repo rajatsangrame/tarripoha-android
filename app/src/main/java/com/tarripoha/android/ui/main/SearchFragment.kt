@@ -132,6 +132,7 @@ class SearchFragment : Fragment() {
                             viewModel.setUserMessage(getString(R.string.error_login))
                         }
                     } else {
+                        viewModel.updateViewsCount(word = data)
                         TPUtils.hideKeyboard(requireContext(), binding.root)
                         WordDetailActivity.startMe(
                             context = requireContext(),
