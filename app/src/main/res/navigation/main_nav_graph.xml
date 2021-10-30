@@ -13,11 +13,7 @@
 
         <action
             android:id="@+id/action_HomeFragment_to_SearchFragment"
-            app:destination="@+id/nav_search"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right" />
+            app:destination="@+id/nav_search" />
 
     </fragment>
 
@@ -25,6 +21,6 @@
         android:id="@+id/nav_search"
         android:name="com.tarripoha.android.ui.main.SearchFragment"
         android:label="SearchFragment"
-        tools:layout="@layout/fragment_search"></fragment>
+        tools:layout="@layout/fragment_search" />
 
 </navigation>
