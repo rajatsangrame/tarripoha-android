@@ -56,6 +56,7 @@ data class Word(
     fun updateUserRelatedData(user: User) {
         this.addedByUserId = user.id
         this.addedByUserName = user.name
+        this.approved = user.admin
     }
 
     fun edit(meaning: String, engMeaning: String, otherDesc: String?, lang: String?): Word {
