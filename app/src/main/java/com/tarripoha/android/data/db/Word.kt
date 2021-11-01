@@ -30,8 +30,8 @@ data class Word(
     var addedByUserId: String? = null,
     var addedByUserName: String? = null,
     var popular: Double? = null,
-    var dirty: Boolean? = null,
-    var approved: Boolean? = null,
+    private var dirty: Boolean? = null,
+    private var approved: Boolean? = null,
     var comments: List<Comment>? = null,
     var timestamp: Long? = null,
     var updated: Long? = null,
@@ -57,6 +57,16 @@ data class Word(
         this.addedByUserId = user.id
         this.addedByUserName = user.name
         this.approved = user.admin
+    }
+
+    fun isDirty(): Boolean {
+        val dirty = this.dirty
+        return dirty != null && dirty
+    }
+
+    fun isApproved(): Boolean {
+        val approved = this.approved
+        return approved == null || approved
     }
 
     fun edit(meaning: String, engMeaning: String, otherDesc: String?, lang: String?): Word {

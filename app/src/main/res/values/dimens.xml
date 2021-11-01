@@ -9,6 +9,7 @@
     <dimen name="margin_wide_distance">32dp</dimen>
 
     <dimen name="margin_bottom_sheet">32dp</dimen>
+    <dimen name="margin_word_of_the_week">32dp</dimen>
 
     <dimen name="text_minimum">10sp</dimen>
     <dimen name="text_small">12sp</dimen>

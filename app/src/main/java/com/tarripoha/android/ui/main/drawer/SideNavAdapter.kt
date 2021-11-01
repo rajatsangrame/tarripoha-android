@@ -6,7 +6,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.tarripoha.android.databinding.LayoutItemSideNavBinding
 
-class SideNavAdapter(private val onItemClick: ((position: Int, item: SideNavItem) -> Unit)) :
+internal class SideNavAdapter(private val onItemClick: ((position: Int, item: SideNavItem) -> Unit)) :
     RecyclerView.Adapter<SideNavAdapter.SideNavVH>() {
     private var menuItemsList = ArrayList<SideNavItem>()
 

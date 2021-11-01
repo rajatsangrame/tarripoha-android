@@ -9,6 +9,7 @@ import com.tarripoha.android.data.Repository
 import com.tarripoha.android.data.db.Word
 import com.tarripoha.android.ui.BaseViewModel
 import com.tarripoha.android.R
+import com.tarripoha.android.firebase.DashboardResponse
 import java.lang.Exception
 import javax.inject.Inject
 
@@ -27,6 +28,8 @@ class MainViewModel @Inject constructor(
     private val searchWords: MutableLiveData<List<Word>> = MutableLiveData()
     private val query: MutableLiveData<String> = MutableLiveData()
     private val wordCount: MutableLiveData<Int> = MutableLiveData()
+    private val dashboardData: MutableLiveData<MutableMap<String, MutableList<Word>>> =
+        MutableLiveData()
 
     fun getWordCount() = wordCount
 
@@ -35,6 +38,12 @@ class MainViewModel @Inject constructor(
     fun getAllWords() = words
 
     fun getQuery() = query
+
+    fun getDashboardData() = dashboardData
+
+    fun setDashboardData(dashboardData: MutableMap<String, MutableList<Word>>?) {
+        this.dashboardData.value = dashboardData
+    }
 
     fun setQuery(query: String?) {
         this.query.value = query
@@ -69,14 +78,14 @@ class MainViewModel @Inject constructor(
         )
     }
 
-    fun fetchAllWord() {
+    fun fetchAllWord(dashboardResponseList: List<DashboardResponse>) {
         if (!checkNetworkAndShowError()) {
             return
         }
         isRefreshing.value = true
         repository.fetchAllWords(
             success = { snapshot ->
-                fetchAllResponse(snapshot = snapshot)
+                fetchAllResponse(snapshot = snapshot, dashboardResponseList = dashboardResponseList)
             },
             failure = {
                 isRefreshing.value = false
@@ -89,17 +98,33 @@ class MainViewModel @Inject constructor(
     }
 
     private fun fetchAllResponse(
+        dashboardResponseList: List<DashboardResponse>,
         snapshot: DataSnapshot
     ) {
-        val wordList: MutableList<Word> = mutableListOf()
-        snapshot.children.forEach {
-
+        val mapResponse: Map<String, DashboardResponse> =
+            dashboardResponseList.filter { it.key != null && it.type == GlobalVar.TYPE_WORD }
+                .associateBy { it.key!! }
+        val tempMap: MutableMap<String, MutableList<Word>> = mutableMapOf()
+        snapshot.children.forEach { snap ->
             try {
-                if (it.getValue(Word::class.java) != null) {
-                    val word: Word = it.getValue(Word::class.java)!!
-                    val isDirty = word.dirty
-                    if (isDirty == null || !isDirty) {
-                        wordList.add(word)
+                if (snap.getValue(Word::class.java) != null) {
+                    val word: Word = snap.getValue(Word::class.java)!!
+                    if (!word.isDirty() && word.isApproved()) {
+                        mapResponse.forEach { item ->
+                            if (item.value.lang == GlobalVar.LANG_MR &&
+                                word.lang == getString(R.string.marathi)
+                            ) {
+                                val list: MutableList<Word> = tempMap[item.key] ?: mutableListOf()
+                                list.add(word)
+                                tempMap[item.key] = list
+                            } else if (item.value.lang == GlobalVar.LANG_HI &&
+                                word.lang == getString(R.string.hindi)
+                            ) {
+                                val list: MutableList<Word> = tempMap[item.key] ?: mutableListOf()
+                                list.add(word)
+                                tempMap[item.key] = list
+                            }
+                        }
                     } else {
                         Log.i(TAG, "fetchAllResponse: ${word.name} found dirty")
                     }
@@ -108,8 +133,33 @@ class MainViewModel @Inject constructor(
                 Log.e(TAG, "fetchAllResponse: ${e.localizedMessage}")
             }
         }
-        words.value = wordList
-        wordCount.value = wordList.size
+
+        mapResponse.forEach {
+            if (it.value.category == GlobalVar.CATEGORY_TOP_LIKED) {
+                val list: List<Word> = tempMap[it.key] ?: mutableListOf()
+                if (it.value.category == GlobalVar.CATEGORY_TOP_LIKED) {
+                    val sortedList = list.sortedWith { o1, o2 ->
+                        var l2 = 0
+                        o2.likes?.forEach {
+                            if (it.value) l2++
+                        }
+                        var l1 = 0
+                        o1.likes?.forEach {
+                            if (it.value) l1++
+                        }
+                        l2 - l1
+                    }
+                    val top5: MutableList<Word> = mutableListOf()
+                    for (i in 0..4) {
+                        top5.add(sortedList[i])
+                    }
+                    tempMap[it.key] = top5
+                }
+            } else if (it.value.category == GlobalVar.CATEGORY_MOST_VIEWED) {
+
+            }
+        }
+        setDashboardData(tempMap)
         isRefreshing.value = false
     }
 
@@ -141,8 +191,7 @@ class MainViewModel @Inject constructor(
             try {
                 if (it.getValue(Word::class.java) != null) {
                     val w: Word = it.getValue(Word::class.java)!!
-                    val isDirty = w.dirty
-                    if (isDirty == null || !isDirty) {
+                    if (!w.isDirty()) {
                         wordList.add(w)
                     } else {
                         Log.i(TAG, "searchResponse: ${w.name} found dirty")

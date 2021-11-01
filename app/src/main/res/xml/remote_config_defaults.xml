@@ -8,4 +8,21 @@
         <key>recommended_version</key>
         <value>0.5</value>
     </entry>
+    <entry>
+        <key>dashboard</key>
+        <value>[
+            {
+            "type": "word",
+            "lang": "mr",
+            "category": "most-viewed",
+            "key": "mr-most-viewed"
+            },
+            {
+            "type": "word",
+            "lang": "mr",
+            "category": "top-liked",
+            "key": "mr-top-liked"
+            }
+            ]</value>
+    </entry>
 </defaultsMap>

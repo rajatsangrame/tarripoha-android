@@ -1,22 +1,22 @@
 package com.tarripoha.android.ui.main
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.*
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import com.tarripoha.android.GlobalVar
+import com.tarripoha.android.R
 import com.tarripoha.android.TPApp
 import com.tarripoha.android.data.db.Word
 import com.tarripoha.android.databinding.FragmentHomeBinding
-import com.tarripoha.android.util.ItemClickListener
+import com.tarripoha.android.firebase.*
+import com.tarripoha.android.firebase.PowerStone
 import com.tarripoha.android.ui.word.WordDetailActivity
+import com.tarripoha.android.util.ItemClickListener
 
 class HomeFragment : Fragment() {
 
@@ -24,10 +24,10 @@ class HomeFragment : Fragment() {
 
     private lateinit var factory: ViewModelProvider.Factory
     private lateinit var binding: FragmentHomeBinding
-    private lateinit var wordAdapter: WordAdapter
     private val viewModel by activityViewModels<MainViewModel> {
         factory
     }
+    private val adapterMap: MutableMap<String, DashboardHelper> = mutableMapOf()
 
     // endregion
 
@@ -55,7 +55,6 @@ class HomeFragment : Fragment() {
             ViewModelProvider.AndroidViewModelFactory(TPApp.get(requireContext()))
 
         setupUI()
-        fetchAllWord()
     }
 
     // endregion
@@ -63,43 +62,55 @@ class HomeFragment : Fragment() {
     // region Helper Methods
 
     private fun setupUI() {
-        setupRecyclerView()
+        setupDashboard()
         setupListeners()
         setupObservers()
     }
 
-    private fun setupRecyclerView() {
-        val linearLayoutManager = LinearLayoutManager(
-            context, RecyclerView.VERTICAL, false
-        )
-        wordAdapter =
-            WordAdapter(words = ArrayList(), itemClickListener = object : ItemClickListener<Word> {
-                override fun onClick(
-                    position: Int,
-                    data: Word
-                ) {
-                    viewModel.updateViewsCount(word = data)
-                    WordDetailActivity.startMe(
-                        context = requireContext(),
-                        wordDetail = data
-                    )
+    private fun setupDashboard() {
+        binding.dashboardLl.removeAllViews()
+
+        val list = PowerStone.getDashboardInfo()
+        val dashboardResponseList: MutableList<DashboardResponse> = mutableListOf()
+        list.forEach {
+            when (it.type) {
+                GlobalVar.TYPE_WORD -> {
+                    val key = it.key
+                    if (key.isNullOrEmpty()) {
+                        viewModel.setUserMessage(getString(R.string.error_unknown))
+                        return@forEach
+                    }
+                    val labelledRecycleView = LabelledRecycleView(requireContext())
+                    var lable = "Word"
+                    if (it.category == GlobalVar.CATEGORY_MOST_VIEWED) {
+                        lable = "Most View"
+                    } else if (it.category == GlobalVar.CATEGORY_TOP_LIKED) {
+                        lable = "Top Liked"
+                    }
+                    labelledRecycleView.setLabel(lable)
+                    val adapter = WordAdapter(
+                        words = ArrayList(),
+                        gridView = true,
+                        itemClickListener = object : ItemClickListener<Word> {
+                            override fun onClick(position: Int, data: Word) {
+                                viewModel.updateViewsCount(word = data)
+                                WordDetailActivity.startMe(
+                                    context = requireContext(),
+                                    wordDetail = data
+                                )
+                            }
+                        })
+                    labelledRecycleView.getRecyclerView().adapter = adapter
+                    adapterMap[key] = DashboardHelper(adapter = adapter, dashboardResponse = it)
+                    dashboardResponseList.add(it)
+                    binding.dashboardLl.addView(labelledRecycleView)
                 }
-            })
-        val scrollListener = object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(
-                recyclerView: RecyclerView,
-                dx: Int,
-                dy: Int
-            ) {
-                val position = linearLayoutManager.findFirstCompletelyVisibleItemPosition()
-                binding.layout.swipeRefreshLayout.isEnabled = position <= 0
+                GlobalVar.TYPE_GOOGLE_AD -> {
+                    // no -op
+                }
             }
         }
-        binding.layout.withSwipeRv.apply {
-            layoutManager = linearLayoutManager
-            adapter = wordAdapter
-            addOnScrollListener(scrollListener)
-        }
+        viewModel.fetchAllWord(dashboardResponseList)
     }
 
     private fun setupObservers() {
@@ -107,20 +118,19 @@ class HomeFragment : Fragment() {
             isRefreshing()
                 .observe(viewLifecycleOwner, Observer {
                     it?.let {
-                        binding.layout.swipeRefreshLayout.isRefreshing = it
+                        binding.swipeRefreshLayout.isRefreshing = it
                     }
                 })
-            getAllWords()
+            getDashboardData()
                 .observe(viewLifecycleOwner, Observer {
-                    it?.let {
-                        wordAdapter.setWordList(it)
+                    adapterMap.forEach { map ->
+                        it[map.key]?.let { words ->
+                            val adapter = map.value.adapter
+                            adapter.setWordList(words = words)
+                        }
                     }
                 })
         }
-    }
-
-    private fun fetchAllWord() {
-        viewModel.fetchAllWord()
     }
 
     // endregion
@@ -128,10 +138,19 @@ class HomeFragment : Fragment() {
     // region Click Related Methods
 
     private fun setupListeners() {
-        binding.layout.swipeRefreshLayout.setOnRefreshListener {
-            fetchAllWord()
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            setupDashboard()
         }
     }
+
+    // endregion
+
+    // Helper Class
+
+    private data class DashboardHelper(
+        val adapter: WordAdapter,
+        val dashboardResponse: DashboardResponse
+    )
 
     // endregion
 }

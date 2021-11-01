@@ -24,6 +24,11 @@
         <item name="android:fontFamily">@font/montserrat_extra_bold</item>
     </style>
 
+    <style name="AppTheme.TextTitleGrey" parent="TextAppearance.AppCompat.Title">
+        <item name="android:fontFamily">@font/montserrat_extra_bold</item>
+        <item name="android:textColor">@color/colorGrey</item>
+    </style>
+
     <style name="AppTheme.TextDesc" parent="AppTheme">
         <item name="android:fontFamily">@font/montserrat_medium</item>
         <item name="android:textColor">@color/colorGrey</item>

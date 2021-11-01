@@ -1,4 +1,4 @@
-package com.tarripoha.android.util.helper
+package com.tarripoha.android.firebase
 
 import android.content.Context
 import android.content.Intent
@@ -8,12 +8,18 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.FirebaseApp
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.tarripoha.android.R
 import com.tarripoha.android.util.TPUtils
 import com.tarripoha.android.util.showDialog
+import java.lang.reflect.Type
 
 object PowerStone {
-    const val TAG = "PowerStone"
+    private const val TAG = "PowerStone"
+    private const val KEY_MINIMUM_VERSION = "min_version"
+    private const val KEY_RECOMMENDED_VERSION = "recommended_version"
+    private const val KEY_DASHBOARD_VERSION = "dashboard"
     private const val MIN_FETCH_INTERVAL_SEC = 60L
 
     @JvmStatic
@@ -57,9 +63,9 @@ object PowerStone {
             Log.e(TAG, "processUpdate: appVersion not found")
             return
         }
-        val minVersion = getRemoteConfig().getString("min_version")
+        val minVersion = getRemoteConfig().getString(KEY_MINIMUM_VERSION)
             .replace("[a-zA-Z]|-", "")
-        val recommendedVersion = getRemoteConfig().getString("min_version")
+        val recommendedVersion = getRemoteConfig().getString(KEY_RECOMMENDED_VERSION)
             .replace("[a-zA-Z]|-", "")
         try {
             val minV: Double = minVersion.toDouble()
@@ -105,5 +111,11 @@ object PowerStone {
     private fun getRemoteConfig(): FirebaseRemoteConfig {
         val app = FirebaseApp.getInstance()
         return FirebaseRemoteConfig.getInstance(app)
+    }
+
+    fun getDashboardInfo(): List<DashboardResponse> {
+        val type: Type = object : TypeToken<List<DashboardResponse>>() {}.type
+        val info = getRemoteConfig().getString(KEY_DASHBOARD_VERSION)
+        return Gson().fromJson(info, type)
     }
 }
