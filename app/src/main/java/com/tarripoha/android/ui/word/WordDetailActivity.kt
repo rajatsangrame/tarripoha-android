@@ -3,6 +3,7 @@ package com.tarripoha.android.ui.word
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -142,6 +143,10 @@ class WordDetailActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            android.R.id.home -> {
+                super.onBackPressed()
+                return true
+            }
             R.id.menu_more -> {
                 showWordMenu()
                 return true
@@ -173,12 +178,25 @@ class WordDetailActivity : AppCompatActivity() {
     // region Helper Methods
 
     private fun setupUI() {
-        title = null
+        setupToolbar()
         setupRecyclerView()
         setupListeners()
         setupObservers()
         setupEditText()
         checkPostBtnColor("")
+    }
+
+    private fun setupToolbar() {
+        binding.toolbarLayout.toolbar.title = null
+        setSupportActionBar(binding.toolbarLayout.toolbar)
+        supportActionBar?.apply {
+            title = null
+            setDisplayHomeAsUpEnabled(true)
+            setHomeAsUpIndicator(R.drawable.ic_arrow_back_white)
+            setBackgroundDrawable(
+                ColorDrawable(ContextCompat.getColor(this@WordDetailActivity, R.color.colorPrimary))
+            )
+        }
     }
 
     private fun checkPostBtnColor(query: String) {
@@ -348,11 +366,7 @@ class WordDetailActivity : AppCompatActivity() {
         }
         word.likes?.let {
             val user = viewModel.getPrefUser()
-            if (user?.id == null) {
-                viewModel.setUserMessage(getString(R.string.error_login))
-                return@let
-            }
-            if (it[user.id] != null && it[user.id] == true) {
+            if (user?.id != null && it[user.id] != null && it[user.id] == true) {
                 binding.likeBtn.background = ContextCompat.getDrawable(
                     this,
                     R.drawable.ic_like_black

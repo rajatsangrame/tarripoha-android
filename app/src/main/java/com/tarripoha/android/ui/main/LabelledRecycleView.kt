@@ -38,6 +38,10 @@ internal class LabelledRecycleView : LinearLayout {
         if (label.isNotEmpty()) binding.labelTv.text = label
     }
 
+    fun setOptionalText(text: String) {
+        if (text.isNotEmpty()) binding.optionalTv.text = text
+    }
+
     fun setOnNavigateClickListener(lister: OnClickListener) {
         binding.navigateIv.setOnClickListener(lister)
     }

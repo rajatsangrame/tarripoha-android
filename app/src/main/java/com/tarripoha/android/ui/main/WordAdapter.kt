@@ -10,11 +10,12 @@ import com.tarripoha.android.util.ItemClickListener
 import com.tarripoha.android.databinding.LayoutNewWordPlankBinding
 import com.tarripoha.android.ui.BaseViewHolder
 import com.tarripoha.android.R
+import com.tarripoha.android.databinding.LayoutItemWordSquareBinding
 
 class WordAdapter(
     private var words: MutableList<Word>,
     private val itemClickListener: ItemClickListener<Word>,
-    private val gridView: Boolean = false
+    private val squareView: Boolean = false
 ) : RecyclerView.Adapter<BaseViewHolder>() {
 
     override fun onCreateViewHolder(
@@ -25,6 +26,10 @@ class WordAdapter(
             val binding = LayoutNewWordPlankBinding
                 .inflate(LayoutInflater.from(parent.context), parent, false)
             NewWordPlankViewHolder(binding)
+        } else if (viewType == VIEW_TYPE_SQUARE) {
+            val binding = LayoutItemWordSquareBinding
+                .inflate(LayoutInflater.from(parent.context), parent, false)
+            WordViewHolderSquare(binding)
         } else {
             val binding = LayoutItemWordBinding
                 .inflate(LayoutInflater.from(parent.context), parent, false)
@@ -48,7 +53,7 @@ class WordAdapter(
                 // Always Linear layout for new word
                 Word.TYPE_NEW_WORD -> return VIEW_TYPE_NEW_WORD
             }
-        } else if (gridView) return VIEW_TYPE_GRID
+        } else if (squareView) return VIEW_TYPE_SQUARE
 
         return super.getItemViewType(position)
     }
@@ -107,9 +112,29 @@ class WordAdapter(
         }
     }
 
+    inner class WordViewHolderSquare(private val binding: LayoutItemWordSquareBinding) :
+        BaseViewHolder(binding.root) {
+
+        init {
+            itemView.setOnClickListener {
+                itemClickListener.onClick(adapterPosition, words[adapterPosition])
+            }
+        }
+
+        override fun bind(position: Int) {
+            val word = words[position].name
+            binding.nameTv.text = word
+        }
+
+        override fun bind(data: Any) {
+            // no-op
+        }
+
+    }
+
     companion object {
         const val VIEW_TYPE_NEW_WORD = 101
-        const val VIEW_TYPE_GRID = 102
+        const val VIEW_TYPE_SQUARE = 102
     }
 
 }

@@ -15,11 +15,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ui.word.WordActivityNew"
-            android:exported="false"
-            android:screenOrientation="portrait"
-            />
-        <activity
             android:name=".ui.startup.StartupActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.FullScreen">
@@ -33,6 +28,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.word.WordDetailActivity"
+            android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.login.LoginActivity"

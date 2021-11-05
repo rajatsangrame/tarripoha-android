@@ -3,6 +3,7 @@ package com.tarripoha.android.util
 import android.content.Context
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager.NameNotFoundException
+import android.content.res.Resources.getSystem
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
@@ -180,5 +181,9 @@ object TPUtils {
             ""
         }
     }
+
+    val Int.toDp: Int get() = (this / getSystem().displayMetrics.density).toInt()
+
+    val Int.toPx: Int get() = (this * getSystem().displayMetrics.density).toInt()
 
 }

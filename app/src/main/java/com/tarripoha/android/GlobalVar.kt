@@ -2,10 +2,6 @@ package com.tarripoha.android
 
 object GlobalVar {
 
-
-    const val LANG_EN = "en"
-    const val LANG_MR = "mr"
-    const val LANG_HI = "hi"
     const val TYPE_WORD = "word"
     const val TYPE_GOOGLE_AD = "google-ad"
     const val CATEGORY_MOST_VIEWED = "most-viewed"

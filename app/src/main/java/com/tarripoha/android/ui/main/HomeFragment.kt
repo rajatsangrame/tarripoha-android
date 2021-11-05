@@ -16,7 +16,9 @@ import com.tarripoha.android.databinding.FragmentHomeBinding
 import com.tarripoha.android.firebase.*
 import com.tarripoha.android.firebase.PowerStone
 import com.tarripoha.android.ui.word.WordDetailActivity
+import com.tarripoha.android.util.GridItemDecorator
 import com.tarripoha.android.util.ItemClickListener
+import com.tarripoha.android.util.TPUtils.toDp
 
 class HomeFragment : Fragment() {
 
@@ -65,6 +67,7 @@ class HomeFragment : Fragment() {
         setupDashboard()
         setupListeners()
         setupObservers()
+        fetchDashBoardData()
     }
 
     private fun setupDashboard() {
@@ -81,16 +84,16 @@ class HomeFragment : Fragment() {
                         return@forEach
                     }
                     val labelledRecycleView = LabelledRecycleView(requireContext())
-                    var lable = "Word"
-                    if (it.category == GlobalVar.CATEGORY_MOST_VIEWED) {
-                        lable = "Most View"
-                    } else if (it.category == GlobalVar.CATEGORY_TOP_LIKED) {
-                        lable = "Top Liked"
+                    val label = if (it.category == GlobalVar.CATEGORY_MOST_VIEWED) {
+                        getString(R.string.trending)
+                    } else getString(R.string.top_words)
+                    it.lang?.let {
+                        labelledRecycleView.setOptionalText(it)
                     }
-                    labelledRecycleView.setLabel(lable)
+                    labelledRecycleView.setLabel(label)
                     val adapter = WordAdapter(
                         words = ArrayList(),
-                        gridView = true,
+                        squareView = true,
                         itemClickListener = object : ItemClickListener<Word> {
                             override fun onClick(position: Int, data: Word) {
                                 viewModel.updateViewsCount(word = data)
@@ -100,6 +103,10 @@ class HomeFragment : Fragment() {
                                 )
                             }
                         })
+                    labelledRecycleView.getRecyclerView()
+                        .addItemDecoration(
+                            GridItemDecorator(spanCount = 5, spacing = 64.toDp, includeEdge = true)
+                        )
                     labelledRecycleView.getRecyclerView().adapter = adapter
                     adapterMap[key] = DashboardHelper(adapter = adapter, dashboardResponse = it)
                     dashboardResponseList.add(it)
@@ -110,7 +117,11 @@ class HomeFragment : Fragment() {
                 }
             }
         }
-        viewModel.fetchAllWord(dashboardResponseList)
+    }
+
+    private fun fetchDashBoardData() {
+        val list = PowerStone.getDashboardInfo()
+        viewModel.fetchAllWord(list)
     }
 
     private fun setupObservers() {
@@ -139,7 +150,7 @@ class HomeFragment : Fragment() {
 
     private fun setupListeners() {
         binding.swipeRefreshLayout.setOnRefreshListener {
-            setupDashboard()
+            fetchDashBoardData()
         }
     }
 

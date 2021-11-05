@@ -13,13 +13,13 @@
         <value>[
             {
             "type": "word",
-            "lang": "mr",
+            "lang": "Marathi",
             "category": "most-viewed",
             "key": "mr-most-viewed"
             },
             {
             "type": "word",
-            "lang": "mr",
+            "lang": "Marathi",
             "category": "top-liked",
             "key": "mr-top-liked"
             }

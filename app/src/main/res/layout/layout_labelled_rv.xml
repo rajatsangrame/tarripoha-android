@@ -10,11 +10,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_extra_large"
-        android:layout_marginTop="@dimen/margin_extra_large"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="@string/top_words" />
 
+
+    <TextView
+        android:id="@+id/optional_tv"
+        style="@style/AppTheme.TextDesc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_small"
+        app:layout_constraintBottom_toBottomOf="@+id/label_tv"
+        app:layout_constraintStart_toEndOf="@+id/label_tv"
+        app:layout_constraintTop_toTopOf="@+id/label_tv"
+        tools:text="@string/top_words" />
 
     <ImageView
         android:id="@+id/navigate_iv"
@@ -22,6 +32,8 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/margin_extra_large"
         android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:focusable="true"
         android:src="@drawable/ic_arrow_forward_black"
         app:layout_constraintBottom_toBottomOf="@+id/label_tv"
         app:layout_constraintEnd_toEndOf="parent"
@@ -31,9 +43,9 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycleView"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_extra_large"
+        android:layout_height="180dp"
         android:orientation="horizontal"
+        android:overScrollMode="never"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

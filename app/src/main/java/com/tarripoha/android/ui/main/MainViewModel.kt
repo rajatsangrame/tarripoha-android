@@ -41,7 +41,7 @@ class MainViewModel @Inject constructor(
 
     fun getDashboardData() = dashboardData
 
-    fun setDashboardData(dashboardData: MutableMap<String, MutableList<Word>>?) {
+    private fun setDashboardData(dashboardData: MutableMap<String, MutableList<Word>>?) {
         this.dashboardData.value = dashboardData
     }
 
@@ -107,27 +107,15 @@ class MainViewModel @Inject constructor(
         val tempMap: MutableMap<String, MutableList<Word>> = mutableMapOf()
         snapshot.children.forEach { snap ->
             try {
-                if (snap.getValue(Word::class.java) != null) {
-                    val word: Word = snap.getValue(Word::class.java)!!
-                    if (!word.isDirty() && word.isApproved()) {
-                        mapResponse.forEach { item ->
-                            if (item.value.lang == GlobalVar.LANG_MR &&
-                                word.lang == getString(R.string.marathi)
-                            ) {
-                                val list: MutableList<Word> = tempMap[item.key] ?: mutableListOf()
-                                list.add(word)
-                                tempMap[item.key] = list
-                            } else if (item.value.lang == GlobalVar.LANG_HI &&
-                                word.lang == getString(R.string.hindi)
-                            ) {
-                                val list: MutableList<Word> = tempMap[item.key] ?: mutableListOf()
-                                list.add(word)
-                                tempMap[item.key] = list
-                            }
+                val word: Word? = snap.getValue(Word::class.java)
+                if (word != null && !word.isDirty() && word.isApproved()) {
+                    mapResponse.forEach { item ->
+                        if (item.value.lang == word.lang) {
+                            tempMap.updateValue(item.key, word)
                         }
-                    } else {
-                        Log.i(TAG, "fetchAllResponse: ${word.name} found dirty")
                     }
+                } else {
+                    Log.i(TAG, "fetchAllResponse: $word found dirty or not approved")
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "fetchAllResponse: ${e.localizedMessage}")
@@ -135,32 +123,61 @@ class MainViewModel @Inject constructor(
         }
 
         mapResponse.forEach {
+            val list: MutableList<Word> = tempMap[it.key] ?: mutableListOf()
             if (it.value.category == GlobalVar.CATEGORY_TOP_LIKED) {
-                val list: List<Word> = tempMap[it.key] ?: mutableListOf()
                 if (it.value.category == GlobalVar.CATEGORY_TOP_LIKED) {
-                    val sortedList = list.sortedWith { o1, o2 ->
-                        var l2 = 0
-                        o2.likes?.forEach {
-                            if (it.value) l2++
-                        }
-                        var l1 = 0
-                        o1.likes?.forEach {
-                            if (it.value) l1++
-                        }
-                        l2 - l1
-                    }
-                    val top5: MutableList<Word> = mutableListOf()
-                    for (i in 0..4) {
-                        top5.add(sortedList[i])
-                    }
-                    tempMap[it.key] = top5
+                    tempMap[it.key] = getTopLikedWords(list)
                 }
             } else if (it.value.category == GlobalVar.CATEGORY_MOST_VIEWED) {
-
+                tempMap[it.key] = getMostViewedList(list)
             }
         }
         setDashboardData(tempMap)
+        wordCount.value = snapshot.childrenCount.toInt()
         isRefreshing.value = false
+    }
+
+    private fun MutableMap<String, MutableList<Word>>.updateValue(
+        key: String,
+        word: Word
+    ) {
+        val list: MutableList<Word> = this[key] ?: mutableListOf()
+        list.add(word)
+        this[key] = list
+    }
+
+    private fun getTopLikedWords(list: MutableList<Word>, total: Int = 5): MutableList<Word> {
+        val sortedList = list.sortedWith { o1, o2 ->
+            var l2 = 0
+            o2.likes?.forEach {
+                if (it.value) l2++
+            }
+            var l1 = 0
+            o1.likes?.forEach {
+                if (it.value) l1++
+            }
+            l2 - l1
+        }
+        val top5: MutableList<Word> = mutableListOf()
+        val max = if (list.size > total) total else list.size
+        for (i in 0 until max) {
+            top5.add(sortedList[i])
+        }
+        return top5
+    }
+
+    private fun getMostViewedList(list: MutableList<Word>, total: Int = 5): MutableList<Word> {
+        val sortedList = list.sortedWith { o1, o2 ->
+            val l2 = o2.views?.size ?: 0
+            val l1 = o1.views?.size ?: 0
+            l2 - l1
+        }
+        val top5: MutableList<Word> = mutableListOf()
+        val max = if (list.size > total) total else list.size
+        for (i in 0 until max) {
+            top5.add(sortedList[i])
+        }
+        return top5
     }
 
     fun search(query: String) {
@@ -191,7 +208,7 @@ class MainViewModel @Inject constructor(
             try {
                 if (it.getValue(Word::class.java) != null) {
                     val w: Word = it.getValue(Word::class.java)!!
-                    if (!w.isDirty()) {
+                    if (!w.isDirty() && w.isApproved()) {
                         wordList.add(w)
                     } else {
                         Log.i(TAG, "searchResponse: ${w.name} found dirty")
