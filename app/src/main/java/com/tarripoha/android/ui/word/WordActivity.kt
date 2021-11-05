@@ -46,7 +46,7 @@ class WordActivity : ComponentActivity() {
                         val word = intent?.getParcelableExtra<Word>(KEY_WORD)
                         val displayMode = intent?.getStringExtra(KEY_MODE)
                             ?: KEY_MODE_NEW
-                        LoginScreen(word, displayMode)
+                        WordActivityScreen(word, displayMode)
                     }
                 }
             }
@@ -54,7 +54,7 @@ class WordActivity : ComponentActivity() {
     }
 
     companion object {
-        private const val TAG = "WordActivityNew"
+        private const val TAG = "WordActivity"
         const val KEY_WORD = "word"
         private const val KEY_MODE = "mode"
         const val KEY_MODE_NEW = "new"
@@ -74,7 +74,7 @@ class WordActivity : ComponentActivity() {
 }
 
 @Composable
-fun LoginScreen(word: Word?, displayMode: String) {
+fun WordActivityScreen(word: Word?, displayMode: String) {
 
     val activity = (LocalContext.current as Activity)
 

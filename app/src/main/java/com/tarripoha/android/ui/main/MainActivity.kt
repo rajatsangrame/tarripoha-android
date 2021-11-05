@@ -211,6 +211,10 @@ class MainActivity : BaseActivity() {
                 R.id.nav_search -> {
                     searchNavigation()
                 }
+
+                R.id.nav_wordList -> {
+                    wordListNavigation()
+                }
             }
         }
     }
@@ -227,6 +231,7 @@ class MainActivity : BaseActivity() {
             title.text = getString(R.string.app_name)
             title.visibility = View.VISIBLE
             searchToolbar.visibility = View.GONE
+            heading.visibility = View.GONE
         }
         binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
     }
@@ -242,8 +247,25 @@ class MainActivity : BaseActivity() {
         binding.container.toolbarLayout.apply {
             title.visibility = View.GONE
             searchToolbar.visibility = View.VISIBLE
+            heading.visibility = View.GONE
         }
         showKeyboard()
+        binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+    }
+
+    private fun wordListNavigation() {
+        showBackBtn = true
+        supportActionBar?.apply {
+            setHomeAsUpIndicator(R.drawable.ic_arrow_back_white)
+            setBackgroundDrawable(
+                ColorDrawable(ContextCompat.getColor(this@MainActivity, R.color.colorPrimary))
+            )
+        }
+        binding.container.toolbarLayout.apply {
+            title.visibility = View.GONE
+            searchToolbar.visibility = View.GONE
+            heading.visibility = View.VISIBLE
+        }
         binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
     }
 

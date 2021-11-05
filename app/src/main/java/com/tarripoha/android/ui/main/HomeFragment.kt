@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.*
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.tarripoha.android.GlobalVar
 import com.tarripoha.android.R
 import com.tarripoha.android.TPApp
@@ -78,8 +79,7 @@ class HomeFragment : Fragment() {
         list.forEach {
             when (it.type) {
                 GlobalVar.TYPE_WORD -> {
-                    val key = it.key
-                    if (key.isNullOrEmpty()) {
+                    if (it.key.isNullOrEmpty() || it.category.isNullOrEmpty() || it.lang.isNullOrEmpty()) {
                         viewModel.setUserMessage(getString(R.string.error_unknown))
                         return@forEach
                     }
@@ -87,10 +87,12 @@ class HomeFragment : Fragment() {
                     val label = if (it.category == GlobalVar.CATEGORY_MOST_VIEWED) {
                         getString(R.string.trending)
                     } else getString(R.string.top_words)
-                    it.lang?.let {
-                        labelledRecycleView.setOptionalText(it)
-                    }
+
+                    labelledRecycleView.setOptionalText(it.lang)
                     labelledRecycleView.setLabel(label)
+                    labelledRecycleView.setOnNavigateClickListener { _ ->
+                        navigateToWordListFragment(lang = it.lang, category = it.category)
+                    }
                     val adapter = WordAdapter(
                         words = ArrayList(),
                         squareView = true,
@@ -108,7 +110,7 @@ class HomeFragment : Fragment() {
                             GridItemDecorator(spanCount = 5, spacing = 64.toDp, includeEdge = true)
                         )
                     labelledRecycleView.getRecyclerView().adapter = adapter
-                    adapterMap[key] = DashboardHelper(adapter = adapter, dashboardResponse = it)
+                    adapterMap[it.key] = DashboardHelper(adapter = adapter, dashboardResponse = it)
                     dashboardResponseList.add(it)
                     binding.dashboardLl.addView(labelledRecycleView)
                 }
@@ -122,6 +124,17 @@ class HomeFragment : Fragment() {
     private fun fetchDashBoardData() {
         val list = PowerStone.getDashboardInfo()
         viewModel.fetchAllWord(list)
+    }
+
+    private fun navigateToWordListFragment(lang: String, category: String) {
+        viewModel.setWordListParam(null)
+        viewModel.setWords(null)
+        val param = WordListFragment.WordListFragmentParam(
+            lang = lang,
+            category = category
+        )
+        viewModel.setWordListParam(param)
+        findNavController().navigate(R.id.action_HomeFragment_to_WordListFragment)
     }
 
     private fun setupObservers() {

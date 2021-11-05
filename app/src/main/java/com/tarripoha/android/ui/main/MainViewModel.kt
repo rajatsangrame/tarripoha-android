@@ -24,18 +24,38 @@ class MainViewModel @Inject constructor(
 ) : BaseViewModel(app) {
 
     private val isRefreshing: MutableLiveData<Boolean> = MutableLiveData()
-    private val words: MutableLiveData<List<Word>> = MutableLiveData()
+
+    // SearchFragment
     private val searchWords: MutableLiveData<List<Word>> = MutableLiveData()
     private val query: MutableLiveData<String> = MutableLiveData()
+
+    // HomeFragment
     private val wordCount: MutableLiveData<Int> = MutableLiveData()
     private val dashboardData: MutableLiveData<MutableMap<String, MutableList<Word>>> =
         MutableLiveData()
 
+    // WordListFragment
+    private val wordListParam: MutableLiveData<WordListFragment.WordListFragmentParam> =
+        MutableLiveData()
+    private val words: MutableLiveData<List<Word>> = MutableLiveData()
+
     fun getWordCount() = wordCount
+
+    private fun setWordCount(wordCount: Int?) {
+        this.wordCount.value = wordCount
+    }
 
     fun isRefreshing() = isRefreshing
 
-    fun getAllWords() = words
+    private fun setRefreshing(isRefreshing: Boolean?) {
+        this.isRefreshing.value = isRefreshing
+    }
+
+    fun getWords() = words
+
+    fun setWords(words: List<Word>?) {
+        this.words.value = words
+    }
 
     fun getQuery() = query
 
@@ -53,6 +73,12 @@ class MainViewModel @Inject constructor(
 
     fun setSearchWords(words: List<Word>?) {
         searchWords.value = words
+    }
+
+    fun getWordListParam() = wordListParam
+
+    fun setWordListParam(wordListParam: WordListFragment.WordListFragmentParam?) {
+        this.wordListParam.value = wordListParam
     }
 
     // Helper Functions
@@ -78,21 +104,70 @@ class MainViewModel @Inject constructor(
         )
     }
 
+    fun fetchWords(param: WordListFragment.WordListFragmentParam) {
+        if (!checkNetworkAndShowError()) {
+            return
+        }
+        setRefreshing(true)
+        repository.fetchAllWords(
+            success = { snapshot ->
+                fetchAllResponse(snapshot = snapshot, lang = param.lang, category = param.category)
+            },
+            failure = {
+                setRefreshing(false)
+                setUserMessage(getString(R.string.error_unable_to_fetch))
+            },
+            connectionStatus = {
+                if (!it) setRefreshing(false)
+            }
+        )
+    }
+
+    private fun fetchAllResponse(
+        snapshot: DataSnapshot,
+        lang: String, category: String
+    ) {
+        val list: MutableList<Word> = mutableListOf()
+        snapshot.children.forEach { snap ->
+            try {
+                val word: Word? = snap.getValue(Word::class.java)
+                if (word != null && !word.isDirty() && word.isApproved()) {
+                    if (word.lang == lang) {
+                        list.add(word)
+                    }
+                } else {
+                    Log.i(TAG, "fetchAllResponse: $word found dirty or not approved")
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "fetchAllResponse: ${e.localizedMessage}")
+            }
+        }
+        if (category == GlobalVar.CATEGORY_TOP_LIKED) {
+            val sortedList = getTopLikedWords(list = list, total = 50)
+            setWords(sortedList)
+        } else if (category == GlobalVar.CATEGORY_MOST_VIEWED) {
+            val sortedList = getMostViewedList(list = list, total = 50)
+            setWords(sortedList)
+        }
+
+        setRefreshing(false)
+    }
+
     fun fetchAllWord(dashboardResponseList: List<DashboardResponse>) {
         if (!checkNetworkAndShowError()) {
             return
         }
-        isRefreshing.value = true
+        setRefreshing(true)
         repository.fetchAllWords(
             success = { snapshot ->
                 fetchAllResponse(snapshot = snapshot, dashboardResponseList = dashboardResponseList)
             },
             failure = {
-                isRefreshing.value = false
+                setRefreshing(false)
                 setUserMessage(getString(R.string.error_unable_to_fetch))
             },
             connectionStatus = {
-                if (!it) isRefreshing.value = false
+                if (!it) setRefreshing(false)
             }
         )
     }
@@ -125,16 +200,14 @@ class MainViewModel @Inject constructor(
         mapResponse.forEach {
             val list: MutableList<Word> = tempMap[it.key] ?: mutableListOf()
             if (it.value.category == GlobalVar.CATEGORY_TOP_LIKED) {
-                if (it.value.category == GlobalVar.CATEGORY_TOP_LIKED) {
-                    tempMap[it.key] = getTopLikedWords(list)
-                }
+                tempMap[it.key] = getTopLikedWords(list)
             } else if (it.value.category == GlobalVar.CATEGORY_MOST_VIEWED) {
                 tempMap[it.key] = getMostViewedList(list)
             }
         }
         setDashboardData(tempMap)
-        wordCount.value = snapshot.childrenCount.toInt()
-        isRefreshing.value = false
+        setWordCount(snapshot.childrenCount.toInt())
+        setRefreshing(false)
     }
 
     private fun MutableMap<String, MutableList<Word>>.updateValue(
