@@ -187,7 +187,7 @@ class WordDetailActivity : AppCompatActivity() {
     }
 
     private fun setupToolbar() {
-        binding.toolbarLayout.toolbar.title = null
+        binding.toolbarLayout.title.text = null
         setSupportActionBar(binding.toolbarLayout.toolbar)
         supportActionBar?.apply {
             title = null
