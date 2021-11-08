@@ -28,6 +28,7 @@ class MainViewModel @Inject constructor(
     // SearchFragment
     private val searchWords: MutableLiveData<List<Word>> = MutableLiveData()
     private val query: MutableLiveData<String> = MutableLiveData()
+    private val chars: MutableLiveData<String> = MutableLiveData()
 
     // HomeFragment
     private val wordCount: MutableLiveData<Int> = MutableLiveData()
@@ -59,14 +60,20 @@ class MainViewModel @Inject constructor(
 
     fun getQuery() = query
 
+    fun setQuery(query: String?) {
+        this.query.value = query
+    }
+
     fun getDashboardData() = dashboardData
+
+    fun getChar() = chars
+
+    fun setChars(chars: String?) {
+        this.chars.value = chars
+    }
 
     private fun setDashboardData(dashboardData: MutableMap<String, MutableList<Word>>?) {
         this.dashboardData.value = dashboardData
-    }
-
-    fun setQuery(query: String?) {
-        this.query.value = query
     }
 
     fun getSearchWords() = searchWords
@@ -155,6 +162,7 @@ class MainViewModel @Inject constructor(
 
     fun fetchAllWord(dashboardResponseList: List<DashboardResponse>) {
         if (!checkNetworkAndShowError()) {
+            setRefreshing(false)
             return
         }
         setRefreshing(true)

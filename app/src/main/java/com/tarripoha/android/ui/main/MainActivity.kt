@@ -199,6 +199,14 @@ class MainActivity : BaseActivity() {
             .observe(this, Observer {
                 TPUtils.showSnackBar(this, it)
             })
+
+        viewModel.getChar()
+            .observe(this, Observer {
+                var c = binding.container.toolbarLayout.searchEt.text.toString()
+                c += it
+                binding.container.toolbarLayout.searchEt.setText(c)
+                binding.container.toolbarLayout.searchEt.setSelection(c.length)
+            })
     }
 
     private fun handleNavigation() {

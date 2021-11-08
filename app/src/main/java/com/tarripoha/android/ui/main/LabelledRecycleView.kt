@@ -46,5 +46,10 @@ internal class LabelledRecycleView : LinearLayout {
         binding.navigateIv.setOnClickListener(lister)
     }
 
+    fun setErrorView(visibility: Int, msg: String = context.getString(R.string.error_no_result)) {
+        binding.errorTv.visibility = visibility
+        binding.errorTv.text = msg
+    }
+
     fun getRecyclerView() = binding.recycleView
 }

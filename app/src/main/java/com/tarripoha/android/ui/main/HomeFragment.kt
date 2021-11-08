@@ -110,7 +110,11 @@ class HomeFragment : Fragment() {
                             GridItemDecorator(spanCount = 5, spacing = 64.toDp, includeEdge = true)
                         )
                     labelledRecycleView.getRecyclerView().adapter = adapter
-                    adapterMap[it.key] = DashboardHelper(adapter = adapter, dashboardResponse = it)
+                    adapterMap[it.key] = DashboardHelper(
+                        adapter = adapter,
+                        dashboardResponse = it,
+                        labelledRecycleView = labelledRecycleView
+                    )
                     dashboardResponseList.add(it)
                     binding.dashboardLl.addView(labelledRecycleView)
                 }
@@ -151,6 +155,9 @@ class HomeFragment : Fragment() {
                         it[map.key]?.let { words ->
                             val adapter = map.value.adapter
                             adapter.setWordList(words = words)
+                            map.value.labelledRecycleView.setErrorView(
+                                if (words.isEmpty()) View.VISIBLE else View.GONE
+                            )
                         }
                     }
                 })
@@ -173,7 +180,8 @@ class HomeFragment : Fragment() {
 
     private data class DashboardHelper(
         val adapter: WordAdapter,
-        val dashboardResponse: DashboardResponse
+        val dashboardResponse: DashboardResponse,
+        val labelledRecycleView: LabelledRecycleView
     )
 
     // endregion

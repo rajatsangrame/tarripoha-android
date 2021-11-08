@@ -13,10 +13,12 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.tarripoha.android.GlobalVar
 import com.tarripoha.android.R
 import com.tarripoha.android.TPApp
 import com.tarripoha.android.data.db.Word
 import com.tarripoha.android.databinding.FragmentSearchBinding
+import com.tarripoha.android.databinding.LayoutItemCharBinding
 import com.tarripoha.android.ui.word.WordActivity
 import com.tarripoha.android.ui.word.WordDetailActivity
 import com.tarripoha.android.util.ItemClickListener
@@ -96,6 +98,7 @@ class SearchFragment : Fragment() {
         viewModel.apply {
             setQuery(null)
             setSearchWords(null)
+            setChars(null)
         }
         super.onDestroy()
     }
@@ -105,9 +108,28 @@ class SearchFragment : Fragment() {
     // region Helper Methods
 
     private fun setupUI() {
+        setCharsList()
         setupRecyclerView()
         setupListeners()
         setupObservers()
+    }
+
+    private fun setCharsList() {
+        val aa = object : RecyclerView.Adapter<ListItemViewHolder>() {
+            override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListItemViewHolder {
+                val binding =
+                    LayoutItemCharBinding.inflate(LayoutInflater.from(context), parent, false)
+                return ListItemViewHolder(binding)
+            }
+
+            override fun onBindViewHolder(holder: ListItemViewHolder, position: Int) {
+                holder.binding.charTv.text = GlobalVar.getCharList()[position]
+            }
+
+            override fun getItemCount(): Int = GlobalVar.getCharList().size
+
+        }
+        binding.charsLv.adapter = aa
     }
 
     private fun setupRecyclerView() {
@@ -180,4 +202,19 @@ class SearchFragment : Fragment() {
     }
 
     // endregion
+
+    // Helper Class
+
+    private inner class ListItemViewHolder(val binding: LayoutItemCharBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+
+        init {
+            itemView.setOnClickListener {
+                val c = GlobalVar.getCharList()[adapterPosition]
+                viewModel.setChars(c)
+            }
+        }
+    }
+
+    // enregion
 }
