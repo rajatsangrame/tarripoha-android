@@ -49,17 +49,17 @@ class WordDetailActivity : AppCompatActivity() {
         private const val TAG = "WordDetailFragment"
         private const val KEY_WORD_DETAIL = "word_detail"
         private const val KEY_WORD = "word"
-        private const val KEY_IS_EXTERNAL_SHARE = "is_external_share"
+        private const val KEY_POST_FETCH = "post_fetch"
 
         fun startMe(
             context: Context,
-            wordDetail: Word?,
-            isExternalShare: Boolean = false,
+            wordDetail: Word? = null,
+            postFetch: Boolean = false,
             word: String? = null
         ) {
             val intent = Intent(context, WordDetailActivity::class.java)
             intent.putExtra(KEY_WORD_DETAIL, wordDetail)
-            intent.putExtra(KEY_IS_EXTERNAL_SHARE, isExternalShare)
+            intent.putExtra(KEY_POST_FETCH, postFetch)
             intent.putExtra(KEY_WORD, word)
             context.startActivity(intent)
         }
@@ -68,7 +68,7 @@ class WordDetailActivity : AppCompatActivity() {
     @Inject
     lateinit var factory: ViewModelFactory
     private lateinit var binding: FragmentWordDetailBinding
-    private lateinit var commentAdapter: CommentPagingAdapter
+    private var commentAdapter: CommentPagingAdapter? = null
     private lateinit var viewModel: WordViewModel
 
     private val resultLauncher =
@@ -100,16 +100,22 @@ class WordDetailActivity : AppCompatActivity() {
         getDependency()
         viewModel = ViewModelProvider(this, factory).get(WordViewModel::class.java)
 
-        if (intent.hasExtra(KEY_IS_EXTERNAL_SHARE)) {
-            val isExternalShare = intent?.getBooleanExtra(KEY_IS_EXTERNAL_SHARE, false)!!
+        if (intent.hasExtra(KEY_POST_FETCH)) {
+            val postShare = intent?.getBooleanExtra(KEY_POST_FETCH, false)!!
+            val word = intent?.getStringExtra(KEY_WORD)
             when {
-                isExternalShare -> {
-                    // handle External Share
+                postShare -> {
+                    if (word == null) {
+                        viewModel.setUserMessage(getString(R.string.error_unknown))
+                        return
+                    }
+                    viewModel.fetchWordDetail(word = word)
+                    setupUi()
                 }
                 intent.hasExtra(KEY_WORD_DETAIL) -> {
-                    val word = intent?.getParcelableExtra<Word>(KEY_WORD_DETAIL)
-                    viewModel.setWordDetail(word)
-                    setupUI()
+                    val wordDetail = intent?.getParcelableExtra<Word>(KEY_WORD_DETAIL)
+                    viewModel.setWordDetail(wordDetail)
+                    setupUi()
                 }
                 else -> {
                     viewModel.setUserMessage(getString(R.string.error_unknown))
@@ -157,12 +163,12 @@ class WordDetailActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        commentAdapter.startListening()
+        commentAdapter?.startListening()
     }
 
     override fun onStop() {
         super.onStop()
-        commentAdapter.stopListening()
+        commentAdapter?.stopListening()
     }
 
     override fun onDestroy() {
@@ -177,7 +183,7 @@ class WordDetailActivity : AppCompatActivity() {
 
     // region Helper Methods
 
-    private fun setupUI() {
+    private fun setupUi() {
         setupToolbar()
         setupRecyclerView()
         setupListeners()
@@ -219,9 +225,6 @@ class WordDetailActivity : AppCompatActivity() {
         binding.commentRv.apply {
             layoutManager = linearLayoutManager
         }
-        if (!viewModel.isWordDetailSet()) return
-        val word = viewModel.getWordDetail().value!!
-        setupAdapter(getOption(word))
     }
 
     private fun getOption(word: Word): FirestorePagingOptions<Comment> {
@@ -259,7 +262,9 @@ class WordDetailActivity : AppCompatActivity() {
     }
 
     private fun setupAdapter(options: FirestorePagingOptions<Comment>) {
-
+        if (commentAdapter != null) {
+            return
+        }
         commentAdapter = CommentPagingAdapter(options = options, object : OnCommentClickListener {
             override fun onClick(
                 comment: Comment,
@@ -289,7 +294,7 @@ class WordDetailActivity : AppCompatActivity() {
                         viewModel.likeComment(comment, like, userId) {
                             likes[userId] = like
                             comment.likes = likes
-                            commentAdapter.refresh()
+                            commentAdapter?.refresh()
                         }
                     }
                 }
@@ -297,7 +302,7 @@ class WordDetailActivity : AppCompatActivity() {
         }) { state ->
             Log.i(TAG, "setupAdapter: $state")
             if (state == LOADED || state == FINISHED) {
-                if (commentAdapter.itemCount != 0) {
+                if (commentAdapter?.itemCount != 0) {
                     binding.noCommentLayout.visibility = View.GONE
                 } else {
                     binding.noCommentLayout.visibility = View.VISIBLE
@@ -312,10 +317,7 @@ class WordDetailActivity : AppCompatActivity() {
     }
 
     private fun setupEditText() {
-        if (!viewModel.isWordDetailSet()) return
-        val word = viewModel.getWordDetail().value!!
         binding.commentEt.apply {
-            hint = getString(R.string.write_quote, word.name)
             setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     val result = postComment()
@@ -353,7 +355,7 @@ class WordDetailActivity : AppCompatActivity() {
         viewModel.getRefreshComment()
             .observe(this) {
                 it?.let {
-                    commentAdapter.refresh()
+                    commentAdapter?.refresh()
                 }
             }
     }
@@ -363,6 +365,7 @@ class WordDetailActivity : AppCompatActivity() {
             wordTv.text = word.name
             meaningTv.text = word.meaning
             engMeaningTv.setTextWithVisibility(word.eng)
+            commentEt.hint = getString(R.string.write_quote, word.name)
         }
         word.likes?.let {
             val user = viewModel.getPrefUser()
@@ -378,6 +381,7 @@ class WordDetailActivity : AppCompatActivity() {
                 )
             }
         }
+        setupAdapter(getOption(word))
     }
 
     private fun validateComment(): Boolean {
@@ -513,7 +517,7 @@ class WordDetailActivity : AppCompatActivity() {
             postComment()
         }
         binding.swipeRefreshLayout.setOnRefreshListener {
-            setupUI()
+            setupUi()
         }
         binding.likeBtn.setOnClickListener {
             viewModel.likeWord()

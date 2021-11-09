@@ -74,9 +74,10 @@ class HomeFragment : Fragment() {
     private fun setupDashboard() {
         binding.dashboardLl.removeAllViews()
 
-        val list = PowerStone.getDashboardInfo()
-        val dashboardResponseList: MutableList<DashboardResponse> = mutableListOf()
-        list.forEach {
+        val dashboardInfo = PowerStone.getDashboardInfo()
+        binding.wordOfTheWeekTv.text = dashboardInfo.wordOfTheDay
+        val labeledViewList: MutableList<LabeledView> = mutableListOf()
+        dashboardInfo.labeledViews.forEach {
             when (it.type) {
                 GlobalVar.TYPE_WORD -> {
                     if (it.key.isNullOrEmpty() || it.category.isNullOrEmpty() || it.lang.isNullOrEmpty()) {
@@ -112,10 +113,9 @@ class HomeFragment : Fragment() {
                     labelledRecycleView.getRecyclerView().adapter = adapter
                     adapterMap[it.key] = DashboardHelper(
                         adapter = adapter,
-                        dashboardResponse = it,
                         labelledRecycleView = labelledRecycleView
                     )
-                    dashboardResponseList.add(it)
+                    labeledViewList.add(it)
                     binding.dashboardLl.addView(labelledRecycleView)
                 }
                 GlobalVar.TYPE_GOOGLE_AD -> {
@@ -126,8 +126,8 @@ class HomeFragment : Fragment() {
     }
 
     private fun fetchDashBoardData() {
-        val list = PowerStone.getDashboardInfo()
-        viewModel.fetchAllWord(list)
+        val dashboardInfo = PowerStone.getDashboardInfo()
+        viewModel.fetchAllWord(dashboardInfo.labeledViews)
     }
 
     private fun navigateToWordListFragment(lang: String, category: String) {
@@ -172,6 +172,18 @@ class HomeFragment : Fragment() {
         binding.swipeRefreshLayout.setOnRefreshListener {
             fetchDashBoardData()
         }
+        binding.wordOfTheWeekLayout.setOnClickListener {
+            val word: String = binding.wordOfTheWeekTv.text.trim().toString()
+            if (word.isEmpty()) {
+                viewModel.setUserMessage(getString(R.string.error_unknown))
+                return@setOnClickListener
+            }
+            WordDetailActivity.startMe(
+                context = requireContext(),
+                postFetch = true,
+                word = word
+            )
+        }
     }
 
     // endregion
@@ -180,7 +192,6 @@ class HomeFragment : Fragment() {
 
     private data class DashboardHelper(
         val adapter: WordAdapter,
-        val dashboardResponse: DashboardResponse,
         val labelledRecycleView: LabelledRecycleView
     )
 

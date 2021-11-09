@@ -9,6 +9,7 @@ import com.tarripoha.android.data.db.Word
 import com.tarripoha.android.ui.BaseViewModel
 import com.tarripoha.android.R
 import com.tarripoha.android.data.db.Comment
+import com.tarripoha.android.firebase.PowerStone
 import javax.inject.Inject
 
 /**
@@ -202,6 +203,37 @@ class WordViewModel @Inject constructor(
 
             }
         )
+    }
+
+    fun fetchWordDetail(word: String) {
+        if (!checkNetworkAndShowError()) {
+            return
+        }
+        setRefreshing(true)
+        repository.fetchWordDetail(
+            word = word,
+            success = { snapshot ->
+                setRefreshing(false)
+                try {
+                    val w = snapshot.getValue(Word::class.java)
+                    if (w != null) {
+                        setWordDetail(word = w)
+                    } else {
+                        Log.e(TAG, "fetchWordDetail: null word")
+                    }
+                } catch (e: Exception) {
+                    setUserMessage(getString(R.string.error_unknown))
+                    PowerStone.recordException(e)
+                }
+            },
+            failure = {
+                setUserMessage(getString(R.string.error_unable_to_process))
+            },
+            connectionStatus = {
+                setRefreshing(false)
+            }
+        )
+
     }
 
     // endregion

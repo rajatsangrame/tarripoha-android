@@ -16,8 +16,8 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.tarripoha.android.R
+import com.tarripoha.android.firebase.PowerStone
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -144,14 +144,12 @@ object TPUtils {
                     }
                 }
             } catch (e: Exception) {
-                FirebaseCrashlytics.getInstance()
-                    .recordException(e)
+                PowerStone.recordException(e)
                 Log.e(TAG, "Error while modifying relativeTime. not changing it")
             }
             return relativeTime
         } catch (e: Exception) {
-            FirebaseCrashlytics.getInstance()
-                .recordException(e)
+            PowerStone.recordException(e)
             Log.e(TAG, "Error while getting relativeTimeString og time :$date")
         }
         return ""

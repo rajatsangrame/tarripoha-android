@@ -10,7 +10,9 @@
     </entry>
     <entry>
         <key>dashboard</key>
-        <value>[
+        <value>{
+            "word_of_the_day": "होळ",
+            "labeled_views": [
             {
             "type": "word",
             "lang": "Marathi",
@@ -19,10 +21,18 @@
             },
             {
             "type": "word",
+            "lang": "Hindi",
+            "category": "top-liked",
+            "key": "hn-top-liked"
+            },
+            {
+            "type": "word",
             "lang": "Marathi",
             "category": "top-liked",
             "key": "mr-top-liked"
             }
-            ]</value>
+            ]
+            }
+        </value>
     </entry>
 </defaultsMap>

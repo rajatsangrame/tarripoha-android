@@ -19,6 +19,8 @@
                 android:layout_width="0dp"
                 android:layout_height="150dp"
                 android:layout_margin="@dimen/margin_word_of_the_week"
+                android:clickable="true"
+                android:focusable="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -34,17 +36,20 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:clickable="false"
                         android:gravity="center"
                         android:text="@string/word_of_the_week" />
 
                     <TextView
+                        android:id="@+id/word_of_the_week_tv"
                         style="@style/AppTheme.TextTitleGrey"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginTop="@dimen/margin_normal"
+                        android:clickable="false"
                         android:gravity="center"
-                        android:text="@string/sample_word" />
+                        android:hint="@string/sample_word" />
 
                 </LinearLayout>
 

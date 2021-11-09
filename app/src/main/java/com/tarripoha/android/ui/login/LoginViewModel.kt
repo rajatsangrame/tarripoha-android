@@ -142,8 +142,7 @@ class LoginViewModel @Inject constructor(
         Log.i(TAG, "fetchUserInfoResponse: ")
         try {
             if (snapshot.childrenCount > 0) {
-                if (snapshot.getValue(User::class.java) != null
-                ) {
+                if (snapshot.getValue(User::class.java) != null) {
                     setShowProgress(false)
                     val user: User = snapshot.getValue(User::class.java)!!
                     val isDirty = user.dirty

@@ -9,7 +9,7 @@ import com.tarripoha.android.data.Repository
 import com.tarripoha.android.data.db.Word
 import com.tarripoha.android.ui.BaseViewModel
 import com.tarripoha.android.R
-import com.tarripoha.android.firebase.DashboardResponse
+import com.tarripoha.android.firebase.LabeledView
 import java.lang.Exception
 import javax.inject.Inject
 
@@ -160,7 +160,7 @@ class MainViewModel @Inject constructor(
         setRefreshing(false)
     }
 
-    fun fetchAllWord(dashboardResponseList: List<DashboardResponse>) {
+    fun fetchAllWord(labeledView: List<LabeledView>) {
         if (!checkNetworkAndShowError()) {
             setRefreshing(false)
             return
@@ -168,7 +168,7 @@ class MainViewModel @Inject constructor(
         setRefreshing(true)
         repository.fetchAllWords(
             success = { snapshot ->
-                fetchAllResponse(snapshot = snapshot, dashboardResponseList = dashboardResponseList)
+                fetchAllResponse(snapshot = snapshot, labeledViews = labeledView)
             },
             failure = {
                 setRefreshing(false)
@@ -181,11 +181,11 @@ class MainViewModel @Inject constructor(
     }
 
     private fun fetchAllResponse(
-        dashboardResponseList: List<DashboardResponse>,
+        labeledViews: List<LabeledView>,
         snapshot: DataSnapshot
     ) {
-        val mapResponse: Map<String, DashboardResponse> =
-            dashboardResponseList.filter { it.key != null && it.type == GlobalVar.TYPE_WORD }
+        val mapResponse: Map<String, LabeledView> =
+            labeledViews.filter { it.key != null && it.type == GlobalVar.TYPE_WORD }
                 .associateBy { it.key!! }
         val tempMap: MutableMap<String, MutableList<Word>> = mutableMapOf()
         snapshot.children.forEach { snap ->

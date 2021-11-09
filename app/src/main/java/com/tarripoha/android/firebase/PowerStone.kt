@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.core.net.toUri
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.FirebaseApp
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import com.google.gson.Gson
@@ -113,9 +114,13 @@ object PowerStone {
         return FirebaseRemoteConfig.getInstance(app)
     }
 
-    fun getDashboardInfo(): List<DashboardResponse> {
-        val type: Type = object : TypeToken<List<DashboardResponse>>() {}.type
+    fun getDashboardInfo(): DashboardResponse {
+        val type: Type = object : TypeToken<DashboardResponse>() {}.type
         val info = getRemoteConfig().getString(KEY_DASHBOARD_VERSION)
         return Gson().fromJson(info, type)
+    }
+
+    fun recordException(throwable: Throwable) {
+        FirebaseCrashlytics.getInstance().recordException(throwable)
     }
 }

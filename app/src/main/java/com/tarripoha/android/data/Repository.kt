@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -18,6 +17,7 @@ import com.tarripoha.android.data.db.Word
 import com.tarripoha.android.data.db.WordDatabase
 import com.tarripoha.android.data.model.User
 import com.tarripoha.android.data.rest.RetrofitApi
+import com.tarripoha.android.firebase.PowerStone
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 
@@ -308,7 +308,30 @@ class Repository(
             }
             .addOnFailureListener { e ->
                 failure(e)
-                FirebaseCrashlytics.getInstance().recordException(e)
+                PowerStone.recordException(e)
+                Log.e(TAG, "Error adding document", e)
+            }
+
+        checkFirebaseConnection(
+            connectionStatus = {
+                connectionStatus(it)
+            }
+        )
+    }
+
+    fun fetchWordDetail(
+        word: String,
+        success: (DataSnapshot) -> Unit,
+        failure: (Exception) -> Unit,
+        connectionStatus: (Boolean) -> Unit
+    ) {
+        wordRef.child(word).get()
+            .addOnSuccessListener { snapshot ->
+                success(snapshot)
+                Log.d(TAG, "fetchWordDetail: $word")
+            }
+            .addOnFailureListener { e ->
+                failure(e)
                 Log.e(TAG, "Error adding document", e)
             }
 

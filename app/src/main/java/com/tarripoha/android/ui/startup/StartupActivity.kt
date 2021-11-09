@@ -6,7 +6,6 @@ import android.os.Looper
 import android.util.Log
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.gson.Gson
 import com.tarripoha.android.GlobalVar
 import com.tarripoha.android.R
@@ -16,6 +15,7 @@ import com.tarripoha.android.data.model.User
 import com.tarripoha.android.databinding.ActivityStartupBinding
 import com.tarripoha.android.di.component.DaggerStartupActivityComponent
 import com.tarripoha.android.di.component.StartupActivityComponent
+import com.tarripoha.android.firebase.PowerStone
 import com.tarripoha.android.util.helper.PreferenceHelper
 import com.tarripoha.android.util.helper.UserHelper
 import com.tarripoha.android.ui.login.LoginActivity
@@ -58,8 +58,7 @@ class StartupActivity : BaseActivity() {
             try {
                 user = Gson().fromJson(userString, User::class.java)
             } catch (e: Exception) {
-                FirebaseCrashlytics.getInstance()
-                    .recordException(e)
+                PowerStone.recordException(e)
                 Log.e(TAG, "onCreate: {${e.message}}")
             }
         }

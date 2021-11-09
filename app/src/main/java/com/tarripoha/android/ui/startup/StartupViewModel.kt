@@ -45,8 +45,7 @@ class StartupViewModel @Inject constructor(
         Log.i(TAG, "fetchUserInfoResponse: ")
         try {
             if (snapshot.childrenCount > 0) {
-                if (snapshot.getValue(User::class.java) != null
-                ) {
+                if (snapshot.getValue(User::class.java) != null) {
                     val user: User = snapshot.getValue(User::class.java)!!
                     Log.i(TAG, "fetchUserInfoResponse: user found ${user.phone}")
                     this.setUser(user)

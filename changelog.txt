@@ -1,3 +1,10 @@
+Version 0.5.5 [8 Nov 2021]
+
+[New] Home Screen Dashboard
+[new] Hindi chars in Search Screen
+Like a word
+Multiple bug fix and improvement
+________________________________
 Version 0.5.4 [25 Oct 2021]
 1. Fixed login issue
 2. Added language option
