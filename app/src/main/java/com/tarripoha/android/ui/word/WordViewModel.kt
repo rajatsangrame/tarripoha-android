@@ -25,7 +25,7 @@ class WordViewModel @Inject constructor(
 
     // region Variable
 
-    private var fetchMode: FetchMode = FetchMode.Popular
+    private var fetchMode: FetchMode = FetchMode.Recent
     private val isRefreshing: MutableLiveData<Boolean> = MutableLiveData()
     private val wordDetail: MutableLiveData<Word> = MutableLiveData()
     private val refreshComment: MutableLiveData<Boolean> = MutableLiveData()

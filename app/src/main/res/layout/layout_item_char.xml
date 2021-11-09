@@ -3,21 +3,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
     android:layout_width="wrap_content"
-    android:layout_height="32dp"
+    android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackgroundBorderless"
     android:clickable="true"
-    android:focusable="true">
+    android:focusable="true"
+    android:padding="@dimen/margin_normal">
+
+    <ImageView
+        android:id="@+id/avatar_iv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/shape_round_grey" />
 
     <TextView
         android:id="@+id/char_tv"
-        style="@style/AppTheme.TextDescBlack"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginStart="@dimen/margin_extra_large"
-        android:layout_marginEnd="@dimen/margin_extra_large"
         android:gravity="center"
-        android:textSize="@dimen/text_large"
-        tools:text="@string/word" />
+        android:textColor="@color/colorWhite"
+        tools:text="@string/a" />
 
 </FrameLayout>

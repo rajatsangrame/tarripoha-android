@@ -70,6 +70,7 @@ class WordDetailActivity : AppCompatActivity() {
     private lateinit var binding: FragmentWordDetailBinding
     private var commentAdapter: CommentPagingAdapter? = null
     private lateinit var viewModel: WordViewModel
+    private var alreadyInitialised = false
 
     private val resultLauncher =
         registerForActivityResult(StartActivityForResult()) { result ->
@@ -100,30 +101,7 @@ class WordDetailActivity : AppCompatActivity() {
         getDependency()
         viewModel = ViewModelProvider(this, factory).get(WordViewModel::class.java)
 
-        if (intent.hasExtra(KEY_POST_FETCH)) {
-            val postShare = intent?.getBooleanExtra(KEY_POST_FETCH, false)!!
-            val word = intent?.getStringExtra(KEY_WORD)
-            when {
-                postShare -> {
-                    if (word == null) {
-                        viewModel.setUserMessage(getString(R.string.error_unknown))
-                        return
-                    }
-                    viewModel.fetchWordDetail(word = word)
-                    setupUi()
-                }
-                intent.hasExtra(KEY_WORD_DETAIL) -> {
-                    val wordDetail = intent?.getParcelableExtra<Word>(KEY_WORD_DETAIL)
-                    viewModel.setWordDetail(wordDetail)
-                    setupUi()
-                }
-                else -> {
-                    viewModel.setUserMessage(getString(R.string.error_unknown))
-                }
-            }
-        } else {
-            viewModel.setUserMessage(getString(R.string.error_unknown))
-        }
+        init()
     }
 
     private fun getDependency() {
@@ -182,6 +160,37 @@ class WordDetailActivity : AppCompatActivity() {
     // endregion
 
     // region Helper Methods
+
+    /**
+     * This can be called again while swipe refresh. So only loading data for this condition
+     */
+    private fun init() {
+        if (intent.hasExtra(KEY_POST_FETCH)) {
+            val postShare = intent?.getBooleanExtra(KEY_POST_FETCH, false)!!
+            val word = intent?.getStringExtra(KEY_WORD)
+            when {
+                postShare -> {
+                    if (word == null) {
+                        viewModel.setUserMessage(getString(R.string.error_unknown))
+                        return
+                    }
+                    viewModel.fetchWordDetail(word = word)
+                    if (!alreadyInitialised) setupUi() else commentAdapter?.refresh()
+                }
+                intent.hasExtra(KEY_WORD_DETAIL) -> {
+                    val wordDetail = intent?.getParcelableExtra<Word>(KEY_WORD_DETAIL)
+                    viewModel.setWordDetail(wordDetail)
+                    if (!alreadyInitialised) setupUi() else commentAdapter?.refresh()
+                }
+                else -> {
+                    viewModel.setUserMessage(getString(R.string.error_unknown))
+                }
+            }
+        } else {
+            viewModel.setUserMessage(getString(R.string.error_unknown))
+        }
+        alreadyInitialised = true
+    }
 
     private fun setupUi() {
         setupToolbar()
@@ -517,7 +526,7 @@ class WordDetailActivity : AppCompatActivity() {
             postComment()
         }
         binding.swipeRefreshLayout.setOnRefreshListener {
-            setupUi()
+            init()
         }
         binding.likeBtn.setOnClickListener {
             viewModel.likeWord()
