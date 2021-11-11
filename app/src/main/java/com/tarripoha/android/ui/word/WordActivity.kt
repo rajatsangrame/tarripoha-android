@@ -34,6 +34,7 @@ import com.tarripoha.android.ui.word.ui.theme.TarriPohaTheme
 import com.tarripoha.android.ui.word.ui.theme.colorBlack
 import com.tarripoha.android.ui.word.ui.theme.colorGrey
 import com.tarripoha.android.ui.word.ui.theme.colorPrimary
+import com.tarripoha.android.util.hasEnglishChars
 import kotlinx.coroutines.launch
 
 class WordActivity : ComponentActivity() {
@@ -225,6 +226,16 @@ fun WordActivityScreen(word: Word?, displayMode: String) {
                             scope.launch {
                                 scaffoldState.snackbarHostState.showSnackbar(
                                     message = activity.getString(R.string.empty_field)
+                                )
+                            }
+                            return@Button
+                        } else if (meaning.value.trim().hasEnglishChars()) {
+                            scope.launch {
+                                scaffoldState.snackbarHostState.showSnackbar(
+                                    message = activity.getString(
+                                        R.string.msg_invalid_field,
+                                        meaning.value.trim()
+                                    )
                                 )
                             }
                             return@Button

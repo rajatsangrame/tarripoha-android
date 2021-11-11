@@ -23,6 +23,7 @@ import com.tarripoha.android.ui.word.WordActivity
 import com.tarripoha.android.ui.word.WordDetailActivity
 import com.tarripoha.android.util.ItemClickListener
 import com.tarripoha.android.util.TPUtils
+import com.tarripoha.android.util.hasEnglishChars
 
 class SearchFragment : Fragment() {
 
@@ -140,13 +141,29 @@ class SearchFragment : Fragment() {
             WordAdapter(words = ArrayList(), itemClickListener = object : ItemClickListener<Word> {
                 override fun onClick(
                     position: Int,
-                    data: Word
+                    word: Word
                 ) {
-                    if (data.type == Word.TYPE_NEW_WORD) {
+                    if (word.type == Word.TYPE_NEW_WORD) {
                         if (viewModel.isUserLogin()) {
+                            if (word.name.hasEnglishChars()) {
+                                viewModel.setUserMessage(
+                                    getString(
+                                        R.string.msg_invalid_field,
+                                        word.name
+                                    )
+                                )
+                                return
+                            } else if (word.name.length < 2) {
+                                viewModel.setUserMessage(
+                                    getString(
+                                        R.string.msg_field_too_short
+                                    )
+                                )
+                                return
+                            }
                             val intent = WordActivity.getIntent(
                                 context = requireContext(),
-                                word = data,
+                                word = word,
                                 mode = WordActivity.KEY_MODE_NEW
                             )
                             resultLauncher.launch(intent)
@@ -154,11 +171,11 @@ class SearchFragment : Fragment() {
                             viewModel.setUserMessage(getString(R.string.error_login))
                         }
                     } else {
-                        viewModel.updateViewsCount(word = data)
+                        viewModel.updateViewsCount(word = word)
                         TPUtils.hideKeyboard(requireContext(), binding.root)
                         WordDetailActivity.startMe(
                             context = requireContext(),
-                            wordDetail = data
+                            wordDetail = word
                         )
                     }
                 }

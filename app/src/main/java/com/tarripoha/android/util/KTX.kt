@@ -50,6 +50,17 @@ fun View.toggleIsEnable(inputText: CharSequence?) {
 
 fun Any.toJsonString(): String = Gson().toJson(this)
 
+fun CharSequence?.hasEnglishChars(): Boolean {
+    if (isNullOrEmpty()) return false
+    val p = Pattern.compile("[a-zA-Z0-9]")
+    this.forEach {
+        if (p.matcher("$it").matches()) {
+            return true
+        }
+    }
+    return false
+}
+
 // Ref: https://medium.com/over-engineering/hands-on-with-material-components-for-android-dialogs-75c6d726f83a
 fun MaterialAlertDialogBuilder.showDialog(
     title: String? = null,

@@ -74,6 +74,8 @@
     <string name="msg_update_available">Do you want to update the app to latest version</string>
     <string name="msg_confirm_logout">Are you sure you want to logout?</string>
     <string name="msg_select_language">Please select language to continue</string>
+    <string name="msg_invalid_field">Invalid field %1$s</string>
+    <string name="msg_field_too_short">Field is too short</string>
 
     <string name="error_no_result">No result found</string>
     <string name="error_no_quotes">No quotes found</string>
