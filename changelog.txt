@@ -1,9 +1,15 @@
-Version 0.6 [11 Nov 2021]
+Version 0.6.1 [11 Nov 2021]
 
-[New] Home Screen Dashboard
-[new] Hindi chars in Search Screen
-Like a word
+Multiple bug fixes and improvement
+
+________________________________
+Version 0.6.0 [11 Nov 2021]
+
+Home Screen Dashboard
+Hindi chars in Search Screen
+Option to like any word
 Multiple bug fix and improvement
+
 ________________________________
 Version 0.5.4 [25 Oct 2021]
 1. Fixed login issue
@@ -12,8 +18,8 @@ Version 0.5.4 [25 Oct 2021]
 
 ________________________________
 Version 0.5.2 [20 Oct 2021]
-Hello World
 
+Hello World
 
 ________________________________
 Version 0.4.0 [15 April 2021]
@@ -21,6 +27,7 @@ Version 0.4.0 [15 April 2021]
 1. Added firebase auth
 2. User Module
 3. Startup Activity
+
 ________________________________
 Version 0.3.0 [2 April 2021]
 

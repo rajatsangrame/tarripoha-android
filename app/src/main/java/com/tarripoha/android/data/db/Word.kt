@@ -37,7 +37,7 @@ data class Word(
     var updated: Long? = null,
     var saved: Boolean? = false,
     var likes: MutableMap<String, Boolean>? = null,
-    var views: MutableMap<String, MutableList<Long>>? = null
+    var views: MutableMap<String, MutableList<Long?>>? = null
     // Make sure to update edit method when ever extra parameter is added
 ) : Parcelable {
 

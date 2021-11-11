@@ -330,7 +330,7 @@ class MainViewModel @Inject constructor(
 
     private fun updateViewsCount(
         word: Word,
-        views: MutableList<Long>,
+        views: MutableList<Long?>,
         userId: String,
         callback: () -> Unit
     ) {

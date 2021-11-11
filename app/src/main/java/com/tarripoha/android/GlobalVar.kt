@@ -9,7 +9,7 @@ object GlobalVar {
     val DEBUG_MODE = BuildConfig.DEBUG
     private val languages = arrayListOf<String>()
     private val chars = arrayListOf(
-        "अ", "आ", "इ", "ई", "ए", "ऐ", "ओ", "औ", "अं",
+        "अ", "आ", "इ", "ई", "उ", "ऊ", "ए", "ऐ", "ओ", "औ", "अं",
         "क", "ख", "ग", "घ",
         "च", "छ", "ज", "झ",
         "ट", "ठ", "ड", "ढ", "न",

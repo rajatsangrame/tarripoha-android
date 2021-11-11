@@ -295,7 +295,7 @@ class Repository(
 
     fun updateViewsCount(
         word: Word,
-        views: MutableList<Long>,
+        views: MutableList<Long?>,
         userId: String,
         success: () -> Unit,
         failure: (Exception) -> Unit,

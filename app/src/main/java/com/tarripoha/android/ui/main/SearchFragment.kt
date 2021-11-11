@@ -183,7 +183,7 @@ class SearchFragment : Fragment() {
                 .observe(viewLifecycleOwner, Observer {
                     it?.let {
                         Log.d(TAG, "setupObservers: getQuery: $it")
-                        if (it.isEmpty()) {
+                        if (it.isEmpty() || it == "null") {
                             viewModel.setSearchWords(ArrayList())
                         } else {
                             viewModel.search(it)
