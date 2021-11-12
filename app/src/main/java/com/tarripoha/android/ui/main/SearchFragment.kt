@@ -148,7 +148,7 @@ class SearchFragment : Fragment() {
                             if (word.name.hasEnglishChars()) {
                                 viewModel.setUserMessage(
                                     getString(
-                                        R.string.msg_invalid_field,
+                                        R.string.msg_found_english_letters,
                                         word.name
                                     )
                                 )

@@ -233,7 +233,7 @@ fun WordActivityScreen(word: Word?, displayMode: String) {
                             scope.launch {
                                 scaffoldState.snackbarHostState.showSnackbar(
                                     message = activity.getString(
-                                        R.string.msg_invalid_field,
+                                        R.string.msg_found_english_letters,
                                         meaning.value.trim()
                                     )
                                 )
