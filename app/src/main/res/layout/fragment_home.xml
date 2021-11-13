@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="gone"
-            tools:visibility="gone">
+            tools:visibility="visible">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -33,33 +33,40 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
-                    <LinearLayout
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:orientation="vertical">
+                        android:layout_height="match_parent">
 
                         <TextView
-                            style="@style/AppTheme.TextTitle"
+                            android:id="@+id/textView"
+                            style="@style/AppTheme.TextDescWhite"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
+                            android:background="@color/colorPrimary"
                             android:clickable="false"
                             android:gravity="center"
-                            android:text="@string/word_of_the_week" />
+                            android:padding="@dimen/margin_normal"
+                            android:text="@string/word_of_the_week"
+                            android:textSize="@dimen/text_extra_large"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
                         <TextView
                             android:id="@+id/word_of_the_week_tv"
-                            style="@style/AppTheme.TextTitleGrey"
+                            style="@style/AppTheme.TextLabel"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_marginTop="@dimen/margin_normal"
                             android:clickable="false"
                             android:gravity="center"
-                            android:hint="@string/sample_word" />
+                            android:hint="@string/sample_word"
+                            android:textSize="@dimen/text_huge"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/textView" />
 
-                    </LinearLayout>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
                 </com.google.android.material.card.MaterialCardView>
 
@@ -82,7 +89,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="visible"
-            tools:visibility="visible">
+            tools:visibility="gone">
 
             <LinearLayout
                 android:layout_width="match_parent"

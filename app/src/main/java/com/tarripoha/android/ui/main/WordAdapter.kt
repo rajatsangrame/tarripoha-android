@@ -122,8 +122,9 @@ class WordAdapter(
         }
 
         override fun bind(position: Int) {
-            val word = words[position].name
-            binding.nameTv.text = word
+            val word = words[position]
+            binding.nameTv.text = word.name
+            binding.meaningTv.text = word.meaning
         }
 
         override fun bind(data: Any) {

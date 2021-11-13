@@ -43,6 +43,11 @@
         <item name="android:textColor">@color/colorBlack</item>
     </style>
 
+    <style name="AppTheme.TextDescWhite" parent="AppTheme">
+        <item name="android:fontFamily">@font/montserrat_medium</item>
+        <item name="android:textColor">@color/colorWhite</item>
+    </style>
+
     <style name="AppTheme.TextDescItalic" parent="AppTheme">
         <item name="android:fontFamily">@font/montserrat_medium_italic</item>
         <item name="android:textColor">@color/colorGrey</item>

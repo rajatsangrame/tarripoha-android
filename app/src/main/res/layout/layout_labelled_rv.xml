@@ -6,7 +6,7 @@
 
     <TextView
         android:id="@+id/label_tv"
-        style="@style/AppTheme.TextLabel"
+        style="@style/AppTheme.TextDescBlack"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_extra_large"
