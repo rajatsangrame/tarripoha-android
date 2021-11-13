@@ -211,7 +211,7 @@ class MainActivity : BaseActivity() {
                         binding.container.toolbarLayout.searchEt.setText(c)
                         binding.container.toolbarLayout.searchEt.setSelection(start + it.length)
                     }
-                    start != 0 && start < end -> {
+                    start < end -> {
                         c = c.replaceRange(startIndex = start, endIndex = end, it)
                         binding.container.toolbarLayout.searchEt.setText(c)
                         binding.container.toolbarLayout.searchEt.setSelection(start + it.length)
