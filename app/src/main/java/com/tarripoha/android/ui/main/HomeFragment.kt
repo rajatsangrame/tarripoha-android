@@ -68,7 +68,7 @@ class HomeFragment : Fragment() {
         setupDashboard()
         setupListeners()
         setupObservers()
-        fetchDashBoardData()
+        fetchDashBoardData(startShimmer = true)
     }
 
     private fun setupDashboard() {
@@ -125,7 +125,8 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun fetchDashBoardData() {
+    private fun fetchDashBoardData(startShimmer: Boolean = false) {
+        if (startShimmer) binding.shimmer.startShimmer()
         val dashboardInfo = PowerStone.getDashboardInfo()
         viewModel.fetchAllWord(dashboardInfo.labeledViews)
     }
@@ -146,6 +147,7 @@ class HomeFragment : Fragment() {
             isRefreshing()
                 .observe(viewLifecycleOwner, Observer {
                     it?.let {
+                        if (binding.shimmer.isShimmerStarted && binding.shimmer.isShimmerVisible) return@let
                         binding.swipeRefreshLayout.isRefreshing = it
                     }
                 })
@@ -160,6 +162,11 @@ class HomeFragment : Fragment() {
                             )
                         }
                     }
+                    binding.shimmer.apply {
+                        stopShimmer()
+                        visibility = View.GONE
+                    }
+                    binding.container.visibility = View.VISIBLE
                 })
         }
     }

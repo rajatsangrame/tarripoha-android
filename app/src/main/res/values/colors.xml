@@ -18,5 +18,6 @@
     <color name="colorGrey300">#E4E4E4</color>
     <color name="colorRed">#ef5350</color>
     <color name="colorGreen">#66bb6a</color>
+    <color name="colorShimmer">#C2C2C2</color>
 
 </resources>
