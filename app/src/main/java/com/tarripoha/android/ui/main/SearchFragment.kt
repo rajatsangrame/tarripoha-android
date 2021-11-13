@@ -96,11 +96,7 @@ class SearchFragment : Fragment() {
     }
 
     override fun onDestroy() {
-        viewModel.apply {
-            setQuery(null)
-            setSearchWords(null)
-            setChars(null)
-        }
+        viewModel.resetSearchParams()
         super.onDestroy()
     }
 
@@ -200,7 +196,7 @@ class SearchFragment : Fragment() {
                 .observe(viewLifecycleOwner, Observer {
                     it?.let {
                         Log.d(TAG, "setupObservers: getQuery: $it")
-                        if (it.isEmpty() || it == "null") {
+                        if (it.isEmpty() || it.contains("null")) {
                             viewModel.setSearchWords(ArrayList())
                         } else {
                             viewModel.search(it)

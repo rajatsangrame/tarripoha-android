@@ -94,19 +94,19 @@ class MainViewModel @Inject constructor(
         if (!checkNetworkAndShowError()) {
             return
         }
-        isRefreshing.value = true
+        setRefreshing(true)
         repository.addNewWord(
             word = word,
             success = {
-                isRefreshing.value = false
+                setRefreshing(false)
                 setUserMessage(getString(R.string.succ_data_added))
             },
             failure = {
-                isRefreshing.value = false
+                setRefreshing(false)
                 setUserMessage(getString(R.string.error_unable_to_process))
             },
             connectionStatus = {
-                if (!it) isRefreshing.value = false
+                if (!it) setRefreshing(false)
             }
         )
     }
@@ -349,6 +349,12 @@ class MainViewModel @Inject constructor(
 
             }
         )
+    }
+
+    fun resetSearchParams(){
+        setQuery(null)
+        setSearchWords(null)
+        setChars(null)
     }
 
     // endregion

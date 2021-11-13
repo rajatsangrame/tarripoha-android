@@ -20,7 +20,7 @@ object PowerStone {
     private const val TAG = "PowerStone"
     private const val KEY_MINIMUM_VERSION = "min_version"
     private const val KEY_RECOMMENDED_VERSION = "recommended_version"
-    private const val KEY_DASHBOARD_VERSION = "dashboard"
+    private const val KEY_DASHBOARD = "dashboard"
     private const val MIN_FETCH_INTERVAL_SEC = 60L
 
     @JvmStatic
@@ -116,7 +116,7 @@ object PowerStone {
 
     fun getDashboardInfo(): DashboardResponse {
         val type: Type = object : TypeToken<DashboardResponse>() {}.type
-        val info = getRemoteConfig().getString(KEY_DASHBOARD_VERSION)
+        val info = getRemoteConfig().getString(KEY_DASHBOARD)
         return Gson().fromJson(info, type)
     }
 
