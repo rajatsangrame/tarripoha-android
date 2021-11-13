@@ -6,6 +6,8 @@ import android.widget.TextView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.Gson
 import com.tarripoha.android.R
+import com.google.gson.reflect.TypeToken
+import java.lang.reflect.Type
 import java.util.regex.Pattern
 
 fun CharSequence?.isValidNumber(): Boolean {
@@ -49,6 +51,11 @@ fun View.toggleIsEnable(inputText: CharSequence?) {
 }
 
 fun Any.toJsonString(): String = Gson().toJson(this)
+
+fun <T> String.toObject(): T {
+    val type: Type = object : TypeToken<T>() {}.type
+    return Gson().fromJson(this, type)
+}
 
 fun CharSequence?.hasEnglishChars(): Boolean {
     if (isNullOrEmpty()) return false

@@ -203,9 +203,25 @@ class MainActivity : BaseActivity() {
         viewModel.getChar()
             .observe(this, Observer {
                 var c = binding.container.toolbarLayout.searchEt.text.toString()
-                c += it
-                binding.container.toolbarLayout.searchEt.setText(c)
-                binding.container.toolbarLayout.searchEt.setSelection(c.length)
+                val start = binding.container.toolbarLayout.searchEt.selectionStart
+                val end = binding.container.toolbarLayout.searchEt.selectionEnd
+                when {
+                    start == end && start != 0 -> {
+                        c = c.substring(0, start) + it + c.substring(start, c.length)
+                        binding.container.toolbarLayout.searchEt.setText(c)
+                        binding.container.toolbarLayout.searchEt.setSelection(start + it.length)
+                    }
+                    start != 0 && start < end -> {
+                        c = c.replaceRange(startIndex = start, endIndex = end, it)
+                        binding.container.toolbarLayout.searchEt.setText(c)
+                        binding.container.toolbarLayout.searchEt.setSelection(start + it.length)
+                    }
+                    else -> {
+                        c += it
+                        binding.container.toolbarLayout.searchEt.setText(c)
+                        binding.container.toolbarLayout.searchEt.setSelection(c.length)
+                    }
+                }
             })
     }
 

@@ -10,17 +10,7 @@ object GlobalVar {
     private val languages = arrayListOf<String>()
 
     // Ref: https://jrgraphix.net/r/Unicode/0900-097F
-    private val chars = arrayListOf(
-        "अ", "आ", "इ", "ई", "उ", "ऊ", "ए", "ऐ", "ओ", "औ", "अं",
-        "क", "ख", "ग", "घ", "ङ",
-        "च", "छ", "ज", "झ", "ञ",
-        "ट", "ठ", "ड", "ढ", "ण",
-        "त", "थ", "द", "ध", "न",
-        "प", "फ", "ब", "भ", "म",
-        "य", "र", "ल", "व", "श",
-        "ष", "स", "ह", "ळ", "क्ष", "त्र", "ॠ", "ज्ञ",
-        "ा", "ि", "ी", "ु", "ू", "े", "ै", "ो", "ौ", "ं", "ः"
-    )
+    private val chars = arrayListOf<String>()
 
     fun loadLanguage(languages: List<String>) {
         this.languages.clear()
@@ -28,6 +18,11 @@ object GlobalVar {
     }
 
     fun getLanguages() = languages
+
+    fun setCharList(chars: List<String>) {
+        this.chars.clear()
+        this.chars.addAll(chars)
+    }
 
     fun getCharList() = chars
 }

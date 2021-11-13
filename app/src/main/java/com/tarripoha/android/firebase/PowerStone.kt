@@ -11,9 +11,11 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.tarripoha.android.GlobalVar
 import com.tarripoha.android.R
 import com.tarripoha.android.util.TPUtils
 import com.tarripoha.android.util.showDialog
+import com.tarripoha.android.util.toObject
 import java.lang.reflect.Type
 
 object PowerStone {
@@ -21,6 +23,7 @@ object PowerStone {
     private const val KEY_MINIMUM_VERSION = "min_version"
     private const val KEY_RECOMMENDED_VERSION = "recommended_version"
     private const val KEY_DASHBOARD = "dashboard"
+    private const val KEY_DEVANAGARI_CHARS = "devanagari_chars"
     private const val MIN_FETCH_INTERVAL_SEC = 60L
 
     @JvmStatic
@@ -40,6 +43,7 @@ object PowerStone {
     ) {
         getRemoteConfig().fetchAndActivate()
             .addOnCompleteListener {
+                GlobalVar.setCharList(getDevanagariChars())
                 var updated = false
                 if (it.isSuccessful) {
                     updated = it.result
@@ -58,7 +62,7 @@ object PowerStone {
 
     private fun checkForUpdate(
         context: Context,
-        appVersion: String,
+        appVersion: String
     ) {
         if (appVersion.isEmpty()) {
             Log.e(TAG, "processUpdate: appVersion not found")
@@ -122,5 +126,10 @@ object PowerStone {
 
     fun recordException(throwable: Throwable) {
         FirebaseCrashlytics.getInstance().recordException(throwable)
+    }
+
+    private fun getDevanagariChars(): List<String> {
+        val chars = getRemoteConfig().getString(KEY_DEVANAGARI_CHARS)
+        return chars.toObject()
     }
 }
