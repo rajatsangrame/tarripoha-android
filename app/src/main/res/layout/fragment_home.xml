@@ -46,9 +46,9 @@
                             android:background="@color/colorPrimary"
                             android:clickable="false"
                             android:gravity="center"
-                            android:padding="@dimen/margin_normal"
+                            android:padding="@dimen/margin_large"
                             android:text="@string/word_of_the_week"
-                            android:textSize="@dimen/text_extra_large"
+                            android:textSize="@dimen/text_large"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
