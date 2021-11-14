@@ -21,6 +21,10 @@
     <dimen name="icon_size">24dp</dimen>
     <dimen name="icon_size_small">16dp</dimen>
 
+    <dimen name="char_item_size">50dp</dimen>
+
+    <dimen name="comment_et_size">50dp</dimen>
+
     <dimen name="avatar_size">32dp</dimen>
 
 </resources>

@@ -64,7 +64,7 @@ class CommentPagingAdapter(
                     commentTv.text = comment.comment
                     avatarTv.text = user[0].toString()
                     setLikeButton(comment, likeIv)
-                    showTotalLikes(comment, totalLikesTv)
+                    TPUtils.showTotalLikes(comment.likes, totalLikesTv)
                     val time = TPUtils.getTime(itemView.context, comment.timestamp)
                     timestampTv.setTextWithVisibility(time)
                     likeIv.setOnClickListener {
@@ -115,7 +115,7 @@ class CommentPagingAdapter(
                 likeIv.setImageDrawable(
                     ContextCompat.getDrawable(
                         likeIv.context,
-                        R.drawable.ic_like_black
+                        R.drawable.ic_like_red
                     )
                 )
             } else {
@@ -125,34 +125,6 @@ class CommentPagingAdapter(
                         R.drawable.ic_like_border_black
                     )
                 )
-            }
-        }
-    }
-
-    private fun showTotalLikes(comment: Comment, view: TextView) {
-        val likes = comment.likes
-        if (likes.isNullOrEmpty()) {
-            view.visibility = View.GONE
-            return
-        }
-        val context = view.context
-        var count = 0
-        likes.forEach {
-            if (it.value) {
-                count++
-            }
-        }
-        when (count) {
-            0 -> {
-                view.visibility = View.GONE
-            }
-            1 -> {
-                view.text = context.getString(R.string.like, count.toString())
-                view.visibility = View.VISIBLE
-            }
-            else -> {
-                view.text = context.getString(R.string.likes, count.toString())
-                view.visibility = View.VISIBLE
             }
         }
     }

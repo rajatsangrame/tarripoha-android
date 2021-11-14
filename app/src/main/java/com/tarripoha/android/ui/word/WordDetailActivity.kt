@@ -154,6 +154,7 @@ class WordDetailActivity : AppCompatActivity() {
             setWordDetail(null)
             setRefreshComment(null)
         }
+        TextToSpeechUtil.onStop()
         super.onDestroy()
     }
 
@@ -370,27 +371,44 @@ class WordDetailActivity : AppCompatActivity() {
     }
 
     private fun setupUi(word: Word) {
+        setTexToSpeech(word)
         binding.apply {
             wordTv.text = word.name
             meaningTv.text = word.meaning
             engMeaningTv.setTextWithVisibility(word.eng)
             commentEt.hint = getString(R.string.write_quote, word.name)
         }
+        binding.langTv.setTextWithVisibility(word.lang)
+        TPUtils.showTotalLikes(likes = word.likes, view = binding.likeTv)
         word.likes?.let {
             val user = viewModel.getPrefUser()
             if (user?.id != null && it[user.id] != null && it[user.id] == true) {
-                binding.likeBtn.background = ContextCompat.getDrawable(
-                    this,
-                    R.drawable.ic_like_black
+                binding.likeBtn.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        this,
+                        R.drawable.ic_like_red
+                    )
                 )
             } else {
-                binding.likeBtn.background = ContextCompat.getDrawable(
-                    this,
-                    R.drawable.ic_like_border_black
+                binding.likeBtn.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        this,
+                        R.drawable.ic_like_border_black
+                    )
                 )
             }
         }
         setupAdapter(getOption(word))
+    }
+
+    private fun setTexToSpeech(word: Word) {
+        val lang: String? = TPUtils.getLangCode(context = this, language = word.lang)
+        if (lang.isNullOrEmpty()) {
+            viewModel.setUserMessage(getString(R.string.error_unknown))
+            return
+        }
+        TextToSpeechUtil.init(context = this, lang = lang) {
+        }
     }
 
     private fun validateComment(): Boolean {
@@ -530,6 +548,11 @@ class WordDetailActivity : AppCompatActivity() {
         }
         binding.likeBtn.setOnClickListener {
             viewModel.likeWord()
+        }
+        binding.speechIv.setOnClickListener {
+            if (!viewModel.isWordDetailSet()) return@setOnClickListener
+            val word = viewModel.getWordDetail().value!!
+            TextToSpeechUtil.speak(text = word.name)
         }
     }
 

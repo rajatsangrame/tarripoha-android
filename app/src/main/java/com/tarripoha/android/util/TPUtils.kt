@@ -13,15 +13,20 @@ import android.text.format.Time
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
+import com.tarripoha.android.GlobalVar
 import com.tarripoha.android.R
 import com.tarripoha.android.firebase.PowerStone
+import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 import java.util.UUID
+import kotlin.math.floor
+import kotlin.math.log10
 
 /**
  * Created by Rajat Sangrame
@@ -178,6 +183,62 @@ object TPUtils {
             e.printStackTrace()
             ""
         }
+    }
+
+    private fun prettyCount(number: Number): String {
+        val suffix = charArrayOf(' ', 'K', 'M', 'B', 'T', 'P', 'E')
+        val numValue = number.toLong()
+        val value = floor(log10(numValue.toDouble())).toInt()
+        val base = value / 3
+        return if (value >= 3 && base < suffix.size) {
+            DecimalFormat("#0.0").format(
+                numValue / Math.pow(
+                    10.0,
+                    (base * 3).toDouble()
+                )
+            ) + suffix[base]
+        } else {
+            DecimalFormat("#,##0").format(numValue)
+        }
+    }
+
+    fun showTotalLikes(likes: MutableMap<String, Boolean>?, view: TextView) {
+        if (likes.isNullOrEmpty()) {
+            view.visibility = View.GONE
+            return
+        }
+        val context = view.context
+        var count = 0
+        likes.forEach {
+            if (it.value) {
+                count++
+            }
+        }
+        when (count) {
+            0 -> {
+                view.visibility = View.GONE
+            }
+            1 -> {
+                view.text = context.getString(R.string.like, prettyCount(count))
+                view.visibility = View.VISIBLE
+            }
+            else -> {
+                view.text = context.getString(R.string.likes, prettyCount(count))
+                view.visibility = View.VISIBLE
+            }
+        }
+    }
+
+    fun getLangCode(context: Context, language: String?): String? {
+        if (language.isNullOrEmpty()) return null
+        if (language == context.getString(R.string.marathi)) {
+            return GlobalVar.LANG_MAR
+        } else if (language == context.getString(R.string.hindi)) {
+            return GlobalVar.LANG_HI
+        } else if (language == context.getString(R.string.english)) {
+            return GlobalVar.LANG_EN
+        }
+        return null
     }
 
     val Int.toDp: Int get() = (this / getSystem().displayMetrics.density).toInt()

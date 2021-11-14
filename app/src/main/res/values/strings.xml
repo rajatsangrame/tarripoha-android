@@ -54,6 +54,7 @@
     <string name="request">Request</string>
     <string name="marathi">Marathi</string>
     <string name="hindi">Hindi</string>
+    <string name="english">English</string>
     <string name="select_language">Select Language *</string>
     <string name="word_of_the_week">Word of the Week</string>
     <string name="top_words">Top Words</string>
