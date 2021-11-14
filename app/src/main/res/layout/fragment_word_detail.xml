@@ -82,6 +82,10 @@
                 style="@style/AppTheme.TextDescItalic"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:clickable="true"
+                android:ellipsize="end"
+                android:focusable="true"
+                android:maxLines="2"
                 android:paddingBottom="@dimen/margin_normal"
                 android:textSize="@dimen/text_large"
                 android:visibility="gone"
@@ -156,34 +160,6 @@
                 app:layout_constraintBottom_toBottomOf="@+id/like_btn"
                 app:layout_constraintStart_toEndOf="@+id/like_tv"
                 app:layout_constraintTop_toTopOf="@+id/like_btn" />
-
-            <LinearLayout
-                android:id="@+id/linearLayout2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_normal"
-                android:orientation="horizontal"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/added_by_tv">
-
-                <TextView
-                    android:id="@+id/like_count_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/margin_extra_large"
-                    android:text="12 Likes"
-                    android:visibility="gone"
-                    tools:visibility="gone" />
-
-                <TextView
-                    android:id="@+id/comment_count_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="1 Comment"
-                    android:visibility="gone"
-                    tools:visibility="gone" />
-
-            </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

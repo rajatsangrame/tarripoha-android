@@ -1,5 +1,7 @@
 package com.tarripoha.android.util
 
+import android.os.Build
+import android.text.Html
 import android.util.Patterns
 import android.view.View
 import android.widget.TextView
@@ -42,6 +44,17 @@ fun TextView.setTextWithVisibility(inputText: CharSequence?) {
     visibility = if (inputText.isNullOrEmpty()) View.GONE
     else {
         text = inputText
+        View.VISIBLE
+    }
+}
+
+fun TextView.underlinedWithVisibility(inputText: String?) {
+    visibility = if (inputText.isNullOrEmpty()) View.GONE
+    else {
+        val htmlText = "<p><u>$inputText</u></p>"
+        text = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Html.fromHtml(htmlText, Html.FROM_HTML_MODE_LEGACY);
+        } else Html.fromHtml(htmlText)
         View.VISIBLE
     }
 }

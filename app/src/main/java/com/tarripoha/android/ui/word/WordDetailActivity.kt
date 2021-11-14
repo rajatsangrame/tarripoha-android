@@ -4,12 +4,14 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.appcompat.app.AppCompatActivity
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.Observer
@@ -375,7 +377,7 @@ class WordDetailActivity : AppCompatActivity() {
         binding.apply {
             wordTv.text = word.name
             meaningTv.text = word.meaning
-            engMeaningTv.setTextWithVisibility(word.eng)
+            engMeaningTv.underlinedWithVisibility(word.eng)
             commentEt.hint = getString(R.string.write_quote, word.name)
         }
         binding.langTv.setTextWithVisibility(word.lang)
@@ -553,6 +555,14 @@ class WordDetailActivity : AppCompatActivity() {
             if (!viewModel.isWordDetailSet()) return@setOnClickListener
             val word = viewModel.getWordDetail().value!!
             TextToSpeechUtil.speak(text = word.name)
+        }
+        binding.engMeaningTv.setOnClickListener {
+            if (!viewModel.isWordDetailSet()) return@setOnClickListener
+            val word = viewModel.getWordDetail().value!!
+            val uri = Uri.parse("https://www.google.com/search?q=${word.eng} meaning")
+            val builder = CustomTabsIntent.Builder()
+            val customTabsIntent = builder.build()
+            customTabsIntent.launchUrl(this, uri)
         }
     }
 
