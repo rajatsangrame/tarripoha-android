@@ -19,6 +19,7 @@ import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.jakewharton.rxbinding2.widget.RxTextView
+import com.tarripoha.android.BuildConfig
 import com.tarripoha.android.R
 import com.tarripoha.android.TPApp
 import com.tarripoha.android.databinding.ActivityMainBinding
@@ -79,7 +80,7 @@ class MainActivity : BaseActivity() {
         inflater.inflate(R.menu.menu_main, menu)
         menu.apply {
             findItem(R.id.menu_search).isVisible = true
-            findItem(R.id.menu_info).isVisible = true
+            if (viewModel.isUserAdmin()) findItem(R.id.menu_info).isVisible = true
         }
         return true
     }
@@ -135,10 +136,17 @@ class MainActivity : BaseActivity() {
                     // no-op
                 }
                 getString(R.string.rate_us) -> {
-                    // no-op
+                    TPUtils.navigateToPlayStore(this, BuildConfig.APPLICATION_ID)
                 }
-                getString(R.string.share) -> {
-                    // no-op
+                getString(R.string.tell_your_friend) -> {
+                    val intent = Intent()
+                    intent.action = Intent.ACTION_SEND
+                    intent.putExtra(
+                        Intent.EXTRA_TEXT,
+                        getString(R.string.msg_tell_your_friend)
+                    )
+                    intent.type = "text/plain"
+                    startActivity(intent)
                 }
                 getString(R.string.support) -> {
                     // no-op

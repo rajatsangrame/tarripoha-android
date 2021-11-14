@@ -8,6 +8,7 @@ import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.*
@@ -31,6 +32,8 @@ class SearchFragment : Fragment() {
 
     companion object {
         private const val TAG = "SearchFragment"
+        private const val PLAY_STORE_CHAR = "p"
+        private const val PLAY_STORE_LINK = "com.google.android.apps.inputmethod.hindi"
     }
 
     private lateinit var factory: ViewModelProvider.Factory
@@ -120,7 +123,25 @@ class SearchFragment : Fragment() {
             }
 
             override fun onBindViewHolder(holder: ListItemViewHolder, position: Int) {
-                holder.binding.charTv.text = GlobalVar.getCharList()[position]
+                val c = GlobalVar.getCharList()[position]
+                if (c == "p") {
+                    holder.binding.charTv.visibility = View.GONE
+                    holder.binding.avatarIv.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            requireContext(),
+                            R.drawable.ic_google_play
+                        )
+                    )
+                } else {
+                    holder.binding.avatarIv.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            requireContext(),
+                            R.drawable.shape_round_grey
+                        )
+                    )
+                    holder.binding.charTv.visibility = View.VISIBLE
+                    holder.binding.charTv.text = c
+                }
             }
 
             override fun getItemCount(): Int = GlobalVar.getCharList().size
@@ -224,7 +245,9 @@ class SearchFragment : Fragment() {
         init {
             itemView.setOnClickListener {
                 val c = GlobalVar.getCharList()[adapterPosition]
-                viewModel.setChars(c)
+                if (c == PLAY_STORE_CHAR) {
+                    TPUtils.navigateToPlayStore(context = requireContext(), appId = PLAY_STORE_LINK)
+                } else viewModel.setChars(c)
             }
         }
     }

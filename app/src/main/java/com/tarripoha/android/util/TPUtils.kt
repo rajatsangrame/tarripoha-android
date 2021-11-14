@@ -1,11 +1,14 @@
 package com.tarripoha.android.util
 
+import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager.NameNotFoundException
 import android.content.res.Resources.getSystem
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.net.Uri
 import android.os.Build
 import android.text.format.DateFormat
 import android.text.format.DateUtils
@@ -239,6 +242,24 @@ object TPUtils {
             return GlobalVar.LANG_EN
         }
         return null
+    }
+
+    fun navigateToPlayStore(context: Context, appId: String) {
+        try {
+            context.startActivity(
+                Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("market://details?id=$appId")
+                )
+            )
+        } catch (e: ActivityNotFoundException) {
+            context.startActivity(
+                Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("https://play.google.com/store/apps/details?id=$appId")
+                )
+            )
+        }
     }
 
     val Int.toDp: Int get() = (this / getSystem().displayMetrics.density).toInt()

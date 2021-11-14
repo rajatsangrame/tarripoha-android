@@ -16,7 +16,7 @@
     <string name="more">More</string>
     <string name="report">Report</string>
     <string name="copy">Copy</string>
-    <string name="share">Share</string>
+    <string name="tell_your_friend">Tell Your Friend</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
     <string name="empty_field">Empty Field</string>
@@ -77,6 +77,7 @@
     <string name="msg_select_language">Please select language to continue</string>
     <string name="msg_found_english_letters">Found english letters in %1$s</string>
     <string name="msg_field_too_short">Field is too short</string>
+    <string name="msg_tell_your_friend">Download Tarri Poha mobile app. Here you will find thousands of crazy indian words. Get it at https://play.google.com/store/apps/details?id=com.tarripoha.android"</string>
 
     <string name="error_no_result">No result found</string>
     <string name="error_no_quotes">No quotes found</string>
