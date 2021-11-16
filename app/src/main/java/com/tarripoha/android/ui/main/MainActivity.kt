@@ -136,7 +136,10 @@ class MainActivity : BaseActivity() {
                     // no-op
                 }
                 getString(R.string.rate_us) -> {
-                    TPUtils.navigateToPlayStore(this, BuildConfig.APPLICATION_ID)
+                    TPUtils.navigateToPlayStore(
+                        this,
+                        BuildConfig.APPLICATION_ID.replace(".debug", "")
+                    )
                 }
                 getString(R.string.tell_your_friend) -> {
                     val intent = Intent()

@@ -231,9 +231,8 @@ class WordDetailActivity : AppCompatActivity() {
 
     private fun setupRecyclerView() {
         val linearLayoutManager = LinearLayoutManager(
-            this, RecyclerView.VERTICAL, false
+            this, RecyclerView.VERTICAL, true
         )
-        linearLayoutManager.reverseLayout = true
         binding.commentRv.apply {
             layoutManager = linearLayoutManager
         }

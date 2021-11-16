@@ -20,16 +20,16 @@
         <item name="android:windowActionBar">false</item>
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowBackground">@color/colorLightGrey</item>
-        <item name="android:colorBackground">@color/colorLightGrey</item>
+        <item name="android:windowBackground">@color/colorPrimary</item>
+        <item name="android:colorBackground">@color/colorPrimary</item>
     </style>
 
     <style name="AppTheme.TextTitle" parent="TextAppearance.AppCompat.Title">
-        <item name="android:fontFamily">@font/montserrat_extra_bold</item>
+        <item name="android:fontFamily">@font/montserrat_bold</item>
     </style>
 
     <style name="AppTheme.TextTitleGrey" parent="TextAppearance.AppCompat.Title">
-        <item name="android:fontFamily">@font/montserrat_extra_bold</item>
+        <item name="android:fontFamily">@font/montserrat_bold</item>
         <item name="android:textColor">@color/colorGrey</item>
     </style>
 
