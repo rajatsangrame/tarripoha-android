@@ -13,6 +13,7 @@ import androidx.room.TypeConverters
  * Database class for the application. Mange the database in here.
  *
  * Ref: https://developer.android.com/topic/libraries/architecture/room
+ * Ref: https://developer.android.com/training/data-storage/room/migrating-db-versions
  */
 @Database(entities = [Word::class], version = 1)
 @TypeConverters(DbTypeConverter::class)
@@ -26,7 +27,7 @@ abstract class WordDatabase : RoomDatabase() {
 
         fun getDataBase(context: Context): WordDatabase? {
             if (INSTANCE == null) {
-                synchronized(Database::class) {
+                synchronized(WordDatabase::class) {
                     INSTANCE = Room.databaseBuilder(
                         context.applicationContext,
                         WordDatabase::class.java, "database"

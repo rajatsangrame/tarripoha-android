@@ -20,8 +20,8 @@
         <item name="android:windowActionBar">false</item>
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowBackground">@color/colorPrimary</item>
-        <item name="android:colorBackground">@color/colorPrimary</item>
+        <item name="android:windowBackground">@color/colorLightGrey</item>
+        <item name="android:colorBackground">@color/colorLightGrey</item>
     </style>
 
     <style name="AppTheme.TextTitle" parent="TextAppearance.AppCompat.Title">
