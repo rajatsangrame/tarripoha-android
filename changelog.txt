@@ -1,3 +1,11 @@
+Version 0.7.2 [3 Jan 2022]
+
+New LOGO!
+Added proguard
+Fixed text to speech
+Multiple bug fixes and improvement
+
+________________________________
 Version 0.7.1 [16 Nov 2021]
 
 Multiple bug fixes and improvement
