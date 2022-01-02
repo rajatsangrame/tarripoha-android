@@ -34,6 +34,7 @@ import com.tarripoha.android.util.ViewModelFactory
 import com.tarripoha.android.util.helper.PreferenceHelper
 import com.tarripoha.android.util.helper.UserHelper
 import com.tarripoha.android.util.showDialog
+import com.tarripoha.android.util.texttospeech.TextToSpeechUtil
 import com.tarripoha.android.util.toggleVisibility
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -116,6 +117,7 @@ class MainActivity : BaseActivity() {
 
     override fun onDestroy() {
         compositeDisposable.dispose()
+        TextToSpeechUtil.onStop()
         super.onDestroy()
     }
 

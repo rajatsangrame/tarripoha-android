@@ -10,7 +10,6 @@ import android.util.Log
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
-import androidx.appcompat.app.AppCompatActivity
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
@@ -35,15 +34,17 @@ import com.tarripoha.android.di.component.WordDetailActivityComponent
 import com.tarripoha.android.paging.CommentPagingAdapter
 import com.tarripoha.android.paging.CommentPagingAdapter.ClickMode
 import com.tarripoha.android.paging.CommentPagingAdapter.OnCommentClickListener
+import com.tarripoha.android.ui.BaseActivity
 import com.tarripoha.android.ui.OptionsBottomFragment
 import com.tarripoha.android.ui.OptionsBottomFragment.Option
 import com.tarripoha.android.ui.OptionsBottomFragment.OptionCLickListener
 import com.tarripoha.android.util.helper.UserHelper
 import com.tarripoha.android.ui.word.WordViewModel.FetchMode
 import com.tarripoha.android.util.*
+import com.tarripoha.android.util.texttospeech.TextToSpeechUtil
 import javax.inject.Inject
 
-class WordDetailActivity : AppCompatActivity() {
+class WordDetailActivity : BaseActivity() {
 
     // region Variables
 
@@ -156,7 +157,6 @@ class WordDetailActivity : AppCompatActivity() {
             setWordDetail(null)
             setRefreshComment(null)
         }
-        TextToSpeechUtil.onStop()
         super.onDestroy()
     }
 
@@ -372,7 +372,7 @@ class WordDetailActivity : AppCompatActivity() {
     }
 
     private fun setupUi(word: Word) {
-        setTexToSpeech(word)
+        setupTextToSpeech(word)
         binding.apply {
             wordTv.text = word.name
             meaningTv.text = word.meaning
@@ -402,14 +402,22 @@ class WordDetailActivity : AppCompatActivity() {
         setupAdapter(getOption(word))
     }
 
-    private fun setTexToSpeech(word: Word) {
+    private fun setupTextToSpeech(word: Word) {
         val lang: String? = TPUtils.getLangCode(context = this, language = word.lang)
         if (lang.isNullOrEmpty()) {
-            viewModel.setUserMessage(getString(R.string.error_unknown))
+            viewModel.setUserMessage(getString(R.string.error_language_not_supported))
             return
         }
-        TextToSpeechUtil.init(context = this, lang = lang) {
+        TextToSpeechUtil.init(context = this, lang = lang)
+    }
+
+    private fun sayMyName(word: Word) {
+        val lang: String? = TPUtils.getLangCode(context = this, language = word.lang)
+        if (lang.isNullOrEmpty()) {
+            viewModel.setUserMessage(getString(R.string.error_language_not_supported))
+            return
         }
+        TextToSpeechUtil.speak(context = this, lang = lang, text = word.name)
     }
 
     private fun validateComment(): Boolean {
@@ -553,7 +561,7 @@ class WordDetailActivity : AppCompatActivity() {
         binding.speechIv.setOnClickListener {
             if (!viewModel.isWordDetailSet()) return@setOnClickListener
             val word = viewModel.getWordDetail().value!!
-            TextToSpeechUtil.speak(text = word.name)
+            sayMyName(word)
         }
         binding.engMeaningTv.setOnClickListener {
             if (!viewModel.isWordDetailSet()) return@setOnClickListener
