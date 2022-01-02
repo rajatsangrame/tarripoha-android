@@ -13,6 +13,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.tarripoha.android.GlobalVar
 import com.tarripoha.android.R
+import com.tarripoha.android.data.model.DashboardResponse
 import com.tarripoha.android.util.TPUtils
 import com.tarripoha.android.util.showDialog
 import com.tarripoha.android.util.toObject

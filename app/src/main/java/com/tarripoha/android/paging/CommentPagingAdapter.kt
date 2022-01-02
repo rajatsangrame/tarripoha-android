@@ -1,16 +1,14 @@
 package com.tarripoha.android.paging
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.firebase.ui.firestore.paging.FirestorePagingAdapter
 import com.firebase.ui.firestore.paging.FirestorePagingOptions
 import com.firebase.ui.firestore.paging.LoadingState
 import com.tarripoha.android.R
-import com.tarripoha.android.data.db.Comment
+import com.tarripoha.android.data.model.Comment
 import com.tarripoha.android.databinding.LayoutItemCommentBinding
 import com.tarripoha.android.paging.CommentPagingAdapter.CommentViewHolder
 import com.tarripoha.android.ui.BaseViewHolder

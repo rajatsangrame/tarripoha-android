@@ -1,4 +1,4 @@
-package com.tarripoha.android.firebase
+package com.tarripoha.android.data.model
 
 import com.google.gson.annotations.SerializedName
 

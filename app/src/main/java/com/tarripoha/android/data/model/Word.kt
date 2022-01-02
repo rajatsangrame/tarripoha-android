@@ -1,11 +1,10 @@
-package com.tarripoha.android.data.db
+package com.tarripoha.android.data.model
 
 import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
 import com.google.firebase.database.DatabaseException
-import com.tarripoha.android.data.model.User
 
 /**
  * Created by Rajat Sangrame

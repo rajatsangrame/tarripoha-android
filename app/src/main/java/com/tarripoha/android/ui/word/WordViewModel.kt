@@ -3,12 +3,11 @@ package com.tarripoha.android.ui.word
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.*
-import com.google.firebase.database.DataSnapshot
 import com.tarripoha.android.data.Repository
-import com.tarripoha.android.data.db.Word
+import com.tarripoha.android.data.model.Word
 import com.tarripoha.android.ui.BaseViewModel
 import com.tarripoha.android.R
-import com.tarripoha.android.data.db.Comment
+import com.tarripoha.android.data.model.Comment
 import com.tarripoha.android.firebase.PowerStone
 import javax.inject.Inject
 

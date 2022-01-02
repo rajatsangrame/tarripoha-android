@@ -1,4 +1,4 @@
-package com.tarripoha.android.data.db
+package com.tarripoha.android.data.model
 
 import android.os.Parcelable
 import androidx.room.Entity

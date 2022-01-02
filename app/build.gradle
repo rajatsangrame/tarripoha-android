@@ -28,13 +28,16 @@ android {
 
     buildTypes {
         debug {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             applicationIdSuffix ".debug"
             //buildConfigField("String", "AuthKey", AuthKey)
             debuggable true
         }
         release {
-            minifyEnabled false
-            debuggable false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             //buildConfigField("String", "AuthKey", AuthKey)
         }

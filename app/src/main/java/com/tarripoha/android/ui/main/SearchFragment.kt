@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.tarripoha.android.GlobalVar
 import com.tarripoha.android.R
 import com.tarripoha.android.TPApp
-import com.tarripoha.android.data.db.Word
+import com.tarripoha.android.data.model.Word
 import com.tarripoha.android.databinding.FragmentSearchBinding
 import com.tarripoha.android.databinding.LayoutItemCharBinding
 import com.tarripoha.android.ui.word.WordActivity

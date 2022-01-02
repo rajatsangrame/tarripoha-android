@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.tarripoha.android.GlobalVar
 import com.tarripoha.android.R
-import com.tarripoha.android.data.db.Word
+import com.tarripoha.android.data.model.Word
 import com.tarripoha.android.ui.word.ui.theme.TarriPohaTheme
 import com.tarripoha.android.ui.word.ui.theme.colorBlack
 import com.tarripoha.android.ui.word.ui.theme.colorGrey

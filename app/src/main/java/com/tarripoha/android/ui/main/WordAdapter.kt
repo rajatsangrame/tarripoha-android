@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.tarripoha.android.data.db.Word
+import com.tarripoha.android.data.model.Word
 import com.tarripoha.android.databinding.LayoutItemWordBinding
 import com.tarripoha.android.util.ItemClickListener
 import com.tarripoha.android.databinding.LayoutNewWordPlankBinding

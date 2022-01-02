@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tarripoha.android.R
 import com.tarripoha.android.TPApp
-import com.tarripoha.android.data.db.Word
+import com.tarripoha.android.data.model.Word
 import com.tarripoha.android.databinding.LayoutRvWithSwipeBinding
 import com.tarripoha.android.util.ItemClickListener
 import com.tarripoha.android.ui.word.WordDetailActivity

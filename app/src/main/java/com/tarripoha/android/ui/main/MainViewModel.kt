@@ -6,10 +6,10 @@ import androidx.lifecycle.*
 import com.google.firebase.database.DataSnapshot
 import com.tarripoha.android.GlobalVar
 import com.tarripoha.android.data.Repository
-import com.tarripoha.android.data.db.Word
+import com.tarripoha.android.data.model.Word
 import com.tarripoha.android.ui.BaseViewModel
 import com.tarripoha.android.R
-import com.tarripoha.android.firebase.LabeledView
+import com.tarripoha.android.data.model.LabeledView
 import java.lang.Exception
 import javax.inject.Inject
 

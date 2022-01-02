@@ -12,7 +12,8 @@ import androidx.navigation.fragment.findNavController
 import com.tarripoha.android.GlobalVar
 import com.tarripoha.android.R
 import com.tarripoha.android.TPApp
-import com.tarripoha.android.data.db.Word
+import com.tarripoha.android.data.model.LabeledView
+import com.tarripoha.android.data.model.Word
 import com.tarripoha.android.databinding.FragmentHomeBinding
 import com.tarripoha.android.firebase.*
 import com.tarripoha.android.firebase.PowerStone

@@ -12,8 +12,8 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.tarripoha.android.data.db.Comment
-import com.tarripoha.android.data.db.Word
+import com.tarripoha.android.data.model.Comment
+import com.tarripoha.android.data.model.Word
 import com.tarripoha.android.data.db.WordDatabase
 import com.tarripoha.android.data.model.User
 import com.tarripoha.android.data.rest.RetrofitApi

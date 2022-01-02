@@ -26,8 +26,8 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.tarripoha.android.R
 import com.tarripoha.android.TPApp
-import com.tarripoha.android.data.db.Comment
-import com.tarripoha.android.data.db.Word
+import com.tarripoha.android.data.model.Comment
+import com.tarripoha.android.data.model.Word
 import com.tarripoha.android.databinding.FragmentWordDetailBinding
 import com.tarripoha.android.di.component.DaggerWordDetailActivityComponent
 import com.tarripoha.android.di.component.WordDetailActivityComponent
