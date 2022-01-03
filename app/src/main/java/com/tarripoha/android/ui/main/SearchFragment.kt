@@ -20,6 +20,8 @@ import com.tarripoha.android.TPApp
 import com.tarripoha.android.data.model.Word
 import com.tarripoha.android.databinding.FragmentSearchBinding
 import com.tarripoha.android.databinding.LayoutItemCharBinding
+import com.tarripoha.android.databinding.LayoutItemKeyboardBinding
+import com.tarripoha.android.ui.BaseViewHolder
 import com.tarripoha.android.ui.word.WordActivity
 import com.tarripoha.android.ui.word.WordDetailActivity
 import com.tarripoha.android.util.ItemClickListener
@@ -115,33 +117,32 @@ class SearchFragment : Fragment() {
     }
 
     private fun setCharsList() {
-        val aa = object : RecyclerView.Adapter<ListItemViewHolder>() {
-            override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListItemViewHolder {
-                val binding =
-                    LayoutItemCharBinding.inflate(LayoutInflater.from(context), parent, false)
-                return ListItemViewHolder(binding)
+        val keyBoardView = 69
+        val aa = object : RecyclerView.Adapter<BaseViewHolder>() {
+            override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
+                if (viewType == keyBoardView) {
+                    val binding =
+                        LayoutItemKeyboardBinding.inflate(
+                            LayoutInflater.from(context),
+                            parent,
+                            false
+                        )
+                    return KeyBoardViewHolder(binding)
+                } else {
+                    val binding =
+                        LayoutItemCharBinding.inflate(LayoutInflater.from(context), parent, false)
+                    return ListItemViewHolder(binding)
+                }
             }
 
-            override fun onBindViewHolder(holder: ListItemViewHolder, position: Int) {
-                val c = GlobalVar.getCharList()[position]
-                if (c == "p") {
-                    holder.binding.charTv.visibility = View.GONE
-                    holder.binding.avatarIv.setImageDrawable(
-                        ContextCompat.getDrawable(
-                            requireContext(),
-                            R.drawable.ic_google_play
-                        )
-                    )
-                } else {
-                    holder.binding.avatarIv.setImageDrawable(
-                        ContextCompat.getDrawable(
-                            requireContext(),
-                            R.drawable.shape_round_grey
-                        )
-                    )
-                    holder.binding.charTv.visibility = View.VISIBLE
-                    holder.binding.charTv.text = c
-                }
+            override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
+                holder.bind(position = position)
+            }
+
+            override fun getItemViewType(position: Int): Int {
+                return if (position == 0) {
+                    keyBoardView
+                } else super.getItemViewType(position)
             }
 
             override fun getItemCount(): Int = GlobalVar.getCharList().size
@@ -240,7 +241,7 @@ class SearchFragment : Fragment() {
     // Helper Class
 
     private inner class ListItemViewHolder(val binding: LayoutItemCharBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+        BaseViewHolder(binding.root) {
 
         init {
             itemView.setOnClickListener {
@@ -250,6 +251,33 @@ class SearchFragment : Fragment() {
                 } else viewModel.setChars(c)
             }
         }
+
+        override fun bind(position: Int) {
+            val c = GlobalVar.getCharList()[position]
+            binding.avatarIv.setImageDrawable(
+                ContextCompat.getDrawable(
+                    requireContext(),
+                    R.drawable.shape_round_grey
+                )
+            )
+            binding.charTv.visibility = View.VISIBLE
+            binding.charTv.text = c
+        }
+
+        override fun bind(data: Any) {}
+    }
+
+    private inner class KeyBoardViewHolder(binding: LayoutItemKeyboardBinding) :
+        BaseViewHolder(binding.root) {
+        init {
+            itemView.setOnClickListener {
+                TPUtils.navigateToPlayStore(context = requireContext(), appId = PLAY_STORE_LINK)
+            }
+        }
+
+        override fun bind(position: Int) {}
+
+        override fun bind(data: Any) {}
     }
 
     // enregion
