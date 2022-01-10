@@ -88,7 +88,8 @@ fun MaterialAlertDialogBuilder.showDialog(
     positiveText: String = context.getString(R.string.yes),
     negativeText: String? = context.getString(R.string.cancel),
     cancelable: Boolean = true,
-    positiveListener: () -> Unit
+    positiveListener: () -> Unit,
+    negativeListener: () -> Unit
 ) {
     title?.let {
         this.setTitle(it)
@@ -100,6 +101,7 @@ fun MaterialAlertDialogBuilder.showDialog(
             positiveListener()
         }
         .setNegativeButton(negativeText) { _, _ ->
+            negativeListener()
         }
         .setCancelable(cancelable)
         .show()

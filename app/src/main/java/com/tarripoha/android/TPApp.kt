@@ -24,10 +24,8 @@ class TPApp : Application() {
             .applicationModule(ApplicationModule(application = this))
             .contextModule(ContextModule(context = this))
             .build()
-
+        PowerStone.init()
         PreferenceHelper.init(this)
-        PowerStone.init(this)
-        PowerStone.checkForUpdate(this)
     }
 
     fun getComponent(): ApplicationComponent? {

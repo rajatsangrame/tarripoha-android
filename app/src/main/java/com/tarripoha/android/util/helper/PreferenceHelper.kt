@@ -16,6 +16,7 @@ object PreferenceHelper {
 
     const val KEY_USER = "user"
     const val KEY_LOGIN_SKIP = "login_skip"
+    const val KEY_NEW_VERSION_AVAILABLE = "new_version_available"
 
     //endregion
 

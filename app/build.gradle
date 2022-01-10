@@ -17,8 +17,8 @@ android {
         minSdkVersion 21
         multiDexEnabled true
         targetSdkVersion 30
-        versionCode 10
-        versionName "0.7.3"
+        versionCode 11
+        versionName "0.7.4"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -28,8 +28,8 @@ android {
 
     buildTypes {
         debug {
-            minifyEnabled true
-            shrinkResources true
+            minifyEnabled false
+            shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             applicationIdSuffix ".debug"
             //buildConfigField("String", "AuthKey", AuthKey)

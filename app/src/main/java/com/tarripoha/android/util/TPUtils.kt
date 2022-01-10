@@ -188,6 +188,20 @@ object TPUtils {
         }
     }
 
+    /**
+     * @param context App's context
+     * @return Application version code
+     */
+    fun getAppVersionCode(context: Context): Long {
+        val info: PackageInfo = context.packageManager
+            .getPackageInfo(context.packageName, 0)
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            info.longVersionCode
+        } else {
+            info.versionCode.toLong()
+        }
+    }
+
     private fun prettyCount(number: Number): String {
         val suffix = charArrayOf(' ', 'K', 'M', 'B', 'T', 'P', 'E')
         val numValue = number.toLong()

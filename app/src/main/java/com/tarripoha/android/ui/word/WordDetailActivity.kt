@@ -476,7 +476,8 @@ class WordDetailActivity : BaseActivity() {
                                     positiveText = getString(R.string.delete),
                                     positiveListener = {
                                         viewModel.deleteComment(comment = comment)
-                                    }
+                                    },
+                                    negativeListener = {}
                                 )
                         }
                     }

@@ -167,7 +167,8 @@ class MainActivity : BaseActivity() {
                                 PreferenceHelper.clear()
                                 LoginActivity.startMe(this)
                                 finish()
-                            }
+                            },
+                            negativeListener = {}
                         )
                 }
             }

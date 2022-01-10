@@ -50,4 +50,11 @@
             ]
         </value>
     </entry>
+    <entry>
+        <key>languages</key>
+        <value>[
+            "Marathi", "Hindi", "Bhojpuri"
+            ]
+        </value>
+    </entry>
 </defaultsMap>

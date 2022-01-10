@@ -25,10 +25,11 @@ object PowerStone {
     private const val KEY_RECOMMENDED_VERSION = "recommended_version"
     private const val KEY_DASHBOARD = "dashboard"
     private const val KEY_DEVANAGARI_CHARS = "devanagari_chars"
+    private const val KEY_LANGUAGES = "languages"
     private const val MIN_FETCH_INTERVAL_SEC = 60L
 
     @JvmStatic
-    fun init(context: Context) {
+    fun init() {
         Log.i(TAG, "Firebase initialising")
         val remoteConfig = getRemoteConfig()
         val configSettings = remoteConfigSettings {
@@ -39,77 +40,63 @@ object PowerStone {
     }
 
     @JvmStatic
-    fun checkForUpdate(
-        context: Context
+    fun fetchData(
+        context: Context,
+        callback: (message: String, forceUpdate: Boolean) -> Unit
     ) {
         getRemoteConfig().fetchAndActivate()
             .addOnCompleteListener {
                 GlobalVar.setCharList(getDevanagariChars())
+                val languages: MutableList<String> = getLanguages()
+                languages.add(0, context.getString(R.string.select_language))
+                GlobalVar.setLanguage(languages)
                 var updated = false
                 if (it.isSuccessful) {
                     updated = it.result
                 }
-                Log.i(TAG, "Firebase fetchAndActivate: Success. Updated: $updated")
-                val appVersion = TPUtils.getAppVersionName(context)
-                checkForUpdate(context, appVersion)
+                Log.i(TAG, "Firebase fetchData: Success. Updated: $updated")
+                val appVersion = TPUtils.getAppVersionCode(context)
+                checkForUpdate(context, appVersion, callback)
             }
             .addOnFailureListener {
-                Log.e(TAG, "Firebase fetchAndActivate: ${it.message}")
+                callback("addOnFailureListener", false)
+                Log.e(TAG, "Firebase fetchData: ${it.message}")
             }
             .addOnCanceledListener {
-                Log.e(TAG, "fetchAndActivate: cancelled")
+                callback("addOnCanceledListener", false)
+                Log.e(TAG, "fetchData: cancelled")
             }
     }
 
     private fun checkForUpdate(
         context: Context,
-        appVersion: String
+        appVersion: Long,
+        callback: (String, Boolean) -> Unit
     ) {
-        if (appVersion.isEmpty()) {
-            Log.e(TAG, "processUpdate: appVersion not found")
+        if (appVersion < 1) {
+            Log.e(TAG, "checkForUpdate: invalid app version code")
+            callback("invalid app version code", false)
             return
         }
-        val minVersion = getRemoteConfig().getString(KEY_MINIMUM_VERSION)
-            .replace("[a-zA-Z]|-", "")
-        val recommendedVersion = getRemoteConfig().getString(KEY_RECOMMENDED_VERSION)
-            .replace("[a-zA-Z]|-", "")
         try {
-            val minV: Double = minVersion.toDouble()
-            val recommendedV: Double = recommendedVersion.toDouble()
-            val appV: Double = appVersion.toDouble()
+            val minVersion = getRemoteConfig().getString(KEY_MINIMUM_VERSION).toLong()
+            val recommendedVersion = getRemoteConfig().getString(KEY_RECOMMENDED_VERSION).toLong()
 
-            var cancelable: Boolean? = null
-            var message: String? = null
-            var negativeText: String? = context.getString(R.string.cancel)
-            if (appV < minV) {
+            var forceUpdate = false
+            var message = ""
+            if (appVersion < minVersion) {
                 //isForceUpdate
-                cancelable = false
+                forceUpdate = true
                 message = context.getString(R.string.msg_force_update)
-                negativeText = null
-            } else if (appV < recommendedV) {
-                cancelable = true
+            } else if (appVersion < recommendedVersion) {
+                forceUpdate = false
                 message = context.getString(R.string.msg_update_available)
             }
-            cancelable?.let {
-                MaterialAlertDialogBuilder(context)
-                    .showDialog(
-                        title = context.getString(R.string.update_available),
-                        message = message!!,
-                        positiveText = context.getString(R.string.update),
-                        negativeText = negativeText,
-                        cancelable = cancelable,
-                        positiveListener = {
-                            val intent = Intent()
-                            intent.action = Intent.ACTION_VIEW
-                            intent.data =
-                                "https://play.google.com/store/apps/details?id=com.tarripoha.android".toUri()
-                            context.startActivity(intent)
-                        }
-                    )
-            }
-            Log.i(TAG, "processUpdate cancelable: $cancelable")
+            callback(message, forceUpdate)
+            Log.i(TAG, "checkForUpdate forceUpdate: $forceUpdate")
 
         } catch (e: Exception) {
+            callback(e.toString(), false)
             Log.e(TAG, e.toString())
         }
     }
@@ -132,5 +119,10 @@ object PowerStone {
     private fun getDevanagariChars(): List<String> {
         val chars = getRemoteConfig().getString(KEY_DEVANAGARI_CHARS)
         return chars.toObject()
+    }
+
+    private fun getLanguages(): MutableList<String> {
+        val languages = getRemoteConfig().getString(KEY_LANGUAGES)
+        return languages.toObject()
     }
 }

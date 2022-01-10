@@ -15,7 +15,7 @@ object GlobalVar {
     // Ref: https://jrgraphix.net/r/Unicode/0900-097F
     private val chars = arrayListOf<String>()
 
-    fun loadLanguage(languages: List<String>) {
+    fun setLanguage(languages: List<String>) {
         this.languages.clear()
         this.languages.addAll(languages)
     }
