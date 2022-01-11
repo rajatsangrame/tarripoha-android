@@ -1,14 +1,19 @@
 package com.tarripoha.android.ui.main
 
+import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.*
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.tarripoha.android.GlobalVar
 import com.tarripoha.android.R
 import com.tarripoha.android.TPApp
@@ -21,6 +26,9 @@ import com.tarripoha.android.ui.word.WordDetailActivity
 import com.tarripoha.android.util.GridItemDecorator
 import com.tarripoha.android.util.ItemClickListener
 import com.tarripoha.android.util.TPUtils.toDp
+import com.tarripoha.android.util.helper.PreferenceHelper
+import com.tarripoha.android.util.showDialog
+import java.util.concurrent.TimeUnit
 
 class HomeFragment : Fragment() {
 
@@ -59,6 +67,11 @@ class HomeFragment : Fragment() {
             ViewModelProvider.AndroidViewModelFactory(TPApp.get(requireContext()))
 
         setupUI()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        checkUpdateAvailable()
     }
 
     // endregion
@@ -170,6 +183,49 @@ class HomeFragment : Fragment() {
                     binding.container.visibility = View.VISIBLE
                 })
         }
+    }
+
+    private fun checkUpdateAvailable() {
+        Handler(Looper.getMainLooper()).postDelayed({
+            val updateAvailable = PreferenceHelper.get<Boolean>(
+                PreferenceHelper.KEY_NEW_VERSION_AVAILABLE,
+                false
+            )
+            val lastUpdateCheck = PreferenceHelper.get<Long>(
+                PreferenceHelper.KEY_LAST_UPDATE_CHECK,
+                0L
+            )
+            if (updateAvailable) {
+                val current = System.currentTimeMillis()
+                if (current - lastUpdateCheck > TimeUnit.HOURS.toMillis(18)) {
+                    showUpdateAvailableDialog(getString(R.string.msg_update_available))
+                }
+            }
+        }, 2000)
+    }
+
+    private fun showUpdateAvailableDialog(message: String) {
+        MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
+            .showDialog(
+                title = getString(R.string.update_available),
+                message = message,
+                positiveText = getString(R.string.update),
+                negativeText = getString(R.string.close),
+                cancelable = false,
+                positiveListener = {
+                    val intent = Intent()
+                    intent.action = Intent.ACTION_VIEW
+                    intent.data =
+                        "https://play.google.com/store/apps/details?id=com.tarripoha.android".toUri()
+                    startActivity(intent)
+                },
+                negativeListener = {
+                    PreferenceHelper.put<Long>(
+                        PreferenceHelper.KEY_LAST_UPDATE_CHECK,
+                        System.currentTimeMillis()
+                    )
+                }
+            )
     }
 
     // endregion

@@ -159,6 +159,7 @@ class MainActivity : BaseActivity() {
                 getString(R.string.logout) -> {
                     MaterialAlertDialogBuilder(this, R.style.AlertDialogTheme)
                         .showDialog(
+                            title = getString(R.string.logout),
                             message = getString(R.string.msg_confirm_logout),
                             positiveText = getString(R.string.logout),
                             positiveListener = {

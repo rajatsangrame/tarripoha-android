@@ -63,7 +63,7 @@ class StartupActivity : BaseActivity() {
                 if (forceUpdate) {
                     showForceUpdateDialog(message)
                 } else {
-                    if (message == getString(R.string.update_available)) {
+                    if (message == getString(R.string.msg_update_available)) {
                         PreferenceHelper.put<Boolean>(
                             PreferenceHelper.KEY_NEW_VERSION_AVAILABLE,
                             true
