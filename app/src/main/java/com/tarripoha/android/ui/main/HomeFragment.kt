@@ -1,5 +1,6 @@
 package com.tarripoha.android.ui.main
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -7,13 +8,16 @@ import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.*
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.play.core.appupdate.AppUpdateManager
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory
+import com.google.android.play.core.install.model.AppUpdateType.IMMEDIATE
+import com.google.android.play.core.install.model.UpdateAvailability
 import com.tarripoha.android.GlobalVar
 import com.tarripoha.android.R
 import com.tarripoha.android.TPApp
@@ -34,12 +38,18 @@ class HomeFragment : Fragment() {
 
     // region Variables
 
+    companion object {
+        const val UPDATE_REQUEST_CODE = 101
+    }
+
     private lateinit var factory: ViewModelProvider.Factory
     private lateinit var binding: FragmentHomeBinding
     private val viewModel by activityViewModels<MainViewModel> {
         factory
     }
     private val adapterMap: MutableMap<String, DashboardHelper> = mutableMapOf()
+    private val appUpdateManager: AppUpdateManager =
+        AppUpdateManagerFactory.create(requireActivity())
 
     // endregion
 
@@ -72,6 +82,13 @@ class HomeFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         checkUpdateAvailable()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == UPDATE_REQUEST_CODE && resultCode != Activity.RESULT_OK) {
+            viewModel.setUserMessage(getString(R.string.error_update_process_failed))
+        }
     }
 
     // endregion
@@ -213,11 +230,20 @@ class HomeFragment : Fragment() {
                 negativeText = getString(R.string.close),
                 cancelable = false,
                 positiveListener = {
-                    val intent = Intent()
-                    intent.action = Intent.ACTION_VIEW
-                    intent.data =
-                        "https://play.google.com/store/apps/details?id=com.tarripoha.android".toUri()
-                    startActivity(intent)
+                    appUpdateManager
+                        .appUpdateInfo
+                        .addOnSuccessListener { appUpdateInfo ->
+                            if (appUpdateInfo.updateAvailability()
+                                == UpdateAvailability.UPDATE_AVAILABLE
+                            ) {
+                                appUpdateManager.startUpdateFlowForResult(
+                                    appUpdateInfo,
+                                    IMMEDIATE,
+                                    requireActivity(),
+                                    UPDATE_REQUEST_CODE
+                                )
+                            }
+                        }
                 },
                 negativeListener = {
                     PreferenceHelper.put<Long>(

@@ -171,4 +171,7 @@ dependencies {
     // Shimmer
     implementation "com.facebook.shimmer:shimmer:$shimmer_version"
 
+    // In App Update
+    implementation "com.google.android.play:core:$play_core"
+
 }

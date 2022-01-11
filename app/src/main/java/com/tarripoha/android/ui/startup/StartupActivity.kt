@@ -1,14 +1,18 @@
 package com.tarripoha.android.ui.startup
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import androidx.core.net.toUri
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.play.core.appupdate.AppUpdateManager
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory
+import com.google.android.play.core.install.model.AppUpdateType.IMMEDIATE
+import com.google.android.play.core.install.model.UpdateAvailability
 import com.google.gson.Gson
 import com.tarripoha.android.R
 import com.tarripoha.android.TPApp
@@ -35,6 +39,14 @@ class StartupActivity : BaseActivity() {
     lateinit var factory: ViewModelFactory
     private lateinit var binding: ActivityStartupBinding
     private lateinit var viewModel: StartupViewModel
+    private val appUpdateManager: AppUpdateManager = AppUpdateManagerFactory.create(this)
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == UPDATE_REQUEST_CODE && resultCode != Activity.RESULT_OK) {
+            viewModel.setUserMessage(getString(R.string.error_update_process_failed))
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -134,11 +146,20 @@ class StartupActivity : BaseActivity() {
                 negativeText = getString(R.string.close),
                 cancelable = false,
                 positiveListener = {
-                    val intent = Intent()
-                    intent.action = Intent.ACTION_VIEW
-                    intent.data =
-                        "https://play.google.com/store/apps/details?id=com.tarripoha.android".toUri()
-                    startActivity(intent)
+                    appUpdateManager
+                        .appUpdateInfo
+                        .addOnSuccessListener { appUpdateInfo ->
+                            if (appUpdateInfo.updateAvailability()
+                                == UpdateAvailability.UPDATE_AVAILABLE
+                            ) {
+                                appUpdateManager.startUpdateFlowForResult(
+                                    appUpdateInfo,
+                                    IMMEDIATE,
+                                    this,
+                                    UPDATE_REQUEST_CODE
+                                )
+                            }
+                        }
                 },
                 negativeListener = {
                     finish()
@@ -147,6 +168,7 @@ class StartupActivity : BaseActivity() {
     }
 
     companion object {
+        const val UPDATE_REQUEST_CODE = 101
         private const val TAG = "StartupActivity"
     }
 }
