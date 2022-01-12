@@ -48,8 +48,9 @@ class HomeFragment : Fragment() {
         factory
     }
     private val adapterMap: MutableMap<String, DashboardHelper> = mutableMapOf()
-    private val appUpdateManager: AppUpdateManager =
+    private val appUpdateManager: AppUpdateManager by lazy {
         AppUpdateManagerFactory.create(requireActivity())
+    }
 
     // endregion
 

@@ -39,8 +39,9 @@ class StartupActivity : BaseActivity() {
     lateinit var factory: ViewModelFactory
     private lateinit var binding: ActivityStartupBinding
     private lateinit var viewModel: StartupViewModel
-    private val appUpdateManager: AppUpdateManager = AppUpdateManagerFactory.create(this)
-
+    private val appUpdateManager: AppUpdateManager by lazy {
+        AppUpdateManagerFactory.create(this)
+    }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == UPDATE_REQUEST_CODE && resultCode != Activity.RESULT_OK) {
