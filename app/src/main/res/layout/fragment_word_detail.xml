@@ -185,32 +185,15 @@
             app:layout_constraintTop_toBottomOf="@+id/divider2"
             tools:listitem="@layout/layout_item_comment" />
 
-        <LinearLayout
+        <include
             android:id="@+id/no_comment_layout"
+            layout="@layout/layout_error"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@+id/divider1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/divider2"
-            tools:visibility="visible">
-
-            <ImageView
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_emoji_normal" />
-
-            <TextView
-                style="@style/AppTheme.TextDesc"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_normal"
-                android:text="@string/error_no_quotes" />
-
-        </LinearLayout>
+            app:layout_constraintTop_toBottomOf="@+id/divider2" />
 
         <View
             android:id="@+id/divider1"

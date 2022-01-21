@@ -38,10 +38,10 @@ class MainViewModel @Inject constructor(
     // endregion
 
     // region WordListFragment
-    private val wordListParam: MutableLiveData<WordListFragment.WordListFragmentParam> =
-        MutableLiveData()
+    private var wordListParam: WordListFragment.WordListFragmentParam? = null
     private val words: MutableLiveData<List<Word>> = MutableLiveData()
     private val toolbarHeading: MutableLiveData<String> = MutableLiveData()
+    private val wordListErrorMsg: MutableLiveData<String> = MutableLiveData()
     // endregion
 
     fun getWordCount() = wordCount
@@ -58,7 +58,7 @@ class MainViewModel @Inject constructor(
 
     fun getWords() = words
 
-    fun setWords(words: List<Word>?) {
+    private fun setWords(words: List<Word>?) {
         this.words.value = words
     }
 
@@ -89,7 +89,7 @@ class MainViewModel @Inject constructor(
     fun getWordListParam() = wordListParam
 
     fun setWordListParam(wordListParam: WordListFragment.WordListFragmentParam?) {
-        this.wordListParam.value = wordListParam
+        this.wordListParam = wordListParam
     }
 
     fun getToolbarHeading() = toolbarHeading
@@ -97,6 +97,13 @@ class MainViewModel @Inject constructor(
     fun setToolbarHeading(heading: String?) {
         this.toolbarHeading.value = heading
     }
+
+    fun getWordListErrorMsg() = wordListErrorMsg
+
+    private fun setWordListErrorMsg(message: String?) {
+        this.wordListErrorMsg.value = message
+    }
+
 
     // Helper Functions
 
@@ -149,7 +156,14 @@ class MainViewModel @Inject constructor(
             try {
                 val word: Word? = snap.getValue(Word::class.java)
                 if (word != null && !word.isDirty() && word.isApproved()) {
-                    if (word.lang == lang) {
+                    val user = getPrefUser()
+                    if (category == GlobalVar.CATEGORY_USER_LIKED && user != null) {
+                        val likes = word.likes ?: mutableMapOf()
+                        if (likes.isNotEmpty() && likes[user.id] != null && likes[user.id] == true) {
+                            // Likes Map contain user id. This is user liked word
+                            list.add(word)
+                        }
+                    } else if (word.lang == lang) {
                         list.add(word)
                     }
                 } else {
@@ -159,13 +173,26 @@ class MainViewModel @Inject constructor(
                 Log.e(TAG, "fetchAllResponse: ${e.localizedMessage}")
             }
         }
-        if (category == GlobalVar.CATEGORY_TOP_LIKED) {
-            val sortedList = getTopLikedWords(list = list, total = 50)
-            setWords(sortedList)
-        } else if (category == GlobalVar.CATEGORY_MOST_VIEWED) {
-            val sortedList = getMostViewedList(list = list, total = 50)
-            setWords(sortedList)
+        when (category) {
+            GlobalVar.CATEGORY_USER_LIKED -> {
+                if (list.isEmpty()) {
+                    val like = getString(R.string.liked).lowercase()
+                    setWordListErrorMsg(getString(R.string.error_no_words_found, like))
+                }
+                setWords(list)
+            }
+            GlobalVar.CATEGORY_TOP_LIKED -> {
+                val sortedList = getTopLikedWords(list = list, total = 50)
+                setWords(sortedList)
+            }
+            GlobalVar.CATEGORY_MOST_VIEWED -> {
+                val sortedList = getMostViewedList(list = list, total = 50)
+                setWords(sortedList)
+            }
+            GlobalVar.CATEGORY_SAVED -> {
+            }
         }
+
 
         setRefreshing(false)
     }
@@ -365,6 +392,13 @@ class MainViewModel @Inject constructor(
         setQuery(null)
         setSearchWords(null)
         setChars(null)
+    }
+
+    fun resetWordListParams() {
+        setWordListParam(null)
+        setWords(null)
+        setToolbarHeading(null)
+        setWordListErrorMsg(null)
     }
 
     // endregion

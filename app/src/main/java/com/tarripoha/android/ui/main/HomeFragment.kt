@@ -168,9 +168,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun navigateToWordListFragment(lang: String, category: String, heading: String) {
-        viewModel.setWordListParam(null)
-        viewModel.setWords(null)
-        viewModel.setToolbarHeading(null)
+        viewModel.resetWordListParams()
         val param = WordListFragment.WordListFragmentParam(
             lang = lang,
             category = category

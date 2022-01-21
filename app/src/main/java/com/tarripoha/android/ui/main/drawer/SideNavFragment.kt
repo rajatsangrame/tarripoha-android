@@ -75,6 +75,10 @@ class SideNavFragment : Fragment() {
                 SideNavItem(getString(R.string.liked), R.drawable.ic_like_grey)
             )
             menuItemsList.add(
+                1,
+                SideNavItem(getString(R.string.requested), R.drawable.ic_pending)
+            )
+            menuItemsList.add(
                 SideNavItem(
                     getString(R.string.logout),
                     R.drawable.ic_logout_grey,

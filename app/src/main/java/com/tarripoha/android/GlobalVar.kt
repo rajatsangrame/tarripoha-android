@@ -6,9 +6,12 @@ object GlobalVar {
     const val TYPE_GOOGLE_AD = "google-ad"
     const val CATEGORY_MOST_VIEWED = "most-viewed"
     const val CATEGORY_TOP_LIKED = "top-liked"
+    const val CATEGORY_USER_LIKED = "user-liked"
+    const val CATEGORY_SAVED = "saved"
     const val LANG_EN = "en"
     const val LANG_MAR = "mar"
     const val LANG_HI = "hi"
+    const val LANG_ANY = "any"
     val DEBUG_MODE = BuildConfig.DEBUG
     private val languages = arrayListOf<String>()
 

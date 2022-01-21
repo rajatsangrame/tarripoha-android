@@ -1,4 +1,10 @@
-Version 0.7.4 [13 Jan 2022]
+Version 0.7.5 [13 Jan 2022]
+
+Added Liked Words
+
+
+________________________________
+Version 0.7.4 [4 Jan 2022]Version 0.7.4 [13 Jan 2022]
 
 Added Bhojpuri and dynamic language support
 In App Update

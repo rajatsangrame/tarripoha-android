@@ -20,6 +20,7 @@ import androidx.navigation.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.tarripoha.android.BuildConfig
+import com.tarripoha.android.GlobalVar
 import com.tarripoha.android.R
 import com.tarripoha.android.TPApp
 import com.tarripoha.android.databinding.ActivityMainBinding
@@ -133,6 +134,9 @@ class MainActivity : BaseActivity() {
                 }
                 getString(R.string.saved) -> {
                     // no-op
+                }
+                getString(R.string.liked) -> {
+                    navigateToWordListFragment()
                 }
                 getString(R.string.settings) -> {
                     // no-op
@@ -315,6 +319,17 @@ class MainActivity : BaseActivity() {
             heading.visibility = View.VISIBLE
         }
         binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+    }
+
+    private fun navigateToWordListFragment() {
+        viewModel.resetWordListParams()
+        val param = WordListFragment.WordListFragmentParam(
+            lang = GlobalVar.LANG_ANY,
+            category = GlobalVar.CATEGORY_USER_LIKED
+        )
+        viewModel.setWordListParam(param)
+        viewModel.setToolbarHeading(getString(R.string.liked_words))
+        navController.navigate(R.id.action_HomeFragment_to_WordListFragment)
     }
 
     private fun setupSearchEditText() {

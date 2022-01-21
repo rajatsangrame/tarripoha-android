@@ -314,9 +314,9 @@ class WordDetailActivity : BaseActivity() {
             Log.i(TAG, "setupAdapter: $state")
             if (state == LOADED || state == FINISHED) {
                 if (commentAdapter?.itemCount != 0) {
-                    binding.noCommentLayout.visibility = View.GONE
+                    binding.noCommentLayout.layoutError.visibility = View.GONE
                 } else {
-                    binding.noCommentLayout.visibility = View.VISIBLE
+                    binding.noCommentLayout.layoutError.visibility = View.VISIBLE
                 }
                 viewModel.setRefreshing(false)
             } else if (state == LOADING_MORE || state == LOADING_MORE) {

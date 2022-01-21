@@ -55,7 +55,7 @@ class WordListFragment : Fragment() {
             ViewModelProvider.AndroidViewModelFactory(TPApp.get(requireContext()))
 
         setupUI()
-        fetchAllWord()
+        fetchWordList()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -126,11 +126,20 @@ class WordListFragment : Fragment() {
                         wordAdapter.setWordList(it)
                     }
                 })
+            getWordListErrorMsg()
+                .observe(viewLifecycleOwner, Observer {
+                    if (it.isNullOrEmpty()){
+                        binding.layoutError.layoutError.visibility = View.GONE
+                    }else{
+                        binding.layoutError.tvErrorMsg.text = it
+                        binding.layoutError.layoutError.visibility = View.VISIBLE
+                    }
+                })
         }
     }
 
-    private fun fetchAllWord() {
-        val param = viewModel.getWordListParam().value
+    private fun fetchWordList() {
+        val param = viewModel.getWordListParam()
         if (param != null) {
             viewModel.fetchWords(param)
         } else {
@@ -144,7 +153,7 @@ class WordListFragment : Fragment() {
 
     private fun setupListeners() {
         binding.swipeRefreshLayout.setOnRefreshListener {
-            fetchAllWord()
+            fetchWordList()
         }
     }
 
