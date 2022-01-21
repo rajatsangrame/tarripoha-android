@@ -10,10 +10,10 @@ import android.speech.tts.TextToSpeech
  */
 object TextToSpeechUtil {
 
-    fun init(context: Context, lang: String){
-        val tts = TextToSpeechFactory.get(context = context.applicationContext, language = lang)
-        tts.speak(null, TextToSpeech.QUEUE_FLUSH, null, null)
+    fun init(context: Context, lang: String) {
+        TextToSpeechFactory.get(context = context.applicationContext, language = lang)
     }
+
     fun speak(context: Context, lang: String, text: String) {
         val tts = TextToSpeechFactory.get(context = context.applicationContext, language = lang)
         tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null)

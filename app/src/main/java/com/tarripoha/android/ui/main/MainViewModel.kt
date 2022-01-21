@@ -25,20 +25,24 @@ class MainViewModel @Inject constructor(
 
     private val isRefreshing: MutableLiveData<Boolean> = MutableLiveData()
 
-    // SearchFragment
+    // region SearchFragment
     private val searchWords: MutableLiveData<List<Word>> = MutableLiveData()
     private val query: MutableLiveData<String> = MutableLiveData()
     private val chars: MutableLiveData<String> = MutableLiveData()
+    // endregion
 
-    // HomeFragment
+    // region HomeFragment
     private val wordCount: MutableLiveData<Int> = MutableLiveData()
     private val dashboardData: MutableLiveData<MutableMap<String, MutableList<Word>>> =
         MutableLiveData()
+    // endregion
 
-    // WordListFragment
+    // region WordListFragment
     private val wordListParam: MutableLiveData<WordListFragment.WordListFragmentParam> =
         MutableLiveData()
     private val words: MutableLiveData<List<Word>> = MutableLiveData()
+    private val toolbarHeading: MutableLiveData<String> = MutableLiveData()
+    // endregion
 
     fun getWordCount() = wordCount
 
@@ -86,6 +90,12 @@ class MainViewModel @Inject constructor(
 
     fun setWordListParam(wordListParam: WordListFragment.WordListFragmentParam?) {
         this.wordListParam.value = wordListParam
+    }
+
+    fun getToolbarHeading() = toolbarHeading
+
+    fun setToolbarHeading(heading: String?) {
+        this.toolbarHeading.value = heading
     }
 
     // Helper Functions
@@ -351,7 +361,7 @@ class MainViewModel @Inject constructor(
         )
     }
 
-    fun resetSearchParams(){
+    fun resetSearchParams() {
         setQuery(null)
         setSearchWords(null)
         setChars(null)

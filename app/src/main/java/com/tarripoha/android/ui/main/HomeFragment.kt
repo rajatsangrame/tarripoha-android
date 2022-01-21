@@ -124,7 +124,11 @@ class HomeFragment : Fragment() {
                     labelledRecycleView.setOptionalText(it.lang)
                     labelledRecycleView.setLabel(label)
                     labelledRecycleView.setOnNavigateClickListener { _ ->
-                        navigateToWordListFragment(lang = it.lang, category = it.category)
+                        navigateToWordListFragment(
+                            lang = it.lang,
+                            category = it.category,
+                            heading = "$label : ${it.lang}"
+                        )
                     }
                     val adapter = WordAdapter(
                         words = ArrayList(),
@@ -163,14 +167,16 @@ class HomeFragment : Fragment() {
         viewModel.fetchAllWord(dashboardInfo.labeledViews)
     }
 
-    private fun navigateToWordListFragment(lang: String, category: String) {
+    private fun navigateToWordListFragment(lang: String, category: String, heading: String) {
         viewModel.setWordListParam(null)
         viewModel.setWords(null)
+        viewModel.setToolbarHeading(null)
         val param = WordListFragment.WordListFragmentParam(
             lang = lang,
             category = category
         )
         viewModel.setWordListParam(param)
+        viewModel.setToolbarHeading(heading)
         findNavController().navigate(R.id.action_HomeFragment_to_WordListFragment)
     }
 

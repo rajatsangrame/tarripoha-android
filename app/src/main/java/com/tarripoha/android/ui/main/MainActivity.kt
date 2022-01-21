@@ -240,6 +240,13 @@ class MainActivity : BaseActivity() {
                     }
                 }
             })
+
+        viewModel.getToolbarHeading()
+            .observe(this, Observer {
+                it?.let {
+                    binding.container.toolbarLayout.heading.text = it
+                }
+            })
     }
 
     private fun handleNavigation() {

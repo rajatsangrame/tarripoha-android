@@ -64,11 +64,16 @@ class SideNavFragment : Fragment() {
             add(SideNavItem(getString(R.string.saved), R.drawable.ic_save_black))
             add(SideNavItem(getString(R.string.settings), R.drawable.ic_settings_grey))
             add(SideNavItem(getString(R.string.rate_us), R.drawable.ic_star_grey))
-            add(SideNavItem(getString(R.string.tell_your_friend), R.drawable.ic_like_grey))
+            add(SideNavItem(getString(R.string.tell_your_friend), R.drawable.ic_whatsapp_black))
             add(SideNavItem(getString(R.string.support), R.drawable.ic_donate_grey))
+            add(SideNavItem(getString(R.string.help), R.drawable.ic_help_black))
         }
         // Maintain the order here
         if (isUserLoggedIn) {
+            menuItemsList.add(
+                0,
+                SideNavItem(getString(R.string.liked), R.drawable.ic_like_grey)
+            )
             menuItemsList.add(
                 SideNavItem(
                     getString(R.string.logout),
