@@ -59,9 +59,9 @@ class SideNavFragment : Fragment() {
 
     private fun prepareNavItems(): List<SideNavItem> {
         val isUserLoggedIn = UserHelper.isLoggedIn()
+        val isUserAdmin: Boolean = UserHelper.getUser()?.admin ?: false
         val menuItemsList = ArrayList<SideNavItem>()
         menuItemsList.apply {
-            add(SideNavItem(getString(R.string.saved), R.drawable.ic_save_black))
             add(SideNavItem(getString(R.string.settings), R.drawable.ic_settings_grey))
             add(SideNavItem(getString(R.string.rate_us), R.drawable.ic_star_grey))
             add(SideNavItem(getString(R.string.tell_your_friend), R.drawable.ic_whatsapp_black))
@@ -78,6 +78,18 @@ class SideNavFragment : Fragment() {
                 1,
                 SideNavItem(getString(R.string.requested), R.drawable.ic_pending)
             )
+            menuItemsList.add(
+                2,
+                SideNavItem(getString(R.string.saved), R.drawable.ic_save_black)
+            )
+            if (isUserAdmin) {
+                menuItemsList.add(
+                    SideNavItem(
+                        getString(R.string.pending_approvals),
+                        R.drawable.ic_flag_black
+                    )
+                )
+            }
             menuItemsList.add(
                 SideNavItem(
                     getString(R.string.logout),

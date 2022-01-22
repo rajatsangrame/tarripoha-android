@@ -48,6 +48,7 @@
     <string name="rate_us">Rate Us</string>
     <string name="version">Version %1$s</string>
     <string name="logout">Logout</string>
+    <string name="pending_approvals">Pending Approvals</string>
     <string name="support">Support</string>
     <string name="help">Help</string>
     <string name="liked">Liked</string>
@@ -57,6 +58,7 @@
     <string name="request_new_word">Request New Word</string>
     <string name="request">Request</string>
     <string name="requested">Requested</string>
+    <string name="requested_words">Requested Words</string>
     <string name="marathi">Marathi</string>
     <string name="hindi">Hindi</string>
     <string name="bhojpuri">Bhojpuri</string>

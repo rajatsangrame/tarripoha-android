@@ -24,6 +24,7 @@ class MainViewModel @Inject constructor(
 ) : BaseViewModel(app) {
 
     private val isRefreshing: MutableLiveData<Boolean> = MutableLiveData()
+    private val toolbarHeading: MutableLiveData<String> = MutableLiveData()
 
     // region SearchFragment
     private val searchWords: MutableLiveData<List<Word>> = MutableLiveData()
@@ -40,7 +41,6 @@ class MainViewModel @Inject constructor(
     // region WordListFragment
     private var wordListParam: WordListFragment.WordListFragmentParam? = null
     private val words: MutableLiveData<List<Word>> = MutableLiveData()
-    private val toolbarHeading: MutableLiveData<String> = MutableLiveData()
     private val wordListErrorMsg: MutableLiveData<String> = MutableLiveData()
     // endregion
 
@@ -149,34 +149,74 @@ class MainViewModel @Inject constructor(
 
     private fun fetchAllResponse(
         snapshot: DataSnapshot,
-        lang: String, category: String
+        lang: String,
+        category: String
     ) {
         val list: MutableList<Word> = mutableListOf()
         snapshot.children.forEach { snap ->
             try {
                 val word: Word? = snap.getValue(Word::class.java)
-                if (word != null && !word.isDirty() && word.isApproved()) {
-                    val user = getPrefUser()
-                    if (category == GlobalVar.CATEGORY_USER_LIKED && user != null) {
-                        val likes = word.likes ?: mutableMapOf()
-                        if (likes.isNotEmpty() && likes[user.id] != null && likes[user.id] == true) {
-                            // Likes Map contain user id. This is user liked word
-                            list.add(word)
-                        }
-                    } else if (word.lang == lang) {
-                        list.add(word)
-                    }
-                } else {
-                    Log.i(TAG, "fetchAllResponse: $word found dirty or not approved")
-                }
+                prepareResponseList(word = word, list = list, category = category, language = lang)
             } catch (e: Exception) {
                 Log.e(TAG, "fetchAllResponse: ${e.localizedMessage}")
             }
         }
+        handleResponseList(list = list, category = category)
+        setRefreshing(false)
+    }
+
+    private fun prepareResponseList(
+        word: Word?,
+        list: MutableList<Word>,
+        category: String,
+        language: String
+    ) {
+        val user = getPrefUser()
+        if (word != null && !word.isDirty() && word.isApproved()) {
+            if (category == GlobalVar.CATEGORY_USER_LIKED && user != null) {
+                val likes = word.likes ?: mutableMapOf()
+                if (likes.isNotEmpty() && likes[user.id] != null && likes[user.id] == true) {
+                    // Likes Map contain user id. This is user liked word
+                    list.add(word)
+                }
+            } else if (category == GlobalVar.CATEGORY_USER_REQUESTED
+                && user != null
+                && word.addedByUserId == user.id
+            ) {
+                // User Requested Case
+                list.add(word)
+            } else if (word.lang == language) {
+                list.add(word)
+            }
+        } else if (category == GlobalVar.CATEGORY_PENDING_APPROVALS
+            && word != null && !word.isDirty() && !word.isApproved()
+        ) {
+            // Pending Approvals Case
+            list.add(word)
+        } else {
+            Log.i(TAG, "prepareResponseList: $word found dirty or not approved")
+        }
+    }
+
+    private fun handleResponseList(list: MutableList<Word>, category: String) {
         when (category) {
             GlobalVar.CATEGORY_USER_LIKED -> {
                 if (list.isEmpty()) {
                     val like = getString(R.string.liked).lowercase()
+                    setWordListErrorMsg(getString(R.string.error_no_words_found, like))
+                }
+                setWords(list)
+            }
+            GlobalVar.CATEGORY_USER_REQUESTED -> {
+                if (list.isEmpty()) {
+                    val like = getString(R.string.requested).lowercase()
+                    setWordListErrorMsg(getString(R.string.error_no_words_found, like))
+                }
+                setWords(list)
+            }
+            GlobalVar.CATEGORY_PENDING_APPROVALS -> {
+                if (list.isEmpty()) {
+                    val like = getString(R.string.pending_approvals).lowercase()
                     setWordListErrorMsg(getString(R.string.error_no_words_found, like))
                 }
                 setWords(list)
@@ -192,9 +232,6 @@ class MainViewModel @Inject constructor(
             GlobalVar.CATEGORY_SAVED -> {
             }
         }
-
-
-        setRefreshing(false)
     }
 
     fun fetchAllWord(labeledView: List<LabeledView>) {

@@ -14,12 +14,15 @@
         android:src="@drawable/ic_emoji_normal" />
 
     <TextView
-        android:gravity="center"
         android:id="@+id/tv_error_msg"
         style="@style/AppTheme.TextDesc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_extra_large"
         android:layout_marginTop="@dimen/margin_normal"
-        android:text="@string/error_no_quotes" />
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:gravity="center"
+        android:maxLines="3"
+        android:text="@string/error_no_result" />
 
 </LinearLayout>

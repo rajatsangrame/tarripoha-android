@@ -136,7 +136,22 @@ class MainActivity : BaseActivity() {
                     // no-op
                 }
                 getString(R.string.liked) -> {
-                    navigateToWordListFragment()
+                    navigateToWordListFragment(
+                        category = GlobalVar.CATEGORY_USER_LIKED,
+                        heading = getString(R.string.liked_words)
+                    )
+                }
+                getString(R.string.requested) -> {
+                    navigateToWordListFragment(
+                        category = GlobalVar.CATEGORY_USER_REQUESTED,
+                        heading = getString(R.string.requested_words)
+                    )
+                }
+                getString(R.string.pending_approvals) -> {
+                    navigateToWordListFragment(
+                        category = GlobalVar.CATEGORY_PENDING_APPROVALS,
+                        heading = getString(R.string.pending_approvals)
+                    )
                 }
                 getString(R.string.settings) -> {
                     // no-op
@@ -321,14 +336,18 @@ class MainActivity : BaseActivity() {
         binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
     }
 
-    private fun navigateToWordListFragment() {
+    private fun navigateToWordListFragment(
+        lang: String = GlobalVar.LANG_ANY,
+        category: String,
+        heading: String
+    ) {
         viewModel.resetWordListParams()
         val param = WordListFragment.WordListFragmentParam(
-            lang = GlobalVar.LANG_ANY,
-            category = GlobalVar.CATEGORY_USER_LIKED
+            lang = lang,
+            category = category
         )
         viewModel.setWordListParam(param)
-        viewModel.setToolbarHeading(getString(R.string.liked_words))
+        viewModel.setToolbarHeading(heading)
         navController.navigate(R.id.action_HomeFragment_to_WordListFragment)
     }
 

@@ -316,6 +316,7 @@ class WordDetailActivity : BaseActivity() {
                 if (commentAdapter?.itemCount != 0) {
                     binding.noCommentLayout.layoutError.visibility = View.GONE
                 } else {
+                    binding.noCommentLayout.tvErrorMsg.text = getString(R.string.error_no_quotes)
                     binding.noCommentLayout.layoutError.visibility = View.VISIBLE
                 }
                 viewModel.setRefreshing(false)
