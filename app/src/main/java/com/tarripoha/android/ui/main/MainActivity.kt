@@ -133,7 +133,10 @@ class MainActivity : BaseActivity() {
                     // no-op
                 }
                 getString(R.string.saved) -> {
-                    // no-op
+                    navigateToWordListFragment(
+                        category = GlobalVar.CATEGORY_SAVED,
+                        heading = getString(R.string.saved)
+                    )
                 }
                 getString(R.string.liked) -> {
                     navigateToWordListFragment(

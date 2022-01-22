@@ -34,7 +34,7 @@ data class Word(
     var comments: List<Comment>? = null,
     var timestamp: Long? = null,
     var updated: Long? = null,
-    var saved: Boolean? = false,
+    var saved: MutableMap<String, Boolean>? = null,
     var likes: MutableMap<String, Boolean>? = null,
     var views: MutableMap<String, MutableList<Long?>>? = null
     // Make sure to update edit method when ever extra parameter is added

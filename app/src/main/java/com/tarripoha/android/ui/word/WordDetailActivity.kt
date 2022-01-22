@@ -382,25 +382,51 @@ class WordDetailActivity : BaseActivity() {
         }
         binding.langTv.setTextWithVisibility(word.lang)
         TPUtils.showTotalLikes(likes = word.likes, view = binding.likeTv)
-        word.likes?.let {
+        word.handleLike()
+        word.handleSavedState()
+        setupAdapter(getOption(word))
+    }
+
+    private fun Word.handleLike() {
+        this.likes?.let {
             val user = viewModel.getPrefUser()
             if (user?.id != null && it[user.id] != null && it[user.id] == true) {
                 binding.likeBtn.setImageDrawable(
                     ContextCompat.getDrawable(
-                        this,
+                        this@WordDetailActivity,
                         R.drawable.ic_like_red
                     )
                 )
             } else {
                 binding.likeBtn.setImageDrawable(
                     ContextCompat.getDrawable(
-                        this,
+                        this@WordDetailActivity,
                         R.drawable.ic_like_border_black
                     )
                 )
             }
         }
-        setupAdapter(getOption(word))
+    }
+
+    private fun Word.handleSavedState() {
+        this.saved?.let {
+            val user = viewModel.getPrefUser()
+            if (user?.id != null && it[user.id] != null && it[user.id] == true) {
+                binding.saveBtn.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        this@WordDetailActivity,
+                        R.drawable.ic_save_black
+                    )
+                )
+            } else {
+                binding.saveBtn.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        this@WordDetailActivity,
+                        R.drawable.ic_save_border_black
+                    )
+                )
+            }
+        }
     }
 
     private fun setupTextToSpeech(word: Word) {
@@ -559,6 +585,9 @@ class WordDetailActivity : BaseActivity() {
         }
         binding.likeBtn.setOnClickListener {
             viewModel.likeWord()
+        }
+        binding.saveBtn.setOnClickListener {
+            viewModel.saveWord()
         }
         binding.speechIv.setOnClickListener {
             if (!viewModel.isWordDetailSet()) return@setOnClickListener

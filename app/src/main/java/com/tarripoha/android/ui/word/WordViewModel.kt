@@ -204,6 +204,60 @@ class WordViewModel @Inject constructor(
         )
     }
 
+    fun saveWord() {
+        val user = getPrefUser()
+        if (user?.id == null) {
+            setUserMessage(getString(R.string.error_login))
+            return
+        }
+        if (!isWordDetailSet()) return
+        val word = getWordDetail().value!!
+        val saveMap: MutableMap<String, Boolean> =
+            word.saved ?: mutableMapOf()
+        val saved: Boolean = when {
+            saveMap.contains(user.id) -> {
+                // Opposite of saves[userId]
+                !saveMap[user.id]!!
+            }
+            else -> {
+                true
+            }
+        }
+        saveWord(
+            word = word,
+            userId = user.id,
+            saved = saved,
+            callback = {
+                saveMap[user.id] = saved
+                word.saved = saveMap
+                setWordDetail(word)
+            }
+        )
+    }
+
+    private fun saveWord(
+        word: Word,
+        saved: Boolean,
+        userId: String,
+        callback: () -> Unit
+    ) {
+        if (!checkNetworkAndShowError()) {
+            return
+        }
+        repository.saveWord(
+            word = word,
+            saved = saved,
+            userId = userId,
+            success = callback,
+            failure = {
+                setUserMessage(getString(R.string.error_unable_to_process))
+            },
+            connectionStatus = {
+
+            }
+        )
+    }
+
     fun fetchWordDetail(word: String) {
         if (!checkNetworkAndShowError()) {
             return

@@ -293,6 +293,31 @@ class Repository(
         )
     }
 
+    fun saveWord(
+        word: Word,
+        saved: Boolean,
+        userId: String,
+        success: () -> Unit,
+        failure: (Exception) -> Unit,
+        connectionStatus: (Boolean) -> Unit
+    ) {
+        wordRef.child(word.name).child("saved").child(userId).setValue(saved)
+            .addOnSuccessListener {
+                success()
+                Log.d(TAG, "saveWord: DocumentSnapshot added with ID: ${word.name}")
+            }
+            .addOnFailureListener { e ->
+                failure(e)
+                Log.e(TAG, "Error adding document", e)
+            }
+
+        checkFirebaseConnection(
+            connectionStatus = {
+                connectionStatus(it)
+            }
+        )
+    }
+
     fun updateViewsCount(
         word: Word,
         views: MutableList<Long?>,

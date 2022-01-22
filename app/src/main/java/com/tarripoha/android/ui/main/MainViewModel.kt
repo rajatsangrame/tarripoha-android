@@ -171,55 +171,80 @@ class MainViewModel @Inject constructor(
         category: String,
         language: String
     ) {
+        when {
+            word != null && !word.isDirty() && word.isApproved() -> {
+                // Already Approved Words
+                prepareResponseListForApprovedWord(
+                    word = word,
+                    list = list,
+                    category = category,
+                    language = language
+                )
+            }
+            category == GlobalVar.CATEGORY_PENDING_APPROVALS && word != null && !word.isDirty()
+                    && !word.isApproved() -> {
+                // Pending Approvals Case
+                list.add(word)
+            }
+            else -> {
+                Log.i(TAG, "prepareResponseList: $word found dirty or not approved")
+            }
+        }
+    }
+
+    private fun prepareResponseListForApprovedWord(
+        word: Word,
+        list: MutableList<Word>,
+        category: String,
+        language: String
+    ) {
         val user = getPrefUser()
-        if (word != null && !word.isDirty() && word.isApproved()) {
-            if (category == GlobalVar.CATEGORY_USER_LIKED && user != null) {
+        when {
+            category == GlobalVar.CATEGORY_USER_LIKED && user != null -> {
                 val likes = word.likes ?: mutableMapOf()
                 if (likes.isNotEmpty() && likes[user.id] != null && likes[user.id] == true) {
                     // Likes Map contain user id. This is user liked word
                     list.add(word)
                 }
-            } else if (category == GlobalVar.CATEGORY_USER_REQUESTED
-                && user != null
-                && word.addedByUserId == user.id
-            ) {
+            }
+            category == GlobalVar.CATEGORY_SAVED && user != null -> {
+                // Saved Case
+                val saveMap = word.saved ?: mutableMapOf()
+                if (saveMap.isNotEmpty() && saveMap[user.id] != null && saveMap[user.id] == true) {
+                    list.add(word)
+                }
+            }
+            category == GlobalVar.CATEGORY_USER_REQUESTED
+                    && user != null
+                    && word.addedByUserId == user.id -> {
                 // User Requested Case
                 list.add(word)
-            } else if (word.lang == language) {
+            }
+            word.lang == language -> {
                 list.add(word)
             }
-        } else if (category == GlobalVar.CATEGORY_PENDING_APPROVALS
-            && word != null && !word.isDirty() && !word.isApproved()
-        ) {
-            // Pending Approvals Case
-            list.add(word)
-        } else {
-            Log.i(TAG, "prepareResponseList: $word found dirty or not approved")
+            else -> Log.e(TAG, "prepareResponseList: Something is not handled here")
         }
     }
 
     private fun handleResponseList(list: MutableList<Word>, category: String) {
         when (category) {
             GlobalVar.CATEGORY_USER_LIKED -> {
-                if (list.isEmpty()) {
-                    val like = getString(R.string.liked).lowercase()
-                    setWordListErrorMsg(getString(R.string.error_no_words_found, like))
-                }
-                setWords(list)
+                val like = getString(R.string.liked).lowercase()
+                setErrorAndUpdateResponseList(list, like)
             }
             GlobalVar.CATEGORY_USER_REQUESTED -> {
-                if (list.isEmpty()) {
-                    val like = getString(R.string.requested).lowercase()
-                    setWordListErrorMsg(getString(R.string.error_no_words_found, like))
-                }
-                setWords(list)
+                val requested = getString(R.string.requested).lowercase()
+                setErrorAndUpdateResponseList(list, requested)
             }
             GlobalVar.CATEGORY_PENDING_APPROVALS -> {
-                if (list.isEmpty()) {
-                    val like = getString(R.string.pending_approvals).lowercase()
-                    setWordListErrorMsg(getString(R.string.error_no_words_found, like))
-                }
-                setWords(list)
+                val pendingApprovals = getString(R.string.pending_approvals).lowercase()
+                setErrorAndUpdateResponseList(list, pendingApprovals)
+
+            }
+            GlobalVar.CATEGORY_SAVED -> {
+                val saved = getString(R.string.saved).lowercase()
+                setErrorAndUpdateResponseList(list, saved)
             }
             GlobalVar.CATEGORY_TOP_LIKED -> {
                 val sortedList = getTopLikedWords(list = list, total = 50)
@@ -229,9 +254,14 @@ class MainViewModel @Inject constructor(
                 val sortedList = getMostViewedList(list = list, total = 50)
                 setWords(sortedList)
             }
-            GlobalVar.CATEGORY_SAVED -> {
-            }
         }
+    }
+
+    private fun setErrorAndUpdateResponseList(list: MutableList<Word>, value: String) {
+        if (list.isEmpty()) {
+            setWordListErrorMsg(getString(R.string.error_no_words_found, value))
+        }
+        setWords(list)
     }
 
     fun fetchAllWord(labeledView: List<LabeledView>) {
