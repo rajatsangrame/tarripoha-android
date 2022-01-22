@@ -165,14 +165,23 @@ class MainViewModel @Inject constructor(
         setRefreshing(false)
     }
 
+    /**
+     * 1. Check the approved and not-dirty words
+     * 2. Check for CATEGORY_PENDING_APPROVALS
+     * 3. Check for CATEGORY_USER_REQUESTED
+     *
+     * NOTE: Maintain the order of the checks
+     */
     private fun prepareResponseList(
         word: Word?,
         list: MutableList<Word>,
         category: String,
         language: String
     ) {
+        val user = getPrefUser()
         when {
-            word != null && !word.isDirty() && word.isApproved() -> {
+            word != null && !word.isDirty() && word.isApproved()
+                    && category != GlobalVar.CATEGORY_USER_REQUESTED -> {
                 // Already Approved Words
                 prepareResponseListForApprovedWord(
                     word = word,
@@ -184,6 +193,12 @@ class MainViewModel @Inject constructor(
             category == GlobalVar.CATEGORY_PENDING_APPROVALS && word != null && !word.isDirty()
                     && !word.isApproved() -> {
                 // Pending Approvals Case
+                list.add(word)
+            }
+            category == GlobalVar.CATEGORY_USER_REQUESTED
+                    && user != null && word != null
+                    && word.addedByUserId == user.id -> {
+                // User Requested Case
                 list.add(word)
             }
             else -> {
@@ -213,12 +228,6 @@ class MainViewModel @Inject constructor(
                 if (saveMap.isNotEmpty() && saveMap[user.id] != null && saveMap[user.id] == true) {
                     list.add(word)
                 }
-            }
-            category == GlobalVar.CATEGORY_USER_REQUESTED
-                    && user != null
-                    && word.addedByUserId == user.id -> {
-                // User Requested Case
-                list.add(word)
             }
             word.lang == language -> {
                 list.add(word)

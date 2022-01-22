@@ -39,6 +39,24 @@
 
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/status_tv"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:background="@color/colorGreen"
+        android:gravity="center"
+        android:padding="@dimen/margin_normal"
+        android:textColor="@color/colorWhite"
+        android:textSize="@dimen/text_small"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/linearLayout"
+        tools:text="@string/approved"
+        tools:visibility="visible" />
+
+
     <View
         android:id="@+id/view"
         android:layout_width="match_parent"

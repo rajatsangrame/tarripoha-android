@@ -132,7 +132,7 @@ class HomeFragment : Fragment() {
                     }
                     val adapter = WordAdapter(
                         words = ArrayList(),
-                        squareView = true,
+                        options = WordAdapter.ViewingOptions(squareView = true),
                         itemClickListener = object : ItemClickListener<Word> {
                             override fun onClick(position: Int, data: Word) {
                                 viewModel.updateViewsCount(word = data)

@@ -11,6 +11,7 @@ import androidx.lifecycle.*
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.tarripoha.android.GlobalVar
 import com.tarripoha.android.R
 import com.tarripoha.android.TPApp
 import com.tarripoha.android.data.model.Word
@@ -79,6 +80,11 @@ class WordListFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
+        val param = viewModel.getWordListParam()
+        val option = WordAdapter.ViewingOptions()
+        if (param != null && param.category == GlobalVar.CATEGORY_USER_REQUESTED) {
+            option.showStatus = true
+        }
         val linearLayoutManager = LinearLayoutManager(
             context, RecyclerView.VERTICAL, false
         )
@@ -88,13 +94,15 @@ class WordListFragment : Fragment() {
                     position: Int,
                     data: Word
                 ) {
-                    viewModel.updateViewsCount(word = data)
-                    WordDetailActivity.startMe(
-                        context = requireContext(),
-                        wordDetail = data
-                    )
+                    if (data.isApproved() || param?.category == GlobalVar.CATEGORY_PENDING_APPROVALS) {
+                        viewModel.updateViewsCount(word = data)
+                        WordDetailActivity.startMe(
+                            context = requireContext(),
+                            wordDetail = data
+                        )
+                    } else viewModel.setUserMessage(getString(R.string.msg_word_not_approved))
                 }
-            })
+            }, options = option)
         val scrollListener = object : RecyclerView.OnScrollListener() {
             override fun onScrolled(
                 recyclerView: RecyclerView,
@@ -128,9 +136,9 @@ class WordListFragment : Fragment() {
                 })
             getWordListErrorMsg()
                 .observe(viewLifecycleOwner, Observer {
-                    if (it.isNullOrEmpty()){
+                    if (it.isNullOrEmpty()) {
                         binding.layoutError.layoutError.visibility = View.GONE
-                    }else{
+                    } else {
                         binding.layoutError.tvErrorMsg.text = it
                         binding.layoutError.layoutError.visibility = View.VISIBLE
                     }

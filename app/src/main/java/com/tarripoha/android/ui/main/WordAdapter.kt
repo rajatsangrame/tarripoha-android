@@ -1,8 +1,8 @@
 package com.tarripoha.android.ui.main
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.tarripoha.android.data.model.Word
 import com.tarripoha.android.databinding.LayoutItemWordBinding
@@ -15,7 +15,8 @@ import com.tarripoha.android.databinding.LayoutItemWordSquareBinding
 class WordAdapter(
     private var words: MutableList<Word>,
     private val itemClickListener: ItemClickListener<Word>,
-    private val squareView: Boolean = false
+    private val options: ViewingOptions? = null
+
 ) : RecyclerView.Adapter<BaseViewHolder>() {
 
     override fun onCreateViewHolder(
@@ -53,7 +54,7 @@ class WordAdapter(
                 // Always Linear layout for new word
                 Word.TYPE_NEW_WORD -> return VIEW_TYPE_NEW_WORD
             }
-        } else if (squareView) return VIEW_TYPE_SQUARE
+        } else if (options?.squareView == true) return VIEW_TYPE_SQUARE
 
         return super.getItemViewType(position)
     }
@@ -65,12 +66,9 @@ class WordAdapter(
         notifyDataSetChanged()
     }
 
-    inner class WordViewHolder(binding: LayoutItemWordBinding) : BaseViewHolder(
+    inner class WordViewHolder(val binding: LayoutItemWordBinding) : BaseViewHolder(
         binding.root
     ) {
-
-        private val nameTv: TextView = binding.nameTv
-        private val meaningTv: TextView = binding.meaningTv
 
         init {
             itemView.setOnClickListener {
@@ -79,9 +77,27 @@ class WordAdapter(
         }
 
         override fun bind(position: Int) {
+            val context = itemView.context
             val word = words[position]
-            nameTv.text = word.name
-            meaningTv.text = word.meaning
+            binding.nameTv.text = word.name
+            binding.meaningTv.text = word.meaning
+            if (options?.showStatus == true) {
+                binding.statusTv.visibility = View.VISIBLE
+                when {
+                    word.isDirty() -> {
+                        binding.statusTv.text = context.getString(R.string.removed)
+                        binding.statusTv.setBackgroundResource(R.color.colorRed)
+                    }
+                    !word.isApproved() && !word.isDirty() -> {
+                        binding.statusTv.text = context.getString(R.string.pending)
+                        binding.statusTv.setBackgroundResource(R.color.colorGrey)
+                    }
+                    else -> {
+                        binding.statusTv.text = context.getString(R.string.approved)
+                        binding.statusTv.setBackgroundResource(R.color.colorGreen)
+                    }
+                }
+            } else binding.statusTv.visibility = View.GONE
         }
 
         override fun bind(data: Any) {
@@ -93,7 +109,6 @@ class WordAdapter(
         BaseViewHolder(
             binding.root
         ) {
-        private val messageTv: TextView = binding.messageTv
 
         init {
             itemView.setOnClickListener {
@@ -104,7 +119,7 @@ class WordAdapter(
         override fun bind(position: Int) {
             val word = words[position].name
             val msg = binding.view.context.getString(R.string.msg_new_word_plank, word)
-            messageTv.text = msg
+            binding.messageTv.text = msg
         }
 
         override fun bind(data: Any) {
@@ -132,6 +147,12 @@ class WordAdapter(
         }
 
     }
+
+    data class ViewingOptions(
+        var squareView: Boolean = false,
+        var showStatus: Boolean = false,
+        var showCheckBox: Boolean = false,
+    )
 
     companion object {
         const val VIEW_TYPE_NEW_WORD = 101

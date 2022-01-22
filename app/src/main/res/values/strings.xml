@@ -58,6 +58,9 @@
     <string name="request_new_word">Request New Word</string>
     <string name="request">Request</string>
     <string name="requested">Requested</string>
+    <string name="removed">Removed</string>
+    <string name="approved">Approved</string>
+    <string name="pending">Pending</string>
     <string name="requested_words">Requested Words</string>
     <string name="marathi">Marathi</string>
     <string name="hindi">Hindi</string>
@@ -85,6 +88,7 @@
     <string name="msg_select_language">Please select language to continue</string>
     <string name="msg_found_english_letters">Found english letters in %1$s</string>
     <string name="msg_field_too_short">Field is too short</string>
+    <string name="msg_word_not_approved">Word is not approved</string>
     <string name="msg_tell_your_friend">Download Tarri Poha mobile app. Here you will find thousands of crazy indian words. Get it at https://play.google.com/store/apps/details?id=com.tarripoha.android"</string>
 
     <string name="error_no_result">No result found</string>
