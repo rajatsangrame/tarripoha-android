@@ -71,7 +71,8 @@
     <string name="top_words">Top Words</string>
     <string name="faq">FAQ</string>
     <string name="trending">Trending</string>
-    <string name="view_all">View All</string>
+    <string name="black">Black</string>
+    <string name="share">Share</string>
 
     <string name="sample_time">12:35 PM</string>
     <string name="sample_likes">2 Likes</string>
