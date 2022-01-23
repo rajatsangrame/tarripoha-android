@@ -16,7 +16,7 @@
     <string name="more">More</string>
     <string name="report">Report</string>
     <string name="copy">Copy</string>
-    <string name="tell_your_friend">Tell Your Friend</string>
+    <string name="tell_your_friend">Tell Your Friends</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
     <string name="empty_field">Empty Field</string>
@@ -69,12 +69,15 @@
     <string name="select_language">Select Language *</string>
     <string name="word_of_the_week">Word of the Week</string>
     <string name="top_words">Top Words</string>
+    <string name="faq">FAQ</string>
     <string name="trending">Trending</string>
     <string name="view_all">View All</string>
 
     <string name="sample_time">12:35 PM</string>
     <string name="sample_likes">2 Likes</string>
     <string name="sample_word">होळ</string>
+    <string name="sample_faq_title">How to request a new word?</string>
+    <string name="sample_faq_desc">Search your word in the search screen. If you did not find it there will be an option to request new word</string>
 
     <string name="msg_new_word_plank">Request new word %1$s</string>
     <string name="msg_number_not_valid">Enter valid number</string>

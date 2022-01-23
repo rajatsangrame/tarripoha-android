@@ -92,7 +92,8 @@ class LoginActivity : BaseActivity() {
             when (destination.id) {
                 R.id.nav_login -> {
                     supportActionBar?.apply {
-                        setDisplayHomeAsUpEnabled(false)
+                        setDisplayHomeAsUpEnabled(true)
+                        setHomeAsUpIndicator(R.drawable.ic_arrow_back_white)
                         binding.toolbarLayout.apply {
                             title.text = getString(R.string.login)
                         }

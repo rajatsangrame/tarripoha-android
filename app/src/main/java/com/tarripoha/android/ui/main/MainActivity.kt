@@ -27,6 +27,7 @@ import com.tarripoha.android.databinding.ActivityMainBinding
 import com.tarripoha.android.di.component.DaggerMainActivityComponent
 import com.tarripoha.android.di.component.MainActivityComponent
 import com.tarripoha.android.ui.BaseActivity
+import com.tarripoha.android.ui.faq.FAQActivity
 import com.tarripoha.android.ui.login.LoginActivity
 import com.tarripoha.android.ui.login.LoginHelper
 import com.tarripoha.android.ui.main.drawer.SideNavItem
@@ -122,50 +123,92 @@ class MainActivity : BaseActivity() {
         super.onDestroy()
     }
 
-    fun onDrawerClick(item: SideNavItem) {
-        binding.drawerLayout.closeDrawer(GravityCompat.START)
+    private fun performAfterDelay(delay: Long = 300L, callback: () -> Unit) {
         Handler(Looper.getMainLooper()).postDelayed({
-            when (item.itemName) {
-                getString(R.string.login_register) -> {
+            callback()
+        }, delay)
+    }
+
+    fun onDrawerClick(item: SideNavItem) {
+        val isUserLoggedIn = UserHelper.isLoggedIn()
+
+        when (item.itemName) {
+            getString(R.string.login_register) -> {
+                binding.drawerLayout.closeDrawer(GravityCompat.START)
+                performAfterDelay {
                     LoginActivity.startMe(this)
                 }
-                getString(R.string.user) -> {
-                    // no-op
+            }
+            getString(R.string.user) -> {
+                // no-op
+            }
+            getString(R.string.saved) -> {
+                if (!isUserLoggedIn) {
+                    viewModel.setUserMessage(getString(R.string.error_login))
+                    return
                 }
-                getString(R.string.saved) -> {
+                binding.drawerLayout.closeDrawer(GravityCompat.START)
+                performAfterDelay {
                     navigateToWordListFragment(
                         category = GlobalVar.CATEGORY_SAVED,
                         heading = getString(R.string.saved)
                     )
                 }
-                getString(R.string.liked) -> {
+            }
+            getString(R.string.liked) -> {
+                if (!isUserLoggedIn) {
+                    viewModel.setUserMessage(getString(R.string.error_login))
+                    return
+                }
+                binding.drawerLayout.closeDrawer(GravityCompat.START)
+                performAfterDelay {
                     navigateToWordListFragment(
                         category = GlobalVar.CATEGORY_USER_LIKED,
                         heading = getString(R.string.liked_words)
                     )
                 }
-                getString(R.string.requested) -> {
+            }
+            getString(R.string.requested) -> {
+                if (!isUserLoggedIn) {
+                    viewModel.setUserMessage(getString(R.string.error_login))
+                    return
+                }
+                binding.drawerLayout.closeDrawer(GravityCompat.START)
+                performAfterDelay {
                     navigateToWordListFragment(
                         category = GlobalVar.CATEGORY_USER_REQUESTED,
                         heading = getString(R.string.requested_words)
                     )
                 }
-                getString(R.string.pending_approvals) -> {
+            }
+            getString(R.string.pending_approvals) -> {
+                if (!isUserLoggedIn) {
+                    viewModel.setUserMessage(getString(R.string.error_login))
+                    return
+                }
+                binding.drawerLayout.closeDrawer(GravityCompat.START)
+                performAfterDelay {
                     navigateToWordListFragment(
                         category = GlobalVar.CATEGORY_PENDING_APPROVALS,
                         heading = getString(R.string.pending_approvals)
                     )
                 }
-                getString(R.string.settings) -> {
-                    // no-op
-                }
-                getString(R.string.rate_us) -> {
+            }
+            getString(R.string.settings) -> {
+                // no-op
+            }
+            getString(R.string.rate_us) -> {
+                binding.drawerLayout.closeDrawer(GravityCompat.START)
+                performAfterDelay {
                     TPUtils.navigateToPlayStore(
                         this,
                         BuildConfig.APPLICATION_ID.replace(".debug", "")
                     )
                 }
-                getString(R.string.tell_your_friend) -> {
+            }
+            getString(R.string.tell_your_friend) -> {
+                binding.drawerLayout.closeDrawer(GravityCompat.START)
+                performAfterDelay {
                     val intent = Intent()
                     intent.action = Intent.ACTION_SEND
                     intent.putExtra(
@@ -175,27 +218,34 @@ class MainActivity : BaseActivity() {
                     intent.type = "text/plain"
                     startActivity(intent)
                 }
-                getString(R.string.support) -> {
-                    // no-op
-                }
-                getString(R.string.logout) -> {
-                    MaterialAlertDialogBuilder(this, R.style.AlertDialogTheme)
-                        .showDialog(
-                            title = getString(R.string.logout),
-                            message = getString(R.string.msg_confirm_logout),
-                            positiveText = getString(R.string.logout),
-                            positiveListener = {
-                                UserHelper.setUser(null)
-                                LoginHelper.logoutUser()
-                                PreferenceHelper.clear()
-                                LoginActivity.startMe(this)
-                                finish()
-                            },
-                            negativeListener = {}
-                        )
-                }
             }
-        }, 300)
+            getString(R.string.support) -> {
+                // no-op
+            }
+            getString(R.string.help) -> {
+                binding.drawerLayout.closeDrawer(GravityCompat.START)
+                performAfterDelay {
+                    FAQActivity.startMe(this)
+                }
+                // no-op
+            }
+            getString(R.string.logout) -> {
+                MaterialAlertDialogBuilder(this, R.style.AlertDialogTheme)
+                    .showDialog(
+                        title = getString(R.string.logout),
+                        message = getString(R.string.msg_confirm_logout),
+                        positiveText = getString(R.string.logout),
+                        positiveListener = {
+                            UserHelper.setUser(null)
+                            LoginHelper.logoutUser()
+                            PreferenceHelper.clear()
+                            LoginActivity.startMe(this)
+                            finish()
+                        },
+                        negativeListener = {}
+                    )
+            }
+        }
     }
 
     //endregion

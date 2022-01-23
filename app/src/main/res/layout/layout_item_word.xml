@@ -41,7 +41,7 @@
 
     <TextView
         android:id="@+id/status_tv"
-        android:layout_width="80dp"
+        android:layout_width="90dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/margin_extra_large"
         android:background="@color/colorGreen"

@@ -1,10 +1,7 @@
 package com.tarripoha.android.firebase
 
 import android.content.Context
-import android.content.Intent
 import android.util.Log
-import androidx.core.net.toUri
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.FirebaseApp
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
@@ -14,10 +11,11 @@ import com.google.gson.reflect.TypeToken
 import com.tarripoha.android.GlobalVar
 import com.tarripoha.android.R
 import com.tarripoha.android.data.model.DashboardResponse
+import com.tarripoha.android.data.model.FAQResponse
 import com.tarripoha.android.util.TPUtils
-import com.tarripoha.android.util.showDialog
 import com.tarripoha.android.util.toObject
 import java.lang.reflect.Type
+import java.util.*
 
 object PowerStone {
     private const val TAG = "PowerStone"
@@ -25,6 +23,7 @@ object PowerStone {
     private const val KEY_RECOMMENDED_VERSION = "recommended_version"
     private const val KEY_DASHBOARD = "dashboard"
     private const val KEY_DEVANAGARI_CHARS = "devanagari_chars"
+    private const val KEY_FAQ = "faq"
     private const val KEY_LANGUAGES = "languages"
     private const val MIN_FETCH_INTERVAL_SEC = 60L
 
@@ -125,4 +124,10 @@ object PowerStone {
         val languages = getRemoteConfig().getString(KEY_LANGUAGES)
         return languages.toObject()
     }
+
+    fun getFAQResponse(): Array<FAQResponse> {
+        val faqs = getRemoteConfig().getString(KEY_FAQ)
+        return Gson().fromJson(faqs, Array<FAQResponse>::class.java)
+    }
+
 }

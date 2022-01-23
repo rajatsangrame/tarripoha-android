@@ -57,4 +57,47 @@
             ]
         </value>
     </entry>
+    <entry>
+        <key>faq</key>
+        <value>[
+            {
+            "faq": [
+            {
+            "lang": "en",
+            "title": "How to request a new word?",
+            "desc": "Search your word in the search screen. If you didn't find that word in the search result, you will see an option to request a new word"
+            },
+            {
+            "lang": "hi",
+            "title": "एक नए शब्द का अनुरोध कैसे करें?",
+            "desc": "खोज स्क्रीन में अपना शब्द खोजें। यदि आपको खोज परिणाम में वह शब्द नहीं मिला, तो आपको एक नए शब्द का अनुरोध करने का विकल्प दिखाई देगा"
+            },
+            {
+            "lang": "mr",
+            "title": "नवीन शब्दाची विनंती कशी करावी?",
+            "desc": "सर्च स्क्रीनमध्ये तुमचा शब्द शोधा. तुम्हाला तो शब्द शोध परिणामात सापडला नाही, तर तुम्हाला नवीन शब्दाची विनंती करण्याचा पर्याय दिसेल"
+            }
+            ]
+            },
+            {
+            "faq": [
+            {
+            "lang": "en",
+            "title": "Speech option is not working",
+            "desc": "On your phone, navigate to Setting > Accessibility > Text to Speech and select Speech Services by Google"
+            },
+            {
+            "lang": "hi",
+            "title": "भाषण विकल्प काम नहीं कर रहा",
+            "desc": "अपने फोन पर, Setting > Accessibility > Text to Speech पर नेविगेट करें और Speech Services by Google को चुनें"
+            },
+            {
+            "lang": "mr",
+            "title": "भाषण पर्याय काम करत नाही",
+            "desc": "तुमच्या फोनवर, Setting > Accessibility > Text to Speech वर नेव्हिगेट करा आणि Speech Services by Google निवडा"
+            }
+            ]
+            }
+            ]</value>
+    </entry>
 </defaultsMap>

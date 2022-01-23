@@ -62,6 +62,9 @@ class SideNavFragment : Fragment() {
         val isUserAdmin: Boolean = UserHelper.getUser()?.admin ?: false
         val menuItemsList = ArrayList<SideNavItem>()
         menuItemsList.apply {
+            add(SideNavItem(getString(R.string.liked), R.drawable.ic_like_grey))
+            add(SideNavItem(getString(R.string.requested), R.drawable.ic_pending))
+            add(SideNavItem(getString(R.string.saved), R.drawable.ic_save_black))
             add(SideNavItem(getString(R.string.settings), R.drawable.ic_settings_grey))
             add(SideNavItem(getString(R.string.rate_us), R.drawable.ic_star_grey))
             add(SideNavItem(getString(R.string.tell_your_friend), R.drawable.ic_whatsapp_black))
@@ -70,18 +73,6 @@ class SideNavFragment : Fragment() {
         }
         // Maintain the order here
         if (isUserLoggedIn) {
-            menuItemsList.add(
-                0,
-                SideNavItem(getString(R.string.liked), R.drawable.ic_like_grey)
-            )
-            menuItemsList.add(
-                1,
-                SideNavItem(getString(R.string.requested), R.drawable.ic_pending)
-            )
-            menuItemsList.add(
-                2,
-                SideNavItem(getString(R.string.saved), R.drawable.ic_save_black)
-            )
             if (isUserAdmin) {
                 menuItemsList.add(
                     SideNavItem(
