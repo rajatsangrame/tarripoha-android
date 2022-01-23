@@ -18,7 +18,10 @@
             android:name=".ui.faq.FAQActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ui.wordart.WordArtActivity" />
+        <activity
+            android:name=".ui.share.WordCardActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.startup.StartupActivity"
             android:screenOrientation="portrait"

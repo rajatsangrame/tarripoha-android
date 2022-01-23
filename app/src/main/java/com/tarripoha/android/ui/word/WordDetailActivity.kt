@@ -38,6 +38,7 @@ import com.tarripoha.android.ui.BaseActivity
 import com.tarripoha.android.ui.OptionsBottomFragment
 import com.tarripoha.android.ui.OptionsBottomFragment.Option
 import com.tarripoha.android.ui.OptionsBottomFragment.OptionCLickListener
+import com.tarripoha.android.ui.share.WordCardActivity
 import com.tarripoha.android.util.helper.UserHelper
 import com.tarripoha.android.ui.word.WordViewModel.FetchMode
 import com.tarripoha.android.util.*
@@ -493,6 +494,15 @@ class WordDetailActivity : BaseActivity() {
                 override fun onClick(option: Option) {
                     Log.d(TAG, "onClick: $option} ${comment.comment}")
                     when (option) {
+                        Option.Share -> {
+                            if (!viewModel.isWordDetailSet()) return
+                            val word = viewModel.getWordDetail().value!!
+                            WordCardActivity.startMe(
+                                context = this@WordDetailActivity,
+                                word = word,
+                                comment = comment
+                            )
+                        }
                         Option.Delete -> {
                             MaterialAlertDialogBuilder(
                                 this@WordDetailActivity,
@@ -582,6 +592,11 @@ class WordDetailActivity : BaseActivity() {
         }
         binding.swipeRefreshLayout.setOnRefreshListener {
             init()
+        }
+        binding.shareBtn.setOnClickListener {
+            if (!viewModel.isWordDetailSet()) return@setOnClickListener
+            val word = viewModel.getWordDetail().value!!
+            WordCardActivity.startMe(context = this, word = word)
         }
         binding.likeBtn.setOnClickListener {
             viewModel.likeWord()
