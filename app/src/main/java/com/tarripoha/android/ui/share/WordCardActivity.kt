@@ -6,14 +6,20 @@ import android.graphics.*
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.graphics.drawable.toBitmap
 import com.tarripoha.android.R
 import com.tarripoha.android.data.model.Comment
 import com.tarripoha.android.data.model.Word
 import com.tarripoha.android.databinding.ActivityWordCardBinding
 import com.tarripoha.android.util.TPUtils
+import com.tarripoha.android.util.getPackage
+import java.io.File
+import java.io.FileOutputStream
 
 
 class WordCardActivity : AppCompatActivity() {
@@ -222,6 +228,33 @@ class WordCardActivity : AppCompatActivity() {
         binding.toggleBlack.setOnCheckedChangeListener { _, isChecked ->
             this.darkMode = isChecked
             invalidateWordCard()
+        }
+    }
+
+    fun share(view: View) {
+        val shareText =
+            "Download Tarri Poha from the PlayStore https://play.google.com/store/apps/details?id=${getPackage()}"
+        val bitmap = binding.previewIv.drawable.toBitmap()
+        try {
+            val file = File(externalCacheDir, "share.png")
+            val fOut = FileOutputStream(file)
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fOut)
+            fOut.flush()
+            fOut.close()
+            val intent = Intent(Intent.ACTION_SEND)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            intent.putExtra(Intent.EXTRA_TEXT, shareText)
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            val imageUri = FileProvider.getUriForFile(
+                this,
+                "$packageName.provider",
+                file
+            )
+            intent.putExtra(Intent.EXTRA_STREAM, imageUri)
+            intent.type = "image/png"
+            startActivity(Intent.createChooser(intent, "Share image via"))
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 

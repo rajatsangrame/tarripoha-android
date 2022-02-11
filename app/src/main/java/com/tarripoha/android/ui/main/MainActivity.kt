@@ -31,13 +31,10 @@ import com.tarripoha.android.ui.faq.FAQActivity
 import com.tarripoha.android.ui.login.LoginActivity
 import com.tarripoha.android.ui.login.LoginHelper
 import com.tarripoha.android.ui.main.drawer.SideNavItem
-import com.tarripoha.android.util.TPUtils
-import com.tarripoha.android.util.ViewModelFactory
+import com.tarripoha.android.util.*
 import com.tarripoha.android.util.helper.PreferenceHelper
 import com.tarripoha.android.util.helper.UserHelper
-import com.tarripoha.android.util.showDialog
 import com.tarripoha.android.util.texttospeech.TextToSpeechUtil
-import com.tarripoha.android.util.toggleVisibility
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import java.util.concurrent.TimeUnit
@@ -202,7 +199,7 @@ class MainActivity : BaseActivity() {
                 performAfterDelay {
                     TPUtils.navigateToPlayStore(
                         this,
-                        BuildConfig.APPLICATION_ID.replace(".debug", "")
+                        getPackage()
                     )
                 }
             }
