@@ -1,6 +1,8 @@
 package com.tarripoha.android.ui.word
 
 import android.app.Activity
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
@@ -492,32 +494,45 @@ class WordDetailActivity : BaseActivity() {
             bundle = bundle,
             callback = object : OptionCLickListener {
                 override fun onClick(option: Option) {
-                    Log.d(TAG, "onClick: $option} ${comment.comment}")
-                    when (option) {
-                        Option.WordCard -> {
-                            val comments = ArrayList<Comment>()
-                            comments.add(comment)
-                            navigateToWordCardActivity(comments = comments)
-                        }
-                        Option.Delete -> {
-                            MaterialAlertDialogBuilder(
-                                this@WordDetailActivity,
-                                R.style.AlertDialogTheme
-                            )
-                                .showDialog(
-                                    message = getString(R.string.msg_confirm_delete),
-                                    positiveText = getString(R.string.delete),
-                                    positiveListener = {
-                                        viewModel.deleteComment(comment = comment)
-                                    },
-                                    negativeListener = {}
-                                )
-                        }
-                    }
+                    handleCommentOptionClick(comment, option)
                 }
             }
         )
         bottomSheet.show(supportFragmentManager, OptionsBottomFragment.TAG)
+    }
+
+    private fun handleCommentOptionClick(comment: Comment, option: Option) {
+        Log.d(TAG, "onClick: $option} ${comment.comment}")
+        when (option) {
+            Option.WordCard -> {
+                val comments = ArrayList<Comment>()
+                comments.add(comment)
+                navigateToWordCardActivity(comments = comments)
+            }
+            Option.Delete -> {
+                MaterialAlertDialogBuilder(
+                    this@WordDetailActivity,
+                    R.style.AlertDialogTheme
+                )
+                    .showDialog(
+                        message = getString(R.string.msg_confirm_delete),
+                        positiveText = getString(R.string.delete),
+                        positiveListener = {
+                            viewModel.deleteComment(comment = comment)
+                        },
+                        negativeListener = {}
+                    )
+            }
+            Option.Copy -> {
+                val clipboard = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+                val clip = ClipData.newPlainText("comment", comment.comment)
+                clipboard.setPrimaryClip(clip)
+                viewModel.setUserMessage(getString(R.string.copied_to_clipboard))
+            }
+            else -> {
+                Log.e(TAG, "handleCommentOptionClick: Unknown case")
+            }
+        }
     }
 
     private fun getCommentOptions(comment: Comment): List<Option> {
@@ -546,26 +561,41 @@ class WordDetailActivity : BaseActivity() {
             bundle = bundle,
             callback = object : OptionCLickListener {
                 override fun onClick(option: Option) {
-                    Log.d(TAG, "onClick: $option}")
-                    when (option) {
-                        Option.Edit -> {
-                            if (!viewModel.isWordDetailSet()) return
-                            val word = viewModel.getWordDetail().value!!
-                            val intent = WordActivity.getIntent(
-                                context = this@WordDetailActivity,
-                                word = word,
-                                mode = WordActivity.KEY_MODE_EDIT
-                            )
-                            resultLauncher.launch(intent)
-                        }
-                        Option.WordCard -> {
-                            navigateToWordCardActivity()
-                        }
-                    }
+                    handleWordOptionClick(option)
                 }
             }
         )
         bottomSheet.show(supportFragmentManager, OptionsBottomFragment.TAG)
+    }
+
+    private fun handleWordOptionClick(option: Option) {
+        Log.d(TAG, "onClick: $option}")
+        when (option) {
+            Option.Edit -> {
+                if (!viewModel.isWordDetailSet()) return
+                val word = viewModel.getWordDetail().value!!
+                val intent = WordActivity.getIntent(
+                    context = this@WordDetailActivity,
+                    word = word,
+                    mode = WordActivity.KEY_MODE_EDIT
+                )
+                resultLauncher.launch(intent)
+            }
+            Option.WordCard -> {
+                navigateToWordCardActivity()
+            }
+            Option.Copy -> {
+                if (!viewModel.isWordDetailSet()) return
+                val word = viewModel.getWordDetail().value!!
+                val clipboard = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+                val clip = ClipData.newPlainText("word", word.name)
+                clipboard.setPrimaryClip(clip)
+                viewModel.setUserMessage(getString(R.string.copied_to_clipboard))
+            }
+            else -> {
+                Log.e(TAG, "handleWordOptionClick: Unknown case")
+            }
+        }
     }
 
     private fun getWordOptions(): List<Option> {

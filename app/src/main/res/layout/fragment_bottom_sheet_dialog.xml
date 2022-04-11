@@ -85,14 +85,14 @@
             android:layout_width="@dimen/icon_size"
             android:layout_height="@dimen/icon_size"
             android:layout_marginEnd="@dimen/margin_extra_large"
-            android:src="@drawable/ic_share_black"
+            android:src="@drawable/ic_whatsapp_black"
             app:tint="@color/colorGrey" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:text="@string/create_word_card"
+            android:text="@string/share_word_card"
             android:textColor="@color/colorGrey" />
 
     </LinearLayout>

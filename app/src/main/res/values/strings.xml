@@ -17,7 +17,7 @@
     <string name="report">Report</string>
     <string name="copy">Copy</string>
     <string name="tell_your_friend">Tell Your Friends</string>
-    <string name="create_word_card">Create Word Card</string>
+    <string name="share_word_card">Share Word Card</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
     <string name="empty_field">Empty Field</string>
@@ -42,6 +42,8 @@
     <string name="login">Login</string>
     <string name="almost_done">Almost Done</string>
     <string name="update_available">Update Available</string>
+
+    <string name="click_here">Click here</string>
     <string name="login_register">Login/Register</string>
     <string name="saved">Saved</string>
     <string name="save">Save</string>
@@ -74,6 +76,7 @@
     <string name="trending">Trending</string>
     <string name="black">Black</string>
     <string name="share">Share</string>
+    <string name="copied_to_clipboard">Copied to clipboard</string>
 
     <string name="sample_time">12:35 PM</string>
     <string name="sample_likes">2 Likes</string>
