@@ -14,7 +14,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="@dimen/margin_extra_large">
+        android:paddingStart="@dimen/margin_extra_large"
+        android:paddingTop="@dimen/margin_wide_distance"
+        android:paddingEnd="@dimen/margin_extra_large"
+        android:paddingBottom="@dimen/margin_wide_distance">
 
         <TextView
             android:id="@+id/tv_title"
@@ -53,7 +56,7 @@
             app:layout_constraintStart_toStartOf="@+id/tv_title"
             app:layout_constraintTop_toBottomOf="@+id/tv_title"
             tools:text="@string/sample_faq_desc"
-            tools:visibility="visible" />
+            tools:visibility="gone" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
