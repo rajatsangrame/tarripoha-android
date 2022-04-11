@@ -202,7 +202,7 @@ object TPUtils {
         }
     }
 
-    private fun prettyCount(number: Number): String {
+    fun prettyCount(number: Number): String {
         val suffix = charArrayOf(' ', 'K', 'M', 'B', 'T', 'P', 'E')
         val numValue = number.toLong()
         val value = floor(log10(numValue.toDouble())).toInt()

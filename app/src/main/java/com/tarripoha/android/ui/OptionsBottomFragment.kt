@@ -82,8 +82,8 @@ class OptionsBottomFragment : BottomSheetDialogFragment(), View.OnClickListener 
                 R.id.menu_edit -> {
                     it.onClick(Option.Edit)
                 }
-                R.id.menu_share -> {
-                    it.onClick(Option.Share)
+                R.id.menu_create_word_card -> {
+                    it.onClick(Option.WordCard)
                 }
                 R.id.menu_report -> {
                     it.onClick(Option.Report)
@@ -103,7 +103,7 @@ class OptionsBottomFragment : BottomSheetDialogFragment(), View.OnClickListener 
         binding.apply {
             menuCopy.setOnClickListener(this@OptionsBottomFragment)
             menuEdit.setOnClickListener(this@OptionsBottomFragment)
-            menuShare.setOnClickListener(this@OptionsBottomFragment)
+            menuCreateWordCard.setOnClickListener(this@OptionsBottomFragment)
             menuReport.setOnClickListener(this@OptionsBottomFragment)
             menuDelete.setOnClickListener(this@OptionsBottomFragment)
         }
@@ -117,6 +117,7 @@ class OptionsBottomFragment : BottomSheetDialogFragment(), View.OnClickListener 
         Copy,
         Edit,
         Share,
+        WordCard,
         Report,
         Delete
     }

@@ -60,7 +60,7 @@ class CommentPagingAdapter(
                 binding.apply {
                     userTv.text = user
                     commentTv.text = comment.comment
-                    avatarTv.text = user[0].toString()
+                    avatarTv.text = user[0].uppercase()
                     setLikeButton(comment, likeIv)
                     TPUtils.showTotalLikes(comment.likes, totalLikesTv)
                     val time = TPUtils.getTime(itemView.context, comment.timestamp)

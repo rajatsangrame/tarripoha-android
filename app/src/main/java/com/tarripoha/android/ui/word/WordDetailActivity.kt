@@ -494,14 +494,10 @@ class WordDetailActivity : BaseActivity() {
                 override fun onClick(option: Option) {
                     Log.d(TAG, "onClick: $option} ${comment.comment}")
                     when (option) {
-                        Option.Share -> {
-                            if (!viewModel.isWordDetailSet()) return
-                            val word = viewModel.getWordDetail().value!!
-                            WordCardActivity.startMe(
-                                context = this@WordDetailActivity,
-                                word = word,
-                                comment = comment
-                            )
+                        Option.WordCard -> {
+                            val comments = ArrayList<Comment>()
+                            comments.add(comment)
+                            navigateToWordCardActivity(comments = comments)
                         }
                         Option.Delete -> {
                             MaterialAlertDialogBuilder(
@@ -527,7 +523,7 @@ class WordDetailActivity : BaseActivity() {
     private fun getCommentOptions(comment: Comment): List<Option> {
         val options = mutableListOf<Option>()
         options.add(Option.Copy)
-        options.add(Option.Share)
+        options.add(Option.WordCard)
         options.add(Option.Report)
         val user = UserHelper.getUser()
         val isAdmin = viewModel.isUserAdmin()
@@ -562,6 +558,9 @@ class WordDetailActivity : BaseActivity() {
                             )
                             resultLauncher.launch(intent)
                         }
+                        Option.WordCard -> {
+                            navigateToWordCardActivity()
+                        }
                     }
                 }
             }
@@ -572,7 +571,7 @@ class WordDetailActivity : BaseActivity() {
     private fun getWordOptions(): List<Option> {
         val options = mutableListOf<Option>()
         options.add(Option.Copy)
-        options.add(Option.Share)
+        options.add(Option.WordCard)
         options.add(Option.Report)
         val isAdmin = viewModel.isUserAdmin()
         if (isAdmin) {
@@ -580,6 +579,12 @@ class WordDetailActivity : BaseActivity() {
             options.add(Option.Delete)
         }
         return options
+    }
+
+    private fun navigateToWordCardActivity(comments: ArrayList<Comment>? = null) {
+        if (!viewModel.isWordDetailSet()) return
+        val word = viewModel.getWordDetail().value!!
+        WordCardActivity.startMe(context = this, word = word, comments = comments)
     }
 
     // endregion
@@ -594,9 +599,7 @@ class WordDetailActivity : BaseActivity() {
             init()
         }
         binding.shareBtn.setOnClickListener {
-            if (!viewModel.isWordDetailSet()) return@setOnClickListener
-            val word = viewModel.getWordDetail().value!!
-            WordCardActivity.startMe(context = this, word = word)
+            navigateToWordCardActivity()
         }
         binding.likeBtn.setOnClickListener {
             viewModel.likeWord()

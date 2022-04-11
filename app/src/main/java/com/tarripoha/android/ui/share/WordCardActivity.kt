@@ -32,11 +32,12 @@ class WordCardActivity : AppCompatActivity() {
         private const val PLAY_STORE_ICON_HEIGHT = 100
         private const val LOGO_MARGIN = 48F
         private const val START_X = 140F
-        private const val KEY_COMMENT = "comment"
+        private const val KEY_COMMENTS = "comments"
         private const val KEY_WORD = "word"
-        fun startMe(context: Context, word: Word, comment: Comment? = null) {
+
+        fun startMe(context: Context, word: Word, comments: ArrayList<Comment>? = null) {
             val intent = Intent(context, WordCardActivity::class.java)
-            intent.putExtra(KEY_COMMENT, comment)
+            intent.putParcelableArrayListExtra(KEY_COMMENTS, comments)
             intent.putExtra(KEY_WORD, word)
             context.startActivity(intent)
         }
@@ -44,29 +45,49 @@ class WordCardActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityWordCardBinding
     private var word: Word? = null
-    private var comment: Comment? = null
+    private var comments: ArrayList<Comment>? = null
     private var darkMode: Boolean = true
 
-    private fun getNameProperty(): TextProperties {
+    private fun getNameProperty(): TextProperty {
         val color = if (isDarkMode()) {
             ContextCompat.getColor(this, R.color.colorPureWhite)
         } else ContextCompat.getColor(this, R.color.colorBlack)
-        return TextProperties(
+        return TextProperty(
             font = ResourcesCompat.getFont(this, R.font.montserrat_bold)!!,
             textColor = color,
             textSize = 120F
         )
     }
 
-    private val meaning: TextProperties by lazy {
-        TextProperties(
+    private fun getCommentProperty(): TextProperty {
+        val color = if (isDarkMode()) {
+            ContextCompat.getColor(this, R.color.colorPureWhite)
+        } else ContextCompat.getColor(this, R.color.colorBlack)
+        return TextProperty(
+            font = ResourcesCompat.getFont(this, R.font.montserrat_medium)!!,
+            textColor = color,
+            textSize = 45F
+        )
+    }
+
+    private val normalTextProperty: TextProperty by lazy {
+        TextProperty(
             font = ResourcesCompat.getFont(this, R.font.montserrat_medium)!!,
             textColor = ContextCompat.getColor(this, R.color.colorGrey),
             textSize = 60F
         )
     }
-    private val english: TextProperties by lazy {
-        TextProperties(
+
+    private val smallTextProperty: TextProperty by lazy {
+        TextProperty(
+            font = ResourcesCompat.getFont(this, R.font.montserrat_medium)!!,
+            textColor = ContextCompat.getColor(this, R.color.colorGrey),
+            textSize = 35F
+        )
+    }
+
+    private val italicTextProperty: TextProperty by lazy {
+        TextProperty(
             font = ResourcesCompat.getFont(this, R.font.montserrat_medium_italic)!!,
             textColor = ContextCompat.getColor(this, R.color.colorGrey),
             textSize = 60F
@@ -97,10 +118,9 @@ class WordCardActivity : AppCompatActivity() {
                 return
             }
             this.word = word
-
-            val comment = intent?.getParcelableExtra<Comment>(KEY_COMMENT)
-            if (comment == null) {
-                this.comment = comment
+            val comments = intent?.getParcelableArrayListExtra<Comment>(KEY_COMMENTS)
+            if (comments != null) {
+                this.comments = comments
             }
 
         } else {
@@ -111,10 +131,17 @@ class WordCardActivity : AppCompatActivity() {
     private fun invalidateWordCard() {
         if (!isCommentShareMode()) {
             createWordCard()
+            return
         }
+        createWordCardWithComments()
     }
 
     private fun createWordCard() {
+
+        if (word == null) {
+            setUserMessage(getString(R.string.error_unknown))
+            return
+        }
 
         val resultBitmap = Bitmap.createBitmap(MAX_WIDTH, MAX_WIDTH, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(resultBitmap)
@@ -127,14 +154,14 @@ class WordCardActivity : AppCompatActivity() {
             canvas.drawText(it, START_X, 300F, p)
         }
         word?.meaning?.let {
-            val p = getPaint(meaning)
+            val p = getPaint(normalTextProperty)
             canvas.drawText(it, START_X, 400F, p)
         }
         word?.eng?.let {
-            val p = getPaint(english)
+            val p = getPaint(italicTextProperty)
             drawMultilineText(
-                text = it, canvas = canvas, paint = p, y = 500F, yNextLine = 80F
-            )
+                text = it, canvas = canvas, paint = p, x = START_X, y = 500F, yNextLine = 80F
+            ) {}
         }
 
         // Placing at right corner
@@ -156,15 +183,130 @@ class WordCardActivity : AppCompatActivity() {
 
     }
 
+    private fun createWordCardWithComments() {
+
+        if (word == null) {
+            setUserMessage(getString(R.string.error_unknown))
+            return
+        }
+
+        val commentList = comments
+        if (commentList.isNullOrEmpty()) {
+            setUserMessage(getString(R.string.error_unknown))
+            return
+        }
+        var yMAX = MAX_WIDTH
+        var yComment = 500F
+        commentList.forEach {
+            yMAX += (256 + 48)
+            val length = it.comment.length
+            val lines = length / 20
+            yMAX += (lines * 80)
+        }
+
+        val resultBitmap = Bitmap.createBitmap(MAX_WIDTH, yMAX, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(resultBitmap)
+        val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+        paint.color = getBackGroundColor()
+        canvas.drawPaint(paint)
+
+        word?.name?.let {
+            val p = getPaint(getNameProperty())
+            canvas.drawText(it, START_X, 300F, p)
+        }
+        word?.meaning?.let {
+            val p = getPaint(normalTextProperty)
+            canvas.drawText(it, START_X, 400F, p)
+        }
+        word?.eng?.let {
+            val p = getPaint(italicTextProperty)
+            drawMultilineText(
+                text = it, canvas = canvas, paint = p, x = START_X, y = 500F, yNextLine = 80F
+            ) {
+                yComment = it + 300F
+            }
+        }
+
+        commentList.forEach {
+
+            // Avatar
+            val textPaint = getPaint(smallTextProperty)
+            canvas.drawCircle(START_X - 20F, yComment - 15F, 50F, textPaint)
+            val user = it.userName ?: getString(R.string.user)
+
+            // Avatar text
+            val whitePaint = Paint(Paint.ANTI_ALIAS_FLAG)
+            whitePaint.textSize = 50F
+            whitePaint.color = ContextCompat.getColor(this, R.color.colorPureWhite)
+            canvas.drawText(user[0].uppercase(), START_X - 35F, yComment, whitePaint)
+
+            // Username
+            canvas.drawText(user, START_X + 75, yComment - 20F, textPaint)
+
+            // Comment
+            val p = getPaint(getCommentProperty())
+            drawMultilineText(
+                text = it.comment,
+                canvas = canvas,
+                paint = p,
+                x = START_X + 75,
+                y = yComment + 45F,
+                yNextLine = 80F
+            ) {
+                yComment = it
+            }
+
+            val time = TPUtils.getTime(this, it.timestamp)
+            var count = 0
+            it.likes?.forEach { map ->
+                if (map.value) {
+                    count++
+                }
+            }
+            val likes: String = when (count) {
+                0 -> {
+                    ""
+                }
+                1 -> {
+                    getString(R.string.like, TPUtils.prettyCount(count))
+                }
+                else -> {
+                    getString(R.string.likes, TPUtils.prettyCount(count))
+                }
+            }
+            canvas.drawText("$time   $likes", START_X + 75F, yComment + 70F, textPaint)
+        }
+
+        // Placing at right corner
+        canvas.drawBitmap(
+            getPlayStoreLogo(),
+            /*Left*/ (MAX_WIDTH - PLAY_STORE_ICON_WIDTH - LOGO_MARGIN),
+            /*TOP*/ LOGO_MARGIN,
+            Paint()
+        )
+
+        // Placing at bottom center
+        canvas.drawBitmap(
+            getTPLogo(),
+            /*Left*/(MAX_WIDTH / 2F - LOGO_SIZE / 2F),
+            /*TOP*/yMAX - LOGO_SIZE - LOGO_MARGIN,//finalY + 400F - LOGO_SIZE - LOGO_MARGIN,
+            Paint()
+        )
+
+        binding.previewIv.setImageBitmap(resultBitmap)
+
+    }
+
     private fun drawMultilineText(
         text: String, canvas: Canvas, paint: Paint,
-        y: Float, yNextLine: Float,
-        maxLength: Int = 20
+        x: Float, y: Float, yNextLine: Float,
+        maxLength: Int = 20,
+        finalY: (Float) -> Unit
     ) {
         var startY = y
         val size = text.length
         if (size < maxLength) {
-            canvas.drawText(text, START_X, startY, paint)
+            canvas.drawText(text, x, startY, paint)
         } else {
             val list = mutableListOf<String>()
             val arr = text.split(" ")
@@ -181,13 +323,14 @@ class WordCardActivity : AppCompatActivity() {
                 list.add(temp)
             }
             list.forEach { line ->
-                canvas.drawText(line, START_X, startY, paint)
+                canvas.drawText(line, x, startY, paint)
                 startY += yNextLine
             }
         }
+        finalY(startY)
     }
 
-    private fun isCommentShareMode(): Boolean = comment != null
+    private fun isCommentShareMode(): Boolean = comments != null
 
     private fun isDarkMode(): Boolean = this.darkMode
 
@@ -216,7 +359,7 @@ class WordCardActivity : AppCompatActivity() {
         )
     }
 
-    private fun getPaint(property: TextProperties): Paint {
+    private fun getPaint(property: TextProperty): Paint {
         val paint = Paint(Paint.ANTI_ALIAS_FLAG)
         paint.typeface = property.font
         paint.textSize = property.textSize
@@ -258,5 +401,5 @@ class WordCardActivity : AppCompatActivity() {
         }
     }
 
-    data class TextProperties(val font: Typeface, val textSize: Float, val textColor: Int)
+    data class TextProperty(val font: Typeface, val textSize: Float, val textColor: Int)
 }
