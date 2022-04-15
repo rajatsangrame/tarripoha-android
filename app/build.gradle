@@ -17,8 +17,8 @@ android {
         minSdkVersion 21
         multiDexEnabled true
         targetSdkVersion 30
-        versionCode 13
-        versionName "0.7.5"
+        versionCode 14
+        versionName "0.7.6"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -171,5 +171,8 @@ dependencies {
 
     // In App Update
     implementation "com.google.android.play:core:$play_core"
+
+    // Work Manager
+    implementation "androidx.work:work-runtime:$workmanager"
 
 }

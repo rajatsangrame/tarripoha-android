@@ -3,6 +3,7 @@ package com.tarripoha.android.ui.login
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -13,6 +14,7 @@ import com.tarripoha.android.R
 import com.tarripoha.android.databinding.LayoutToolbarWithNavigationBinding
 import com.tarripoha.android.di.component.DaggerLoginActivityComponent
 import com.tarripoha.android.di.component.LoginActivityComponent
+import com.tarripoha.android.firebase.FcmUtil
 import com.tarripoha.android.ui.BaseActivity
 import com.tarripoha.android.ui.main.MainActivity
 import com.tarripoha.android.util.TPUtils
@@ -31,6 +33,7 @@ class LoginActivity : BaseActivity() {
     private lateinit var viewModel: LoginViewModel
 
     companion object {
+        private const val TAG = "LoginActivity"
         fun startMe(context: Context) {
             val intent = Intent(context, LoginActivity::class.java)
             intent.addFlags(
@@ -125,6 +128,12 @@ class LoginActivity : BaseActivity() {
             .observe(this, Observer { user ->
                 user?.let {
                     UserHelper.setUser(it)
+                    FcmUtil.uploadFCMToken(user = user,
+                        success = {
+                            Log.i(TAG, "onNewToken: uploaded")
+                        }, failure = {
+                            Log.e(TAG, "onNewToken: failed")
+                        })
                     MainActivity.startMe(this)
                     finish()
                 }

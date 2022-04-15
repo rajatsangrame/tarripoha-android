@@ -385,12 +385,12 @@ class WordDetailActivity : BaseActivity() {
         }
         binding.langTv.setTextWithVisibility(word.lang)
         TPUtils.showTotalLikes(likes = word.likes, view = binding.likeTv)
-        word.handleLike()
-        word.handleSavedState()
+        word.setupLikes()
+        word.setupSavedState()
         setupAdapter(getOption(word))
     }
 
-    private fun Word.handleLike() {
+    private fun Word.setupLikes() {
         this.likes?.let {
             val user = viewModel.getPrefUser()
             if (user?.id != null && it[user.id] != null && it[user.id] == true) {
@@ -411,7 +411,7 @@ class WordDetailActivity : BaseActivity() {
         }
     }
 
-    private fun Word.handleSavedState() {
+    private fun Word.setupSavedState() {
         this.saved?.let {
             val user = viewModel.getPrefUser()
             if (user?.id != null && it[user.id] != null && it[user.id] == true) {
