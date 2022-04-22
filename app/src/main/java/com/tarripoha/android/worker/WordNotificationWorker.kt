@@ -25,7 +25,7 @@ import java.lang.Exception
 import java.util.*
 
 /**
- * Worker thread to upload FCM token
+ * Worker thread to show word notifications
  */
 class WordNotificationWorker(
     val context: Context,
@@ -40,10 +40,10 @@ class WordNotificationWorker(
      * [Result] from this method.
      */
     override fun doWork(): Result {
-        return uploadFcmToken()
+        return fetchWordAndShowNotification()
     }
 
-    private fun uploadFcmToken(): Result {
+    private fun fetchWordAndShowNotification(): Result {
         var result = Result.success()
         val wordRef = PowerStone.getWordReference()
         wordRef.addValueEventListener(
@@ -131,14 +131,11 @@ class WordNotificationWorker(
         private const val NOTIFICATION_APP_CHANNEL_NAME = "Tarri Poha Notifications"
 
         /**
-         * Creates one time upload work manager task for FCM token
-         *
-         * 1. Get FCM token
-         * 2. On task complete
+         * Creates one time upload work manager task for Word notification
          * */
         @JvmStatic
         @WorkerThread
-        fun processFcmTokenUpload(context: Context) {
+        fun processWork(context: Context) {
 
             val constraints = Constraints.Builder()
                 .setRequiredNetworkType(CONNECTED)

@@ -27,7 +27,7 @@ class TPApp : Application() {
             .build()
         PowerStone.init()
         PreferenceHelper.init(this)
-        WordNotificationWorker.processFcmTokenUpload(this)
+        WordNotificationWorker.processWork(this)
     }
 
     fun getComponent(): ApplicationComponent? {
