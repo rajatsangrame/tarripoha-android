@@ -125,7 +125,7 @@ class WordNotificationWorker(
     }
 
     companion object {
-        private const val TAG = "WordPeriodic"
+        private const val TAG = "WordNotificationWorker"
         private const val MAX_RETRY_LIMIT = 10
         private const val NOTIFICATION_CHANNEL_ID = "tp_app_channel"
         private const val NOTIFICATION_APP_CHANNEL_NAME = "Tarri Poha Notifications"
