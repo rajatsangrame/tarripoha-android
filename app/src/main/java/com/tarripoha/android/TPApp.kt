@@ -8,6 +8,7 @@ import com.tarripoha.android.di.module.ApplicationModule
 import com.tarripoha.android.di.module.ContextModule
 import com.tarripoha.android.firebase.PowerStone
 import com.tarripoha.android.util.helper.PreferenceHelper
+import com.tarripoha.android.worker.WordNotificationWorker
 
 /**
  * Created by Rajat Sangrame
@@ -26,6 +27,7 @@ class TPApp : Application() {
             .build()
         PowerStone.init()
         PreferenceHelper.init(this)
+        WordNotificationWorker.processFcmTokenUpload(this)
     }
 
     fun getComponent(): ApplicationComponent? {

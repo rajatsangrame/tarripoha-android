@@ -32,11 +32,9 @@ class Repository(
 ) {
 
     private val ioExecutor: Executor by lazy { Executors.newSingleThreadExecutor() }
-    private val wordRef: DatabaseReference by lazy { Firebase.database.getReference("word") }
-    private val userRef: DatabaseReference by lazy { Firebase.database.getReference("user") }
-    private val commentRef: CollectionReference by lazy {
-        Firebase.firestore.collection("comment")
-    }
+    private val wordRef: DatabaseReference by lazy { PowerStone.getWordReference() }
+    private val userRef: DatabaseReference by lazy { PowerStone.getUserReference() }
+    private val commentRef: CollectionReference by lazy { PowerStone.getCommentReference() }
 
     /**
      * Check if the [DatabaseReference] is connected

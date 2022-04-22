@@ -4,6 +4,10 @@ import android.content.Context
 import android.util.Log
 import com.google.firebase.FirebaseApp
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ktx.database
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import com.google.gson.Gson
@@ -129,5 +133,11 @@ object PowerStone {
         val faqs = getRemoteConfig().getString(KEY_FAQ)
         return Gson().fromJson(faqs, Array<FAQResponse>::class.java)
     }
+
+    fun getWordReference() = Firebase.database.getReference("word")
+
+    fun getUserReference() = Firebase.database.getReference("user")
+
+    fun getCommentReference() = Firebase.firestore.collection("comment")
 
 }

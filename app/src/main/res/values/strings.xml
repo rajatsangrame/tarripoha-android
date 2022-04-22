@@ -78,6 +78,10 @@
     <string name="share">Share</string>
     <string name="copied_to_clipboard">Copied to clipboard</string>
 
+    <string name="notification_word_title">Do you know %1$s</string>
+    <string name="notification_word_desc">Tap here to get more details</string>
+
+
     <string name="sample_time">12:35 PM</string>
     <string name="sample_likes">2 Likes</string>
     <string name="sample_word">होळ</string>

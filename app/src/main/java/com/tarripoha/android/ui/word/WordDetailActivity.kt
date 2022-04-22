@@ -1,6 +1,7 @@
 package com.tarripoha.android.ui.word
 
 import android.app.Activity
+import android.app.PendingIntent
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -68,6 +69,17 @@ class WordDetailActivity : BaseActivity() {
             intent.putExtra(KEY_POST_FETCH, postFetch)
             intent.putExtra(KEY_WORD, word)
             context.startActivity(intent)
+        }
+
+        fun getPendingIntent(
+            context: Context,
+            word: String
+        ): PendingIntent {
+            val intent = Intent(context, WordDetailActivity::class.java)
+            intent.putExtra(KEY_POST_FETCH, true)
+            intent.putExtra(KEY_WORD, word)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+            return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT)
         }
     }
 
