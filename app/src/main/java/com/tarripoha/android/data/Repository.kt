@@ -92,7 +92,7 @@ class Repository(
         failure: (DatabaseError) -> Unit,
         connectionStatus: (Boolean) -> Unit
     ) {
-        wordRef.addValueEventListener(
+        wordRef.addListenerForSingleValueEvent(
             object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     success(snapshot)

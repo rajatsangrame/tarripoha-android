@@ -43,7 +43,7 @@ class WordNotificationWorker(
     private fun fetchWordAndShowNotification(): Result {
         var result = Result.success()
         val wordRef = PowerStone.getWordReference()
-        wordRef.addValueEventListener(
+        wordRef.addListenerForSingleValueEvent(
             object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     result = showNotification(snapshot)
