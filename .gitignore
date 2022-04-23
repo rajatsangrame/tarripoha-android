@@ -65,7 +65,7 @@ credentials.properties
 .externalNativeBuild
 
 # Google Services (e.g. APIs or Firebase)
-app/google-services.jso
+app/google-services.json
 
 # Freeline
 freeline.py
