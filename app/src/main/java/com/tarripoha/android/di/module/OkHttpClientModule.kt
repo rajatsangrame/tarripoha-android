@@ -13,7 +13,6 @@ import okhttp3.logging.HttpLoggingInterceptor
 import java.io.File
 import java.io.IOException
 
-
 /**
  * Created by Rajat Sangrame
  * http://github.com/rajatsangrame
@@ -23,7 +22,8 @@ class OkHttpClientModule {
 
     @Provides
     fun okHttpClient(
-        cache: Cache, interceptor: Interceptor,
+        cache: Cache,
+        interceptor: Interceptor,
         loggingInterceptor: HttpLoggingInterceptor
     ): OkHttpClient {
         return OkHttpClient()

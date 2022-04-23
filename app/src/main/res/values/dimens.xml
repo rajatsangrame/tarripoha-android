@@ -6,15 +6,25 @@
     <dimen name="margin_large">12dp</dimen>
     <dimen name="margin_extra_large">16dp</dimen>
 
+    <dimen name="margin_wide_distance">32dp</dimen>
+
+    <dimen name="margin_bottom_sheet">32dp</dimen>
+    <dimen name="margin_word_of_the_week">32dp</dimen>
+
     <dimen name="text_minimum">10sp</dimen>
     <dimen name="text_small">12sp</dimen>
     <dimen name="text_normal">14sp</dimen>
-    <dimen name="text_large">20sp</dimen>
-    <dimen name="text_extra_large">22sp</dimen>
-    <dimen name="text_huge">24sp</dimen>
+    <dimen name="text_large">16sp</dimen>
+    <dimen name="text_extra_large">20sp</dimen>
+    <dimen name="text_huge">28sp</dimen>
 
-    <dimen name="et_search">40dp</dimen>
-    <dimen name="btn_play">24dp</dimen>
+    <dimen name="icon_size">24dp</dimen>
+    <dimen name="icon_size_small">16dp</dimen>
 
-    <!--Common dimensions-->
+    <dimen name="char_item_size">50dp</dimen>
+
+    <dimen name="comment_et_size">50dp</dimen>
+
+    <dimen name="avatar_size">32dp</dimen>
+
 </resources>

@@ -6,7 +6,6 @@ import com.tarripoha.android.di.ApplicationScope
 import javax.inject.Inject
 import javax.inject.Provider
 
-
 /**
  * Created by Rajat Sangrame
  */
@@ -19,9 +18,10 @@ class ViewModelFactory @Inject constructor(
     ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        val creator = viewModelsMap[modelClass] ?: viewModelsMap.asIterable().firstOrNull {
-            modelClass.isAssignableFrom(it.key)
-        }?.value ?: throw IllegalArgumentException("unknown model class $modelClass")
+        val creator = viewModelsMap[modelClass] ?: viewModelsMap.asIterable()
+            .firstOrNull {
+                modelClass.isAssignableFrom(it.key)
+            }?.value ?: throw IllegalArgumentException("unknown model class $modelClass")
         return try {
             creator.get() as T
         } catch (e: Exception) {

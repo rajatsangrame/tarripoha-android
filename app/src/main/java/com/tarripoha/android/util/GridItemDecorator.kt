@@ -8,7 +8,11 @@ import androidx.recyclerview.widget.RecyclerView
  * Created by Rajat Sangrame
  * http://github.com/rajatsangrame
  */
-class GridItemDecorator(var spanCount: Int, var spacing: Int, var includeEdge: Boolean) :
+class GridItemDecorator(
+    var spanCount: Int,
+    var spacing: Int,
+    var includeEdge: Boolean
+) :
     RecyclerView.ItemDecoration() {
 
     override fun getItemOffsets(

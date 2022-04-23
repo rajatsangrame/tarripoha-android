@@ -6,7 +6,6 @@ import com.tarripoha.android.di.ApplicationScope
 import dagger.Module
 import dagger.Provides
 
-
 /**
  * Created by Rajat Sangrame
  * http://github.com/rajatsangrame

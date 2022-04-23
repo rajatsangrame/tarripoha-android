@@ -1,10 +1,10 @@
 package com.tarripoha.android.di.module
 
+import android.app.Application
 import android.content.Context
 import com.tarripoha.android.data.Repository
-import com.tarripoha.android.data.db.ModelDatabase
+import com.tarripoha.android.data.db.WordDatabase
 import com.tarripoha.android.data.rest.RetrofitApi
-
 import com.tarripoha.android.di.ApplicationContext
 import com.tarripoha.android.di.ApplicationScope
 import com.google.gson.Gson
@@ -16,13 +16,12 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
-
 /**
  * Created by Rajat Sangrame
  * http://github.com/rajatsangrame
  */
 @Module(includes = [ViewModelModule::class, OkHttpClientModule::class])
-class ApplicationModule {
+class ApplicationModule(val application: Application) {
 
     @Provides
     fun retrofitApi(retrofit: Retrofit): RetrofitApi {
@@ -56,14 +55,24 @@ class ApplicationModule {
 
     @ApplicationScope
     @Provides
-    fun getRepository(retrofitApi: RetrofitApi, database: ModelDatabase?, context: Context): Repository? {
+    fun getRepository(
+        retrofitApi: RetrofitApi,
+        database: WordDatabase?,
+        context: Context
+    ): Repository {
         return Repository(database, retrofitApi, context)
     }
 
     @ApplicationScope
     @Provides
-    fun getDatabase(@ApplicationContext context: Context): ModelDatabase? {
-        return ModelDatabase.getDataBase(context)
+    fun getDatabase(@ApplicationContext context: Context): WordDatabase? {
+        return WordDatabase.getDataBase(context)
+    }
+
+    @ApplicationScope
+    @Provides
+    fun app(): Application {
+        return application
     }
 
     companion object {
