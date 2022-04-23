@@ -46,7 +46,9 @@ import com.tarripoha.android.util.helper.UserHelper
 import com.tarripoha.android.ui.word.WordViewModel.FetchMode
 import com.tarripoha.android.util.*
 import com.tarripoha.android.util.texttospeech.TextToSpeechUtil
+import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 class WordDetailActivity : BaseActivity() {
 
@@ -78,8 +80,12 @@ class WordDetailActivity : BaseActivity() {
             val intent = Intent(context, WordDetailActivity::class.java)
             intent.putExtra(KEY_POST_FETCH, true)
             intent.putExtra(KEY_WORD, word)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-            return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            val requestCode = Random().nextInt()
+            return PendingIntent.getActivity(
+                context, requestCode, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT
+            )
         }
     }
 

@@ -11,7 +11,7 @@ data class User(
     var dirty: Boolean? = null,
     val admin: Boolean = false,
     val timestamp: Long,
-    var fcmToken: Boolean? = null,
+    var fcmToken: String? = null,
     var lastSessionTime: Long? = null,
 ) {
     constructor() : this(
