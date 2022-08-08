@@ -7,6 +7,10 @@ Currently available on the Play Store.
 
 <a href='https://play.google.com/store/apps/details?id=com.tarripoha.android'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png' height='80px'/></a>
 
+
+<a href='https://www.figma.com/community/file/1059931751417352372'><img alt='Figma Project' src='https://cdn.freebiesupply.com/logos/large/2x/figma-1-logo-png-transparent.png' height='80px'/></a>
+
+
 ## Libraries Used
 - [Kotlin](https://kotlinlang.org/)
 - [Dagger2](https://developer.android.com/training/dependency-injection/dagger-android)
