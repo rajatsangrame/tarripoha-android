@@ -34,6 +34,7 @@
         <activity
             android:name=".ui.startup.StartupActivity"
             android:screenOrientation="portrait"
+            android:exported="true"
             android:theme="@style/AppTheme.FullScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

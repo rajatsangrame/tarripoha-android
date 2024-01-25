@@ -36,7 +36,7 @@ buildscript {
         rx_binding = '2.0.0'
         shimmer_version = '0.5.0'
         swiperefreshlayout = '1.1.0'
-        workmanager = '2.5.0'
+        workmanager = '2.7.1'
     }
     repositories {
         google()

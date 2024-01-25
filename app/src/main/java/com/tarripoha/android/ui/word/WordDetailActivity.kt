@@ -84,7 +84,7 @@ class WordDetailActivity : BaseActivity() {
             val requestCode = Random().nextInt()
             return PendingIntent.getActivity(
                 context, requestCode, intent,
-                PendingIntent.FLAG_UPDATE_CURRENT
+                PendingIntent.FLAG_MUTABLE
             )
         }
     }

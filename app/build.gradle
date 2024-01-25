@@ -9,14 +9,13 @@ plugins {
 }
 
 android {
-    compileSdkVersion 30
-    buildToolsVersion "30.0.3"
+    compileSdkVersion 33
 
     defaultConfig {
         applicationId "com.tarripoha.android"
         minSdkVersion 21
         multiDexEnabled true
-        targetSdkVersion 30
+        targetSdkVersion 33
         versionCode 14
         versionName "0.7.6"
 
