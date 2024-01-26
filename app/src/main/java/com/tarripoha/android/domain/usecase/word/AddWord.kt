@@ -1,6 +1,6 @@
-package com.tarripoha.android.domain.usecases.word
+package com.tarripoha.android.domain.usecase.word
 
-import com.tarripoha.android.domain.entities.Word
+import com.tarripoha.android.domain.entity.Word
 import com.tarripoha.android.domain.repository.WordRepository
 
 class AddWord(private val wordRepository: WordRepository){

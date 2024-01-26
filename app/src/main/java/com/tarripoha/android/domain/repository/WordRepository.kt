@@ -1,6 +1,6 @@
 package com.tarripoha.android.domain.repository
 
-import com.tarripoha.android.domain.entities.Word
+import com.tarripoha.android.domain.entity.Word
 
 class WordRepository(private val dataSource: WordDataSource) {
     suspend fun addWord(word: Word) = dataSource.add(word)

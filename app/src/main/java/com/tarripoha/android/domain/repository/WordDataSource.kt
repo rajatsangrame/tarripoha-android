@@ -1,5 +1,5 @@
 package com.tarripoha.android.domain.repository
-import com.tarripoha.android.domain.entities.Word
+import com.tarripoha.android.domain.entity.Word
 
 interface WordDataSource {
     suspend fun add(word: Word)
