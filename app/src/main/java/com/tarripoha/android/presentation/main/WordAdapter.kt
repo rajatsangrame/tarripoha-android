@@ -11,6 +11,7 @@ import com.tarripoha.android.presentation.base.BaseViewHolder
 import com.tarripoha.android.R
 import com.tarripoha.android.databinding.LayoutItemWordSquareBinding
 import com.tarripoha.android.domain.entity.Word
+import timber.log.Timber
 
 class WordAdapter(
     private var words: MutableList<Word>,
@@ -23,7 +24,7 @@ class WordAdapter(
         parent: ViewGroup,
         viewType: Int
     ): BaseViewHolder {
-        return if (viewType == VIEW_TYPE_NEW_WORD) {
+        return if (viewType == VIEW_TYPE_NEW_WORD_SUGGESTION) {
             val binding = LayoutNewWordPlankBinding
                 .inflate(LayoutInflater.from(parent.context), parent, false)
             NewWordPlankViewHolder(binding)
@@ -47,17 +48,15 @@ class WordAdapter(
 
     override fun getItemCount(): Int = words.size
 
-//    override fun getItemViewType(position: Int): Int {
-//        val type = this.words[position].type
-//        if (type != null) {
-//            when (type) {
-//                // Always Linear layout for new word
-//                Word.TYPE_NEW_WORD -> return VIEW_TYPE_NEW_WORD
-//            }
-//        } else if (options?.squareView == true) return VIEW_TYPE_SQUARE
-//
-//        return super.getItemViewType(position)
-//    }
+    override fun getItemViewType(position: Int): Int {
+        val type = this.words[position].isAddNewWord
+        if (type) {
+            // Always Linear layout for new word
+            return VIEW_TYPE_NEW_WORD_SUGGESTION
+        } else if (options?.squareView == true) return VIEW_TYPE_SQUARE
+
+        return super.getItemViewType(position)
+    }
 
     fun setWordList(words: List<Word>) {
         this.words.clear()
@@ -88,10 +87,12 @@ class WordAdapter(
                         binding.statusTv.text = context.getString(R.string.removed)
                         binding.statusTv.setBackgroundResource(R.color.colorRed)
                     }
+
                     !word.isApproved() && !word.isDirty() -> {
                         binding.statusTv.text = context.getString(R.string.pending)
                         binding.statusTv.setBackgroundResource(R.color.colorGrey)
                     }
+
                     else -> {
                         binding.statusTv.text = context.getString(R.string.approved)
                         binding.statusTv.setBackgroundResource(R.color.colorGreen)
@@ -155,7 +156,7 @@ class WordAdapter(
     )
 
     companion object {
-        const val VIEW_TYPE_NEW_WORD = 101
+        const val VIEW_TYPE_NEW_WORD_SUGGESTION = 101
         const val VIEW_TYPE_SQUARE = 102
     }
 

@@ -41,9 +41,8 @@ import java.util.concurrent.TimeUnit
 class MainActivity : BaseActivity() {
 
     private lateinit var navController: NavController
-    private val mainViewModel : MainViewModel by viewModels()
+    private val mainViewModel: MainViewModel by viewModels()
     private lateinit var binding: ActivityMainBinding
-    private var showBackBtn = false
 
     companion object {
         private const val SEARCH_DEBOUNCE_TIME_IN_MS = 300L
@@ -119,6 +118,10 @@ class MainActivity : BaseActivity() {
         Handler(Looper.getMainLooper()).postDelayed({
             callback()
         }, delay)
+    }
+
+    fun openDrawer() {
+        binding.drawerLayout.open()
     }
 
     fun onDrawerClick(item: SideNavItem) {
@@ -256,21 +259,11 @@ class MainActivity : BaseActivity() {
     //region Helper functions
 
     private fun setupUI() {
-        setupToolbar()
         setupObservers()
         setupListeners()
         setupSearchEditText()
         navController = findNavController(R.id.nav_host_fragment)
         navController.setGraph(R.navigation.main_nav_graph)
-        handleNavigation()
-    }
-
-    private fun setupToolbar() {
-        setSupportActionBar(binding.container.toolbarLayout.toolbar)
-        supportActionBar?.apply {
-            title = null
-            setDisplayHomeAsUpEnabled(true)
-        }
     }
 
     private fun setupObservers() {
@@ -315,74 +308,6 @@ class MainActivity : BaseActivity() {
 //            })
     }
 
-    private fun handleNavigation() {
-//        navController.addOnDestinationChangedListener { _, destination, _ ->
-//            when (destination.id) {
-//                R.id.nav_home -> {
-//                    homeNavigation()
-//                }
-//
-//                R.id.nav_search -> {
-//                    searchNavigation()
-//                }
-//
-//                R.id.nav_wordList -> {
-//                    wordListNavigation()
-//                }
-//            }
-//        }
-    }
-
-    private fun homeNavigation() {
-        showBackBtn = false
-        supportActionBar?.apply {
-            setHomeAsUpIndicator(R.drawable.ic_menu_white)
-            setBackgroundDrawable(
-                ColorDrawable(ContextCompat.getColor(this@MainActivity, R.color.colorPrimary))
-            )
-        }
-        binding.container.toolbarLayout.apply {
-            title.text = getString(R.string.app_name)
-            title.visibility = View.VISIBLE
-            searchToolbar.visibility = View.GONE
-            heading.visibility = View.GONE
-        }
-        binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
-    }
-
-    private fun searchNavigation() {
-        showBackBtn = true
-        supportActionBar?.apply {
-            setHomeAsUpIndicator(R.drawable.ic_arrow_back_grey)
-            setBackgroundDrawable(
-                ColorDrawable(ContextCompat.getColor(this@MainActivity, R.color.colorToolbarWhite))
-            )
-        }
-        binding.container.toolbarLayout.apply {
-            title.visibility = View.GONE
-            searchToolbar.visibility = View.VISIBLE
-            heading.visibility = View.GONE
-        }
-        showKeyboard()
-        binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
-    }
-
-    private fun wordListNavigation() {
-        showBackBtn = true
-        supportActionBar?.apply {
-            setHomeAsUpIndicator(R.drawable.ic_arrow_back_white)
-            setBackgroundDrawable(
-                ColorDrawable(ContextCompat.getColor(this@MainActivity, R.color.colorPrimary))
-            )
-        }
-        binding.container.toolbarLayout.apply {
-            title.visibility = View.GONE
-            searchToolbar.visibility = View.GONE
-            heading.visibility = View.VISIBLE
-        }
-        binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
-    }
-
     /*private fun navigateToWordListFragment(
         lang: String = GlobalVar.LANG_ANY,
         category: String,
@@ -418,17 +343,6 @@ class MainActivity : BaseActivity() {
     }
 
     private fun setupListeners() {
-        binding.container.toolbarLayout.apply {
-            clearBtn.setOnClickListener {
-                showKeyboard()
-                searchEt.text = null
-                clearBtn.visibility = View.GONE
-            }
-        }
-    }
-
-    private fun showKeyboard() {
-        TPUtils.showKeyboard(context = this, view = binding.container.toolbarLayout.searchEt)
     }
 
     //endregion

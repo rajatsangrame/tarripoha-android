@@ -135,6 +135,7 @@ object TPUtils {
                             SimpleDateFormat("h:mm a", Locale.getDefault()).format(time.time)
                         }
                     }
+
                     System.currentTimeMillis() - date < millisElapsedToday + DateUtils.DAY_IN_MILLIS -> {
                         // event happened yesterday as difference between current time and event's time since epoch is less than millis elapsed (today + one whole day).
                         val timeStrings = relativeTime.split(",".toRegex())
@@ -142,9 +143,11 @@ object TPUtils {
                         timeStrings[0] = context.getString(R.string.yesterday)
                         relativeTime = timeStrings[0]
                     }
+
                     isSameYear(date) -> {
                         relativeTime = SimpleDateFormat("d MMM", Locale.getDefault()).format(date)
                     }
+
                     else -> {
                         relativeTime =
                             SimpleDateFormat("d MMM yy", Locale.getDefault()).format(date)
@@ -232,27 +235,17 @@ object TPUtils {
             0 -> {
                 view.visibility = View.GONE
             }
+
             1 -> {
                 view.text = context.getString(R.string.like, prettyCount(count))
                 view.visibility = View.VISIBLE
             }
+
             else -> {
                 view.text = context.getString(R.string.likes, prettyCount(count))
                 view.visibility = View.VISIBLE
             }
         }
-    }
-
-    fun getLangCode(context: Context, language: String?): String? {
-        if (language.isNullOrEmpty()) return null
-        if (language == context.getString(R.string.marathi)) {
-            return GlobalVar.LANG_MAR
-        } else if (language == context.getString(R.string.hindi)) {
-            return GlobalVar.LANG_HI
-        } else if (language == context.getString(R.string.english)) {
-            return GlobalVar.LANG_EN
-        }
-        return null
     }
 
     fun navigateToPlayStore(context: Context, appId: String) {

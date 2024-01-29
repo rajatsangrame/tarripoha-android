@@ -5,13 +5,15 @@ import android.content.res.Resources
 import com.google.firebase.database.ktx.database
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.tarripoha.android.data.repository.home.FirebaseDashboardDataSource
 import com.tarripoha.android.data.repository.word.FirebaseWordDataSource
-import com.tarripoha.android.data.repository.word.UseCases
-import com.tarripoha.android.domain.repository.WordRepository
-import com.tarripoha.android.domain.usecase.word.AddWord
+import com.tarripoha.android.data.repository.home.HomeUseCase
+import com.tarripoha.android.domain.repository.dashboard.DashboardRepository
+import com.tarripoha.android.domain.repository.word.WordRepository
+import com.tarripoha.android.domain.usecase.dashboard.GetDashboardData
 import com.tarripoha.android.domain.usecase.word.GetAllWord
-import com.tarripoha.android.domain.usecase.word.GetWord
-import com.tarripoha.android.domain.usecase.word.RemoveWord
+import com.tarripoha.android.domain.usecase.word.GetFilteredWords
+import com.tarripoha.android.domain.usecase.word.GetWordDetail
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import dagger.Module
@@ -31,18 +33,28 @@ object RepositoryModule {
     }
 
     @Provides
+    @Singleton
+    fun provideDashboardRepository(): DashboardRepository {
+        val ref = Firebase.database.getReference("dashboard")
+        return DashboardRepository(FirebaseDashboardDataSource(ref))
+    }
+
+    @Provides
     fun provideResource(@ApplicationContext context: Context): Resources {
         return context.resources
     }
 
     @Provides
     @Singleton
-    fun provideWordUseCases(repository: WordRepository): UseCases {
-        return UseCases(
-            AddWord(repository),
-            GetWord(repository),
-            GetAllWord(repository),
-            RemoveWord(repository)
+    fun provideHomeUseCase(
+        wordRepository: WordRepository,
+        dashboardRepository: DashboardRepository
+    ): HomeUseCase {
+        return HomeUseCase(
+            GetWordDetail(wordRepository),
+            GetAllWord(wordRepository),
+            GetDashboardData(dashboardRepository),
+            GetFilteredWords(wordRepository)
         )
     }
 }

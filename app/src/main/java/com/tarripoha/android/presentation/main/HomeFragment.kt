@@ -12,20 +12,26 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.*
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.google.android.play.core.install.model.AppUpdateType.IMMEDIATE
 import com.google.android.play.core.install.model.UpdateAvailability
-import com.tarripoha.android.GlobalVar
+import com.tarripoha.android.Constants
+import com.tarripoha.android.Constants.DashboardViewCategory
+import com.tarripoha.android.Constants.DashboardViewType
 import com.tarripoha.android.R
+import com.tarripoha.android.data.model.DashboardResponse
+import com.tarripoha.android.data.model.LabeledView
 import com.tarripoha.android.databinding.FragmentHomeBinding
+import com.tarripoha.android.domain.entity.Word
 import com.tarripoha.android.presentation.main2.MainViewModel
+import com.tarripoha.android.util.GridItemDecorator
 import com.tarripoha.android.util.ItemClickListener
 import com.tarripoha.android.util.TPUtils.toDp
 import com.tarripoha.android.util.helper.PreferenceHelper
 import com.tarripoha.android.util.ktx.showDialog
+import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
 class HomeFragment : Fragment() {
@@ -58,15 +64,9 @@ class HomeFragment : Fragment() {
         return binding.root
     }
 
-    /**
-     * Called when fragment's activity is created.
-     * 1. Setup UI for the activity. See [setupUI].
-     *
-     * @param savedInstanceState Saved data on config or state change.
-     */
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-            setupUI()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setupUI()
     }
 
     override fun onResume() {
@@ -86,37 +86,41 @@ class HomeFragment : Fragment() {
     // region Helper Methods
 
     private fun setupUI() {
-        setupDashboard()
+        setupToolbar()
         setupListeners()
         setupObservers()
         fetchDashBoardData(startShimmer = true)
     }
 
-    private fun setupDashboard() {
+    private fun setupToolbar() {
+        binding.toolbarLayout.btnBack.setImageResource(R.drawable.ic_hamburger)
+        binding.toolbarLayout.btnBack.setOnClickListener {
+            (requireActivity() as MainActivity).openDrawer()
+        }
+    }
+
+    private fun setupDashboard(dashboardInfo: DashboardResponse) {
         binding.dashboardLl.removeAllViews()
 
-        /*val dashboardInfo = PowerStone.getDashboardInfo()
         binding.wordOfTheWeekTv.text = dashboardInfo.wordOfTheDay
         val labeledViewList: MutableList<LabeledView> = mutableListOf()
         dashboardInfo.labeledViews.forEach {
             when (it.type) {
-                GlobalVar.TYPE_WORD -> {
-                    if (it.key.isNullOrEmpty() || it.category.isNullOrEmpty() || it.lang.isNullOrEmpty()) {
-                        viewModel.setUserMessage(getString(R.string.error_unknown))
-                        return@forEach
-                    }
+                DashboardViewType.TYPE_WORD.value -> {
+                    val key = "${it.lang!!}_${it.category!!}"
+                    val language = Constants.getLanguageName(it.lang)!!
                     val labelledRecycleView = LabelledRecycleView(requireContext())
-                    val label = if (it.category == GlobalVar.CATEGORY_MOST_VIEWED) {
+                    val label = if (it.category == DashboardViewCategory.MOST_VIEWED.value) {
                         getString(R.string.trending)
                     } else getString(R.string.top_words)
 
-                    labelledRecycleView.setOptionalText(it.lang)
+                    labelledRecycleView.setOptionalText(language)
                     labelledRecycleView.setLabel(label)
                     labelledRecycleView.setOnNavigateClickListener { _ ->
                         navigateToWordListFragment(
-                            lang = it.lang,
+                            lang = language,
                             category = it.category,
-                            heading = "$label : ${it.lang}"
+                            heading = "$label : $language"
                         )
                     }
                     val adapter = WordAdapter(
@@ -124,11 +128,10 @@ class HomeFragment : Fragment() {
                         options = WordAdapter.ViewingOptions(squareView = true),
                         itemClickListener = object : ItemClickListener<Word> {
                             override fun onClick(position: Int, data: Word) {
-                                viewModel.updateViewsCount(word = data)
-                                WordDetailActivity.startMe(
-                                    context = requireContext(),
-                                    wordDetail = data
-                                )
+//                                WordDetailActivity.startMe(
+//                                    context = requireContext(),
+//                                    wordDetail = data
+//                                )
                             }
                         })
                     labelledRecycleView.getRecyclerView()
@@ -136,24 +139,24 @@ class HomeFragment : Fragment() {
                             GridItemDecorator(spanCount = 5, spacing = 64.toDp, includeEdge = true)
                         )
                     labelledRecycleView.getRecyclerView().adapter = adapter
-                    adapterMap[it.key] = DashboardHelper(
+                    adapterMap[key] = DashboardHelper(
                         adapter = adapter,
                         labelledRecycleView = labelledRecycleView
                     )
                     labeledViewList.add(it)
                     binding.dashboardLl.addView(labelledRecycleView)
                 }
-                GlobalVar.TYPE_GOOGLE_AD -> {
+
+                DashboardViewType.TYPE_GOOGLE_AD.value -> {
                     // no -op
                 }
             }
-        }*/
+        }
     }
 
     private fun fetchDashBoardData(startShimmer: Boolean = false) {
-        /*if (startShimmer) binding.shimmer.startShimmer()
-        val dashboardInfo = PowerStone.getDashboardInfo()
-        viewModel.fetchAllWord(dashboardInfo.labeledViews)*/
+        if (startShimmer) binding.shimmer.startShimmer()
+        viewModel.fetchDashboardWord()
     }
 
     private fun navigateToWordListFragment(lang: String, category: String, heading: String) {
@@ -168,7 +171,8 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupObservers() {
-        /*viewModel.apply {
+        viewModel.apply {
+
             isRefreshing()
                 .observe(viewLifecycleOwner, Observer {
                     it?.let {
@@ -176,10 +180,16 @@ class HomeFragment : Fragment() {
                         binding.swipeRefreshLayout.isRefreshing = it
                     }
                 })
-            getDashboardData()
+
+            getDashBoardInfo()
                 .observe(viewLifecycleOwner, Observer {
+                    if (it == null) return@Observer
+
+                    Timber.tag("FUCK").d("here " + it.data.size)
+
+                    setupDashboard(it.response)
                     adapterMap.forEach { map ->
-                        it[map.key]?.let { words ->
+                        it.data[map.key]?.let { words ->
                             val adapter = map.value.adapter
                             adapter.setWordList(words = words)
                             map.value.labelledRecycleView.setErrorView(
@@ -193,7 +203,7 @@ class HomeFragment : Fragment() {
                     }
                     binding.container.visibility = View.VISIBLE
                 })
-        }*/
+        }
     }
 
     private fun checkUpdateAvailable() {

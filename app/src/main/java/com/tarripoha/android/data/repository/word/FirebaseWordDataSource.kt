@@ -1,11 +1,12 @@
 package com.tarripoha.android.data.repository.word
 
-import com.google.firebase.database.DataSnapshot
 import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
 import com.tarripoha.android.domain.entity.Word
-import com.tarripoha.android.domain.repository.WordDataSource
-import com.tarripoha.android.util.ktx.FirebaseUtil.fireStoreFind
+import com.tarripoha.android.domain.repository.word.WordDataSource
+import com.tarripoha.android.domain.repository.word.WordRepository.FilterParams
+import com.tarripoha.android.util.ktx.FirebaseUtil.cloudStorageFind
 import timber.log.Timber
 
 
@@ -15,12 +16,24 @@ class FirebaseWordDataSource(private val wordRef: CollectionReference) : WordDat
         TODO("Not yet implemented")
     }
 
-    override suspend fun get(id: Long): Word? {
+    override suspend fun getWordDetail(id: Long): Word? {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getAll(): List<Word> {
-        val snapshot = wordRef.fireStoreFind()
+    override suspend fun getFilteredWords(params: Any): List<Word> {
+        val (field, value, sortField, asc, cursor, limit) = (params as FilterParams)
+        val direction = if (asc == true) Query.Direction.ASCENDING else Query.Direction.DESCENDING
+        val query = if (false) {
+            wordRef.whereEqualTo(field, value).orderBy(sortField!!, direction).limit(limit)
+        } else {
+            wordRef.whereEqualTo(field, value).limit(limit)
+        }
+        val snapshot = query.cloudStorageFind()
+        return parseWordList(snapshot)
+    }
+
+    override suspend fun getAllWords(): List<Word> {
+        val snapshot = wordRef.cloudStorageFind()
         return parseWordList(snapshot)
     }
 

@@ -16,8 +16,11 @@ data class Word(
     var views: Long? = null,
     var comments: Long? = null,
     private var dirty: Boolean? = null,
-    private var approved: Boolean? = null
+    private var approved: Boolean? = null,
 ) {
+
+    // Local use
+    var isAddNewWord: Boolean = false
 
     /** Must define a no-argument constructor to avoid [DatabaseException] */
     constructor() : this(id = "", name = "", meaning = "")

@@ -6,10 +6,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/toolbar_layout"
+            layout="@layout/toolbar" />
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/container"
@@ -133,7 +137,7 @@
 
         </com.facebook.shimmer.ShimmerFrameLayout>
 
-    </FrameLayout>
+    </LinearLayout>
 
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

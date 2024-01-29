@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import android.content.res.Resources
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.tarripoha.android.R
@@ -17,7 +18,8 @@ import com.tarripoha.android.util.TPUtils
 abstract class BaseViewModel(private val resources: Resources) : ViewModel() {
 
     private val userMessage: MutableLiveData<String> = MutableLiveData()
-    private val showProgress = MutableLiveData<Boolean>()
+    val isRefreshing: MutableLiveData<Boolean> = MutableLiveData()
+    val showProgress = MutableLiveData<Boolean>()
     //private val user = MutableLiveData<User>()
 
     fun setUserMessage(msg: String) {
@@ -27,11 +29,9 @@ abstract class BaseViewModel(private val resources: Resources) : ViewModel() {
 
     fun getUserMessage() = userMessage
 
-    fun setShowProgress(showProgress: Boolean?) {
-        this.showProgress.value = showProgress
-    }
+    fun getShowProgress(): LiveData<Boolean> = showProgress
 
-    fun getShowProgress() = showProgress
+    fun isRefreshing(): LiveData<Boolean> = isRefreshing
 
     fun getString(resId: Int) = resources.getString(resId)
 
