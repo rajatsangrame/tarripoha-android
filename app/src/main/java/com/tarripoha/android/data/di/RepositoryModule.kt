@@ -1,7 +1,9 @@
 package com.tarripoha.android.data.di
 
 import android.content.Context
+import android.content.res.Resources
 import com.google.firebase.database.ktx.database
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.tarripoha.android.data.repository.word.FirebaseWordDataSource
 import com.tarripoha.android.data.repository.word.UseCases
@@ -24,8 +26,13 @@ object RepositoryModule {
     @Provides
     @Singleton
     fun provideWordRepository(@ApplicationContext context: Context): WordRepository {
-        val ref = Firebase.database.getReference("test-word")
+        val ref = Firebase.firestore.collection("word")
         return WordRepository(FirebaseWordDataSource(ref))
+    }
+
+    @Provides
+    fun provideResource(@ApplicationContext context: Context): Resources {
+        return context.resources
     }
 
     @Provides

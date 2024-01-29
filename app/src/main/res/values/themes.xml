@@ -2,4 +2,5 @@
 <resources>
 
     <style name="Theme.TarriPoha" parent="Theme.AppCompat.DayNight" />
+
 </resources>

@@ -1,7 +1,8 @@
 package com.tarripoha.android
 
 import android.app.Application
-import com.tarripoha.android.utils.ReleaseTree
+import com.tarripoha.android.util.ReleaseTree
+import com.tarripoha.android.util.helper.PreferenceHelper
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 
@@ -11,6 +12,7 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         setupTimber()
+        PreferenceHelper.init(this)
     }
 
     private fun setupTimber() {
