@@ -4,6 +4,7 @@ import android.content.res.Resources
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.tarripoha.android.Constants.DashboardViewType
 import com.tarripoha.android.Constants
 import com.tarripoha.android.data.model.DashboardResponse
 import com.tarripoha.android.data.repository.home.HomeUseCase
@@ -45,7 +46,7 @@ class MainViewModel @Inject constructor(
             val dashboardResponse = async { homeUseCase.dashboardData() }.await()
             val map = mutableMapOf<String, List<Word>>()
             dashboardResponse.labeledViews.forEach {
-                if (it.type == "word") {
+                if (it.type == DashboardViewType.TYPE_WORD.value) {
                     val key = "${it.lang}_${it.category}"
                     val lang = Constants.getLanguageName(it.lang!!)!!
                     val words = when (it.category) {

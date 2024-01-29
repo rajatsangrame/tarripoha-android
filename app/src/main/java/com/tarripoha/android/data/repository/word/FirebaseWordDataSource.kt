@@ -23,8 +23,8 @@ class FirebaseWordDataSource(private val wordRef: CollectionReference) : WordDat
     override suspend fun getFilteredWords(params: Any): List<Word> {
         val (field, value, sortField, asc, cursor, limit) = (params as FilterParams)
         val direction = if (asc == true) Query.Direction.ASCENDING else Query.Direction.DESCENDING
-        val query = if (false) {
-            wordRef.whereEqualTo(field, value).orderBy(sortField!!, direction).limit(limit)
+        val query = if (sortField != null) {
+            wordRef.whereEqualTo(field, value).orderBy(field, direction).limit(limit)
         } else {
             wordRef.whereEqualTo(field, value).limit(limit)
         }

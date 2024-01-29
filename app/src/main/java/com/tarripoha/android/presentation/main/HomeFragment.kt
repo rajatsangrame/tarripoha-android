@@ -185,8 +185,6 @@ class HomeFragment : Fragment() {
                 .observe(viewLifecycleOwner, Observer {
                     if (it == null) return@Observer
 
-                    Timber.tag("FUCK").d("here " + it.data.size)
-
                     setupDashboard(it.response)
                     adapterMap.forEach { map ->
                         it.data[map.key]?.let { words ->
