@@ -3,6 +3,7 @@ package com.tarripoha.android.presentation.main2
 import android.content.res.Resources
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.tarripoha.android.Constants.DashboardViewType
 import com.tarripoha.android.Constants
@@ -19,6 +20,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
+    private val savedStateHandle: SavedStateHandle,
     private val homeUseCase: HomeUseCase,
     resources: Resources
 ) :
@@ -35,7 +37,7 @@ class MainViewModel @Inject constructor(
 
     fun getAllWords() {
         viewModelScope.launch {
-            val words = async { homeUseCase.getAllWord() }.await()
+            val words = homeUseCase.getAllWord()
             Timber.tag(TAG).d("getAllWords: %s", words.size)
         }
     }
@@ -43,7 +45,7 @@ class MainViewModel @Inject constructor(
     fun fetchDashboardWord() {
         isRefreshing.value = true
         viewModelScope.launch {
-            val dashboardResponse = async { homeUseCase.dashboardData() }.await()
+            val dashboardResponse = homeUseCase.dashboardData()
             val map = mutableMapOf<String, List<Word>>()
             dashboardResponse.labeledViews.forEach {
                 if (it.type == DashboardViewType.TYPE_WORD.value) {
@@ -51,21 +53,18 @@ class MainViewModel @Inject constructor(
                     val lang = Constants.getLanguageName(it.lang!!)!!
                     val words = when (it.category) {
                         Constants.DashboardViewCategory.MOST_LIKED.value -> {
-                            async {
-                                homeUseCase.getFilteredWords(
-                                    WordRepository.FilterParams(
-                                        field = "lang",
-                                        value = lang,
-                                        sortField = "likes",
-                                        asc = false,
-                                        limit = 5
-                                    )
+                            homeUseCase.getFilteredWords(
+                                WordRepository.FilterParams(
+                                    field = "lang",
+                                    value = lang,
+                                    sortField = "likes",
+                                    asc = false,
+                                    limit = 5
                                 )
-                            }.await()
+                            )
                         }
 
                         Constants.DashboardViewCategory.MOST_VIEWED.value -> {
-                            async {
                                 homeUseCase.getFilteredWords(
                                     WordRepository.FilterParams(
                                         field = "lang",
@@ -75,7 +74,6 @@ class MainViewModel @Inject constructor(
                                         limit = 5
                                     )
                                 )
-                            }.await()
                         }
 
                         else -> null
