@@ -66,9 +66,8 @@ fun View.toggleIsEnable(inputText: CharSequence?) {
 
 fun Any.toJsonString(): String = Gson().toJson(this)
 
-fun <T> String.toObject(): T {
-    val type: Type = object : TypeToken<T>() {}.type
-    return Gson().fromJson(this, type)
+inline fun <reified T> String.parseObject(): T {
+    return Gson().fromJson(this, T::class.java)
 }
 
 fun CharSequence?.hasEnglishChars(): Boolean {
@@ -112,7 +111,3 @@ fun Context.getPackage(): String {
     return this.packageName.replace(".debug", "")
 }
 
-
-inline fun <reified T> String.parseObject(): T {
-    return Gson().fromJson(this, T::class.java)
-}

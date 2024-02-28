@@ -1,4 +1,4 @@
-package com.tarripoha.android.data.repository.home
+package com.tarripoha.android.data.datasource.home
 
 import com.tarripoha.android.domain.usecase.dashboard.GetDashboardData
 import com.tarripoha.android.domain.usecase.word.GetAllWord

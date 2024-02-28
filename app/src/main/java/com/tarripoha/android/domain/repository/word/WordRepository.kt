@@ -11,8 +11,7 @@ class WordRepository(private val dataSource: WordDataSource) {
     suspend fun removeWord(word: Word) = dataSource.remove(word)
 
     data class FilterParams(
-        val field: String,
-        val value: String,
+        val data: Map<String, Any>,
         var sortField: String? = null,
         var asc: Boolean? = null,
         var cursor: String? = null,

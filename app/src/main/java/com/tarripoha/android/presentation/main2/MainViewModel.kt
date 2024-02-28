@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.tarripoha.android.Constants.DashboardViewType
 import com.tarripoha.android.Constants
 import com.tarripoha.android.data.model.DashboardResponse
-import com.tarripoha.android.data.repository.home.HomeUseCase
+import com.tarripoha.android.data.datasource.home.HomeUseCase
 import com.tarripoha.android.domain.entity.Word
 import com.tarripoha.android.domain.repository.word.WordRepository
 import com.tarripoha.android.presentation.base.BaseViewModel
@@ -44,13 +44,16 @@ class MainViewModel @Inject constructor(
     }
 
     private suspend fun fetchWords(category: String, lang: String): List<Word> {
+        val filter = mutableMapOf<String, Any>().also {
+            it["lang"] = lang
+            it["dirty"] = false
+            it["approved"] = true
+        }
         val words = when (category) {
-
             Constants.DashboardViewCategory.MOST_LIKED.value -> {
                 homeUseCase.getFilteredWords(
                     WordRepository.FilterParams(
-                        field = "lang",
-                        value = lang,
+                        data = filter,
                         sortField = "likes",
                         asc = false,
                         limit = 5
@@ -61,8 +64,7 @@ class MainViewModel @Inject constructor(
             Constants.DashboardViewCategory.MOST_VIEWED.value -> {
                 homeUseCase.getFilteredWords(
                     WordRepository.FilterParams(
-                        field = "lang",
-                        value = lang,
+                        data = filter,
                         sortField = "views",
                         asc = false,
                         limit = 5

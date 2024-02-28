@@ -5,9 +5,9 @@ import android.content.res.Resources
 import com.google.firebase.database.ktx.database
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.tarripoha.android.data.repository.home.FirebaseDashboardDataSource
-import com.tarripoha.android.data.repository.word.FirebaseWordDataSource
-import com.tarripoha.android.data.repository.home.HomeUseCase
+import com.tarripoha.android.data.datasource.home.FirebaseDashboardDataSource
+import com.tarripoha.android.data.datasource.word.FirebaseWordDataSource
+import com.tarripoha.android.data.datasource.home.HomeUseCase
 import com.tarripoha.android.domain.repository.dashboard.DashboardRepository
 import com.tarripoha.android.domain.repository.word.WordRepository
 import com.tarripoha.android.domain.usecase.dashboard.GetDashboardData

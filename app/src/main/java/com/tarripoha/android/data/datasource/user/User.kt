@@ -1,4 +1,4 @@
-package com.tarripoha.android.data.repository.user
+package com.tarripoha.android.data.datasource.user
 
 data class User(
     val id: String,
