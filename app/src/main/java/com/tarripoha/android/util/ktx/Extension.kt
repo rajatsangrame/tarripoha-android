@@ -111,3 +111,8 @@ fun MaterialAlertDialogBuilder.showDialog(
 fun Context.getPackage(): String {
     return this.packageName.replace(".debug", "")
 }
+
+
+inline fun <reified T> String.parseObject(): T {
+    return Gson().fromJson(this, T::class.java)
+}

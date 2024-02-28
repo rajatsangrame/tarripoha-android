@@ -6,7 +6,7 @@ import com.google.firebase.firestore.QuerySnapshot
 import com.tarripoha.android.domain.entity.Word
 import com.tarripoha.android.domain.repository.word.WordDataSource
 import com.tarripoha.android.domain.repository.word.WordRepository.FilterParams
-import com.tarripoha.android.util.ktx.FirebaseUtil.cloudStorageFind
+import com.tarripoha.android.util.helper.FirebaseHelper.cloudStorageFind
 import timber.log.Timber
 
 
@@ -28,6 +28,7 @@ class FirebaseWordDataSource(private val wordRef: CollectionReference) : WordDat
         } else {
             wordRef.whereEqualTo(field, value).limit(limit)
         }
+        // TODO: Add dirty and approved logic on query itself
         val snapshot = query.cloudStorageFind()
         return parseWordList(snapshot)
     }

@@ -75,6 +75,10 @@ class MainViewModel @Inject constructor(
         return words ?: mutableListOf()
     }
 
+    // TODO: Use CoroutineExceptionHandler
+    // https://medium.com/the-kotlin-chronicle/coroutine-exceptions-3378f51a7d33
+    // https://proandroiddev.com/exception-handling-observability-of-android-d29e2639b2db
+
     fun fetchDashboardWord() {
         viewModelScope.launch(Dispatchers.Main) {
             isRefreshing.value = true
