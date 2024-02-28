@@ -7,6 +7,8 @@ import android.widget.LinearLayout
 import androidx.core.content.res.ResourcesCompat
 import com.tarripoha.android.R
 import com.tarripoha.android.databinding.LayoutLabelledRvBinding
+import com.tarripoha.android.util.EqualSpacingItemDecorator
+import com.tarripoha.android.util.TPUtils.toPx
 
 internal class LabelledRecycleView : LinearLayout {
 
@@ -28,6 +30,9 @@ internal class LabelledRecycleView : LinearLayout {
 
     private fun init() {
         binding.labelTv.typeface = font
+        binding.recycleView.addItemDecoration(
+            EqualSpacingItemDecorator(spanCount = 5, spacing = 16.toPx, includeEdge = true)
+        )
     }
 
     private fun obtainAttrValues(attr: AttributeSet) {

@@ -27,7 +27,7 @@ class FirebaseWordDataSource(private val wordRef: CollectionReference) : WordDat
         if (sortField != null) {
             query = query.orderBy(sortField, direction)
         }
-        query.limit(limit)
+        query = query.limit(limit)
         return query.findItems()
     }
 

@@ -56,7 +56,7 @@ class MainViewModel @Inject constructor(
                         data = filter,
                         sortField = "likes",
                         asc = false,
-                        limit = 5
+                        limit = 10
                     )
                 )
             }
@@ -67,7 +67,7 @@ class MainViewModel @Inject constructor(
                         data = filter,
                         sortField = "views",
                         asc = false,
-                        limit = 5
+                        limit = 10
                     )
                 )
             }

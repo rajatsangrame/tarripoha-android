@@ -26,12 +26,9 @@ import com.tarripoha.android.data.model.LabeledView
 import com.tarripoha.android.databinding.FragmentHomeBinding
 import com.tarripoha.android.domain.entity.Word
 import com.tarripoha.android.presentation.main2.MainViewModel
-import com.tarripoha.android.util.GridItemDecorator
 import com.tarripoha.android.util.ItemClickListener
-import com.tarripoha.android.util.TPUtils.toDp
 import com.tarripoha.android.util.helper.PreferenceHelper
 import com.tarripoha.android.util.ktx.showDialog
-import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
 class HomeFragment : Fragment() {
@@ -134,10 +131,6 @@ class HomeFragment : Fragment() {
 //                                )
                             }
                         })
-                    labelledRecycleView.getRecyclerView()
-                        .addItemDecoration(
-                            GridItemDecorator(spanCount = 5, spacing = 64.toDp, includeEdge = true)
-                        )
                     labelledRecycleView.getRecyclerView().adapter = adapter
                     adapterMap[key] = DashboardHelper(
                         adapter = adapter,
