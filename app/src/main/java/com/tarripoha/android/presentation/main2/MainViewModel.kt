@@ -39,7 +39,7 @@ class MainViewModel @Inject constructor(
     fun getDashBoardInfo(): LiveData<DashBoardInfo> = dashBoardInfoLiveData
 
     fun getAllWords() {
-        viewModelScope.launch(Dispatchers.Main + exceptionHandler) {
+        viewModelScope.launch(exceptionHandler) {
             val words = homeUseCase.getAllWord()
             Timber.tag(TAG).d("getAllWords: %s", words.size)
         }
@@ -80,7 +80,7 @@ class MainViewModel @Inject constructor(
     }
 
     fun fetchDashboardData() {
-        viewModelScope.launch(Dispatchers.Main + exceptionHandler) {
+        viewModelScope.launch(exceptionHandler) {
             isRefreshing.value = true
 
             val map = mutableMapOf<String, List<Word>>()

@@ -269,7 +269,9 @@ class MainActivity : BaseActivity() {
     private fun setupObservers() {
         mainViewModel.getErrorMessage()
             .observe(this, Observer {
-                TPUtils.showSnackBar(this, it)
+                it?.let {
+                    TPUtils.showSnackBar(this, it)
+                }
             })
 //
 //        viewModel.getChar()
