@@ -70,6 +70,7 @@ class LoginFragment : Fragment() {
     // region Helper Methods
 
     private fun setupUI() {
+        setupToolbar()
         setupEditText()
         setupListeners()
         setupObservers()
@@ -78,6 +79,11 @@ class LoginFragment : Fragment() {
             textInputLayout.hint = getString(R.string.mobile_number)
             optionalTv.setTextWithVisibility(getString(R.string.skip))
         }
+    }
+
+    private fun setupToolbar() {
+        binding.toolbarLayout.title.text = getString(R.string.login)
+        binding.toolbarLayout.btnBack.visibility = View.GONE
     }
 
     private fun setupEditText() {

@@ -44,18 +44,9 @@ class LoginActivity : BaseActivity() {
 
 
     private fun setupUi() {
-        setupToolbar()
         setupObservers()
         navController = findNavController(R.id.nav_host_fragment)
         navController.setGraph(R.navigation.login_nav_graph)
-    }
-
-    private fun setupToolbar() {
-        setSupportActionBar(binding.toolbarLayout.toolbar)
-        supportActionBar?.apply {
-            title = null
-            setDisplayHomeAsUpEnabled(false)
-        }
     }
 
     private fun setupObservers() {

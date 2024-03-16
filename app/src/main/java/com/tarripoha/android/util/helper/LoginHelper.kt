@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit
 object LoginHelper {
 
     private const val TAG = "FirebaseAuth"
-    private const val PHONE_AUTH_TIMEOUT = 30L
+    private const val PHONE_AUTH_TIMEOUT = 60L
     private val auth: FirebaseAuth by lazy {
         FirebaseAuth.getInstance()
     }
