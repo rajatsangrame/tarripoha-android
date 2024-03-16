@@ -27,7 +27,7 @@ import com.tarripoha.android.presentation.main.drawer.SideNavItem
 import com.tarripoha.android.presentation.main2.MainViewModel
 //import com.tarripoha.android.presentation.faq.FAQActivity
 //import com.tarripoha.android.presentation.login.LoginActivity
-//import com.tarripoha.android.presentation.login.LoginHelper
+//import com.tarripoha.android.util.helper.LoginHelper
 //import com.tarripoha.android.presentation.main.drawer.SideNavItem
 import com.tarripoha.android.util.*
 import com.tarripoha.android.util.helper.UserHelper

@@ -5,7 +5,7 @@ import com.tarripoha.android.domain.usecase.word.GetAllWord
 import com.tarripoha.android.domain.usecase.word.GetWordDetail
 import com.tarripoha.android.domain.usecase.word.GetFilteredWords
 
-data class HomeUseCase(
+data class HomeUseCases(
     val getWordDetail: GetWordDetail,
     val getAllWord: GetAllWord,
     val dashboardData: GetDashboardData,

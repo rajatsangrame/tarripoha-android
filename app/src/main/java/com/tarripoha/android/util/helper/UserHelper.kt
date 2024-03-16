@@ -1,7 +1,7 @@
 package com.tarripoha.android.util.helper
 
 
-import com.tarripoha.android.data.datasource.user.User
+import com.tarripoha.android.domain.entity.User
 import com.tarripoha.android.util.ktx.toJsonString
 
 /**

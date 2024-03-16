@@ -7,7 +7,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.tarripoha.android.data.datasource.home.FirebaseDashboardDataSource
 import com.tarripoha.android.data.datasource.word.FirebaseWordDataSource
-import com.tarripoha.android.data.datasource.home.HomeUseCase
+import com.tarripoha.android.data.datasource.home.HomeUseCases
 import com.tarripoha.android.domain.repository.dashboard.DashboardRepository
 import com.tarripoha.android.domain.repository.word.WordRepository
 import com.tarripoha.android.domain.usecase.dashboard.GetDashboardData
@@ -49,8 +49,8 @@ object RepositoryModule {
     fun provideHomeUseCase(
         wordRepository: WordRepository,
         dashboardRepository: DashboardRepository
-    ): HomeUseCase {
-        return HomeUseCase(
+    ): HomeUseCases {
+        return HomeUseCases(
             GetWordDetail(wordRepository),
             GetAllWord(wordRepository),
             GetDashboardData(dashboardRepository),

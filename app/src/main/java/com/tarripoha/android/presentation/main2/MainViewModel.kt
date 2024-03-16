@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.tarripoha.android.Constants.DashboardViewType
 import com.tarripoha.android.Constants
 import com.tarripoha.android.data.model.DashboardResponse
-import com.tarripoha.android.data.datasource.home.HomeUseCase
+import com.tarripoha.android.data.datasource.home.HomeUseCases
 import com.tarripoha.android.domain.entity.Word
 import com.tarripoha.android.domain.repository.word.WordRepository
 import com.tarripoha.android.presentation.base.BaseViewModel
@@ -24,7 +24,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
-    private val homeUseCase: HomeUseCase,
+    private val homeUseCases: HomeUseCases,
     resources: Resources
 ) :
     BaseViewModel(resources) {
@@ -40,7 +40,7 @@ class MainViewModel @Inject constructor(
 
     fun getAllWords() {
         viewModelScope.launch(exceptionHandler) {
-            val words = homeUseCase.getAllWord()
+            val words = homeUseCases.getAllWord()
             Timber.tag(TAG).d("getAllWords: %s", words.size)
         }
     }
@@ -53,7 +53,7 @@ class MainViewModel @Inject constructor(
         }
         val words = when (category) {
             Constants.DashboardViewCategory.MOST_LIKED.value -> {
-                homeUseCase.getFilteredWords(
+                homeUseCases.getFilteredWords(
                     WordRepository.FilterParams(
                         data = filter,
                         sortField = "likes",
@@ -64,7 +64,7 @@ class MainViewModel @Inject constructor(
             }
 
             Constants.DashboardViewCategory.MOST_VIEWED.value -> {
-                homeUseCase.getFilteredWords(
+                homeUseCases.getFilteredWords(
                     WordRepository.FilterParams(
                         data = filter,
                         sortField = "views",
@@ -85,7 +85,7 @@ class MainViewModel @Inject constructor(
 
             val map = mutableMapOf<String, List<Word>>()
             val dashboardResult = async(Dispatchers.IO) {
-                homeUseCase.dashboardData()
+                homeUseCases.dashboardData()
             }.await()
 
             val deferred: List<Deferred<Unit>> =

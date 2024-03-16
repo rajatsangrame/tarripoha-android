@@ -1,4 +1,4 @@
-package com.tarripoha.android.presentation.login
+package com.tarripoha.android.util.helper
 
 import android.app.Activity
 import com.google.android.gms.tasks.OnCompleteListener

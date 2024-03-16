@@ -1,4 +1,6 @@
-package com.tarripoha.android.data.datasource.user
+package com.tarripoha.android.domain.entity
+
+import com.google.firebase.database.DatabaseException
 
 data class User(
     val id: String,
@@ -14,6 +16,8 @@ data class User(
     var fcmToken: String? = null,
     var lastSessionTime: Long? = null,
 ) {
+
+    /** Must define a no-argument constructor to avoid [DatabaseException] */
     constructor() : this(
         id = "", name = "", phone = "", email = "", timestamp = 0L
     )
