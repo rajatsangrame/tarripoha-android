@@ -149,7 +149,7 @@ class HomeFragment : Fragment() {
 
     private fun fetchDashBoardData(startShimmer: Boolean = false) {
         if (startShimmer) binding.shimmer.startShimmer()
-        viewModel.fetchDashboardWord()
+        viewModel.fetchDashboardData()
     }
 
     private fun navigateToWordListFragment(lang: String, category: String, heading: String) {

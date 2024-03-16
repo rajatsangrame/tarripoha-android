@@ -9,6 +9,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.tarripoha.android.R
 import com.tarripoha.android.util.TPUtils
+import com.tarripoha.android.util.errorhandler.AppError
+import kotlinx.coroutines.CoroutineExceptionHandler
+import timber.log.Timber
 
 /**
  * Created by Rajat Sangrame
@@ -18,13 +21,20 @@ import com.tarripoha.android.util.TPUtils
 abstract class BaseViewModel(private val resources: Resources) : ViewModel() {
 
     private val userMessage: MutableLiveData<String> = MutableLiveData()
+    private val errorMessage: MutableLiveData<String> = MutableLiveData()
+
     val isRefreshing: MutableLiveData<Boolean> = MutableLiveData()
     val showProgress = MutableLiveData<Boolean>()
     //private val user = MutableLiveData<User>()
 
+    protected val exceptionHandler = CoroutineExceptionHandler { coroutineContext, throwable ->
+        val error = AppError.parse(throwable)
+        errorMessage.postValue(getString(error.message))
+    }
+
     fun setUserMessage(msg: String) {
         userMessage.value = msg
-        Log.i(TAG, "setUserMessage: $msg")
+        Timber.tag(TAG).i("setUserMessage: $msg")
     }
 
     fun getUserMessage() = userMessage

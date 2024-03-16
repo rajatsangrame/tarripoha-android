@@ -12,9 +12,12 @@ import com.tarripoha.android.data.datasource.home.HomeUseCase
 import com.tarripoha.android.domain.entity.Word
 import com.tarripoha.android.domain.repository.word.WordRepository
 import com.tarripoha.android.presentation.base.BaseViewModel
+import com.tarripoha.android.util.errorhandler.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -37,7 +40,7 @@ class MainViewModel @Inject constructor(
     fun getDashBoardInfo(): LiveData<DashBoardInfo> = dashBoardInfoLiveData
 
     fun getAllWords() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.Main + exceptionHandler) {
             val words = homeUseCase.getAllWord()
             Timber.tag(TAG).d("getAllWords: %s", words.size)
         }
@@ -77,27 +80,38 @@ class MainViewModel @Inject constructor(
         return words ?: mutableListOf()
     }
 
-    // TODO: Use CoroutineExceptionHandler
-    // https://medium.com/the-kotlin-chronicle/coroutine-exceptions-3378f51a7d33
-    // https://proandroiddev.com/exception-handling-observability-of-android-d29e2639b2db
-
-    fun fetchDashboardWord() {
-        viewModelScope.launch(Dispatchers.Main) {
+    fun fetchDashboardData() {
+        viewModelScope.launch(Dispatchers.Main + exceptionHandler) {
             isRefreshing.value = true
-            val dashBoardInfo = async(Dispatchers.IO) {
-                val dashboardResponse = homeUseCase.dashboardData()
-                val map = mutableMapOf<String, List<Word>>()
-                dashboardResponse.labeledViews.forEach {
-                    if (it.type == DashboardViewType.TYPE_WORD.value) {
-                        val key = "${it.lang!!}_${it.category!!}"
-                        val lang = Constants.getLanguageName(it.lang)!!
-                        map[key] = fetchWords(it.category, lang)
-                    }
-                }
-                DashBoardInfo(dashboardResponse, map)
+
+            val map = mutableMapOf<String, List<Word>>()
+            val dashboardResult = async(Dispatchers.IO) {
+                homeUseCase.dashboardData()
             }.await()
+
+            when (dashboardResult) {
+                is Result.Success -> {
+                    val deferred: List<Deferred<Unit>> =
+                        dashboardResult.data.labeledViews.filter {
+                            it.type == DashboardViewType.TYPE_WORD.value
+                        }.map {
+                            async(Dispatchers.IO) {
+                                val key = "${it.lang!!}_${it.category!!}"
+                                val lang = Constants.getLanguageName(it.lang)!!
+                                map[key] = fetchWords(it.category, lang)
+                            }
+                        }
+
+                    deferred.awaitAll()
+                    val dashBoardInfo = DashBoardInfo(dashboardResult.data, map)
+                    dashBoardInfoLiveData.value = dashBoardInfo
+                }
+
+                is Result.Error -> {
+                    Timber.e(getString(dashboardResult.message))
+                }
+            }
             isRefreshing.value = false
-            dashBoardInfoLiveData.value = dashBoardInfo
         }
     }
 

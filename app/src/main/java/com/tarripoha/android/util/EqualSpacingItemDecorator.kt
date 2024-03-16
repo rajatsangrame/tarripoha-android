@@ -55,7 +55,7 @@ class EqualSpacingItemDecorator(
                 parent.itemDecorationCount
                 if (parent.getChildAdapterPosition(view) == parent.adapter?.itemCount!! - 1
                 ) {
-                    outRect.right = spacing;
+                    outRect.right = spacing
                 } else {
                     outRect.right = 0;
                 }
