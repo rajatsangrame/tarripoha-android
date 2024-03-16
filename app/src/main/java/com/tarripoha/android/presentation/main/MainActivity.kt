@@ -30,6 +30,8 @@ import com.tarripoha.android.presentation.main2.MainViewModel
 //import com.tarripoha.android.presentation.login.LoginHelper
 //import com.tarripoha.android.presentation.main.drawer.SideNavItem
 import com.tarripoha.android.util.*
+import com.tarripoha.android.util.helper.UserHelper
+import com.tarripoha.android.util.ktx.getPackage
 import dagger.hilt.android.AndroidEntryPoint
 //import com.tarripoha.android.util.helper.PreferenceHelper
 //import com.tarripoha.android.util.helper.UserHelper
@@ -72,7 +74,7 @@ class MainActivity : BaseActivity() {
         inflater.inflate(R.menu.menu_main, menu)
         menu.apply {
             findItem(R.id.menu_search).isVisible = true
-            if (viewModel.isUserAdmin()) findItem(R.id.menu_info).isVisible = true
+            if (mainViewModel.isUserAdmin()) findItem(R.id.menu_info).isVisible = true
         }
         return true
     }*/
@@ -96,10 +98,10 @@ class MainActivity : BaseActivity() {
             }
 
             R.id.menu_info -> {
-                val count = if (viewModel.getWordCount().value == null) {
+                val count = if (mainViewModel.getWordCount().value == null) {
                     0
                 } else {
-                    viewModel.getWordCount().value
+                    mainViewModel.getWordCount().value
                 }
                 TPUtils.showSnackBar(this, "Total words: $count")
                 true
@@ -125,13 +127,13 @@ class MainActivity : BaseActivity() {
     }
 
     fun onDrawerClick(item: SideNavItem) {
-        /*val isUserLoggedIn = UserHelper.isLoggedIn()
+        val isUserLoggedIn = UserHelper.isLoggedIn()
 
         when (item.itemName) {
             getString(R.string.login_register) -> {
                 binding.drawerLayout.closeDrawer(GravityCompat.START)
                 performAfterDelay {
-                    LoginActivity.startMe(this)
+                    //LoginActivity.startMe(this)
                 }
             }
 
@@ -141,57 +143,57 @@ class MainActivity : BaseActivity() {
 
             getString(R.string.saved) -> {
                 if (!isUserLoggedIn) {
-                    viewModel.setUserMessage(getString(R.string.error_login))
+                    mainViewModel.setUserMessage(getString(R.string.error_login))
                     return
                 }
                 binding.drawerLayout.closeDrawer(GravityCompat.START)
                 performAfterDelay {
-                    navigateToWordListFragment(
-                        category = GlobalVar.CATEGORY_SAVED,
-                        heading = getString(R.string.saved)
-                    )
+//                    navigateToWordListFragment(
+//                        category = GlobalVar.CATEGORY_SAVED,
+//                        heading = getString(R.string.saved)
+//                    )
                 }
             }
 
             getString(R.string.liked) -> {
                 if (!isUserLoggedIn) {
-                    viewModel.setUserMessage(getString(R.string.error_login))
+                    mainViewModel.setUserMessage(getString(R.string.error_login))
                     return
                 }
                 binding.drawerLayout.closeDrawer(GravityCompat.START)
                 performAfterDelay {
-                    navigateToWordListFragment(
-                        category = GlobalVar.CATEGORY_USER_LIKED,
-                        heading = getString(R.string.liked_words)
-                    )
+//                    navigateToWordListFragment(
+//                        category = GlobalVar.CATEGORY_USER_LIKED,
+//                        heading = getString(R.string.liked_words)
+//                    )
                 }
             }
 
             getString(R.string.requested) -> {
                 if (!isUserLoggedIn) {
-                    viewModel.setUserMessage(getString(R.string.error_login))
+                    mainViewModel.setUserMessage(getString(R.string.error_login))
                     return
                 }
                 binding.drawerLayout.closeDrawer(GravityCompat.START)
                 performAfterDelay {
-                    navigateToWordListFragment(
-                        category = GlobalVar.CATEGORY_USER_REQUESTED,
-                        heading = getString(R.string.requested_words)
-                    )
+//                    navigateToWordListFragment(
+//                        category = GlobalVar.CATEGORY_USER_REQUESTED,
+//                        heading = getString(R.string.requested_words)
+//                    )
                 }
             }
 
             getString(R.string.pending_approvals) -> {
                 if (!isUserLoggedIn) {
-                    viewModel.setUserMessage(getString(R.string.error_login))
+                    mainViewModel.setUserMessage(getString(R.string.error_login))
                     return
                 }
                 binding.drawerLayout.closeDrawer(GravityCompat.START)
                 performAfterDelay {
-                    navigateToWordListFragment(
-                        category = GlobalVar.CATEGORY_PENDING_APPROVALS,
-                        heading = getString(R.string.pending_approvals)
-                    )
+//                    navigateToWordListFragment(
+//                        category = GlobalVar.CATEGORY_PENDING_APPROVALS,
+//                        heading = getString(R.string.pending_approvals)
+//                    )
                 }
             }
 
@@ -230,28 +232,28 @@ class MainActivity : BaseActivity() {
             getString(R.string.help) -> {
                 binding.drawerLayout.closeDrawer(GravityCompat.START)
                 performAfterDelay {
-                    FAQActivity.startMe(this)
+                    //FAQActivity.startMe(this)
                 }
                 // no-op
             }
 
             getString(R.string.logout) -> {
-                MaterialAlertDialogBuilder(this, R.style.AlertDialogTheme)
-                    .showDialog(
-                        title = getString(R.string.logout),
-                        message = getString(R.string.msg_confirm_logout),
-                        positiveText = getString(R.string.logout),
-                        positiveListener = {
-                            UserHelper.setUser(null)
-                            LoginHelper.logoutUser()
-                            PreferenceHelper.clear()
-                            LoginActivity.startMe(this)
-                            finish()
-                        },
-                        negativeListener = {}
-                    )
+//                MaterialAlertDialogBuilder(this, R.style.AlertDialogTheme)
+//                    .showDialog(
+//                        title = getString(R.string.logout),
+//                        message = getString(R.string.msg_confirm_logout),
+//                        positiveText = getString(R.string.logout),
+//                        positiveListener = {
+//                            UserHelper.setUser(null)
+//                            LoginHelper.logoutUser()
+//                            PreferenceHelper.clear()
+//                            LoginActivity.startMe(this)
+//                            finish()
+//                        },
+//                        negativeListener = {}
+//                    )
             }
-        }*/
+        }
     }
 
     //endregion
@@ -274,7 +276,7 @@ class MainActivity : BaseActivity() {
                 }
             })
 //
-//        viewModel.getChar()
+//        mainViewModel.getChar()
 //            .observe(this, Observer { it ->
 //                it?.let {
 //                    var c = binding.container.toolbarLayout.searchEt.text.toString()
@@ -302,7 +304,7 @@ class MainActivity : BaseActivity() {
 //                }
 //            })
 //
-//        viewModel.getToolbarHeading()
+//        mainViewModel.getToolbarHeading()
 //            .observe(this, Observer {
 //                it?.let {
 //                    binding.container.toolbarLayout.heading.text = it
@@ -315,13 +317,13 @@ class MainActivity : BaseActivity() {
         category: String,
         heading: String
     ) {
-        viewModel.resetWordListParams()
+        mainViewModel.resetWordListParams()
         val param = WordListFragment.WordListFragmentParam(
             lang = lang,
             category = category
         )
-        viewModel.setWordListParam(param)
-        viewModel.setToolbarHeading(heading)
+        mainViewModel.setWordListParam(param)
+        mainViewModel.setToolbarHeading(heading)
         navController.navigate(R.id.action_HomeFragment_to_WordListFragment)
     }*/
 
@@ -333,7 +335,7 @@ class MainActivity : BaseActivity() {
                 .debounce(SEARCH_DEBOUNCE_TIME_IN_MS, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-                    viewModel.setQuery(it.toString())
+                    mainViewModel.setQuery(it.toString())
                 }
             compositeDisposable.add(d)
             doAfterTextChanged {
