@@ -6,9 +6,5 @@ interface UserDataSource {
 
     suspend fun createUser(user: User)
 
-    suspend fun getUser(): User
-
-    suspend fun loginUser()
-
-    suspend fun verifyOtp()
+    suspend fun getUser(phone: String): User?
 }

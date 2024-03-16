@@ -7,6 +7,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.tarripoha.android.Constants.DashboardViewType
 import com.tarripoha.android.Constants
+import com.tarripoha.android.data.datasource.CloudStoreFilterParams
 import com.tarripoha.android.data.model.DashboardResponse
 import com.tarripoha.android.data.datasource.home.HomeUseCases
 import com.tarripoha.android.domain.entity.Word
@@ -54,7 +55,7 @@ class MainViewModel @Inject constructor(
         val words = when (category) {
             Constants.DashboardViewCategory.MOST_LIKED.value -> {
                 homeUseCases.getFilteredWords(
-                    WordRepository.FilterParams(
+                    CloudStoreFilterParams(
                         data = filter,
                         sortField = "likes",
                         asc = false,
@@ -65,7 +66,7 @@ class MainViewModel @Inject constructor(
 
             Constants.DashboardViewCategory.MOST_VIEWED.value -> {
                 homeUseCases.getFilteredWords(
-                    WordRepository.FilterParams(
+                    CloudStoreFilterParams(
                         data = filter,
                         sortField = "views",
                         asc = false,

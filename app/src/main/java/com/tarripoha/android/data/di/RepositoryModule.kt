@@ -8,9 +8,14 @@ import com.google.firebase.ktx.Firebase
 import com.tarripoha.android.data.datasource.home.FirebaseDashboardDataSource
 import com.tarripoha.android.data.datasource.word.FirebaseWordDataSource
 import com.tarripoha.android.data.datasource.home.HomeUseCases
+import com.tarripoha.android.data.datasource.user.FirebaseUserDataSource
+import com.tarripoha.android.data.datasource.user.UserUseCases
 import com.tarripoha.android.domain.repository.dashboard.DashboardRepository
+import com.tarripoha.android.domain.repository.user.UserRepository
 import com.tarripoha.android.domain.repository.word.WordRepository
 import com.tarripoha.android.domain.usecase.dashboard.GetDashboardData
+import com.tarripoha.android.domain.usecase.user.CreateUser
+import com.tarripoha.android.domain.usecase.user.GetUser
 import com.tarripoha.android.domain.usecase.word.GetAllWord
 import com.tarripoha.android.domain.usecase.word.GetFilteredWords
 import com.tarripoha.android.domain.usecase.word.GetWordDetail
@@ -40,13 +45,31 @@ object RepositoryModule {
     }
 
     @Provides
+    @Singleton
+    fun provideUserRepository(): UserRepository {
+        val ref = Firebase.firestore.collection("user")
+        return UserRepository(FirebaseUserDataSource(ref))
+    }
+
+    @Provides
     fun provideResource(@ApplicationContext context: Context): Resources {
         return context.resources
     }
 
     @Provides
     @Singleton
-    fun provideHomeUseCase(
+    fun provideUserUseCases(
+        userRepository: UserRepository,
+    ): UserUseCases {
+        return UserUseCases(
+            CreateUser(userRepository),
+            GetUser(userRepository)
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideHomeUseCases(
         wordRepository: WordRepository,
         dashboardRepository: DashboardRepository
     ): HomeUseCases {

@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.InputType
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -111,7 +110,7 @@ class OtpVerifyFragment : Fragment() {
     }
 
     private fun setupObservers() {
-        viewModel.getIsNewUserCreated()
+        viewModel.getNavigateToNewUserScreen()
             .observe(viewLifecycleOwner, Observer {
                 it?.let {
                     if (it) navigateToCreateUserFragment()
@@ -120,7 +119,9 @@ class OtpVerifyFragment : Fragment() {
         viewModel.getIsDirtyAccount()
             .observe(viewLifecycleOwner, Observer {
                 it?.let {
-                    if (it) findNavController().popBackStack()
+                    if (it) {
+                        findNavController().popBackStack()
+                    }
                 }
             })
         viewModel.showProgress.observe(viewLifecycleOwner, Observer {
@@ -175,7 +176,7 @@ class OtpVerifyFragment : Fragment() {
             if (task.isSuccessful) {
                 val user = task.result?.user
                 Timber.tag(TAG).i("verifyOtp: success ${user.toString()}")
-                viewModel.fetchUserInfo()
+                viewModel.checkIfUserInfoExist()
             } else {
                 viewModel.showProgress.value = false
                 Timber.tag(TAG).e("verifyOtp: failure ${task.exception}")

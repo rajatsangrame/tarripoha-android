@@ -59,20 +59,21 @@ class LoginActivity : BaseActivity() {
     }
 
     private fun setupObservers() {
-        viewModel.getUser()
-            .observe(this, Observer { user ->
-                user?.let {
-                    UserHelper.setUser(it)
+        viewModel.getIsUserCreated()
+            .observe(this) {
+                it?.let {
+                    if (it) {
 //                    FcmUtil.uploadFCMToken(user = user,
 //                        success = {
 //                            Log.i(TAG, "onNewToken: uploaded")
 //                        }, failure = {
 //                            Log.e(TAG, "onNewToken: failed")
 //                        })
-                    MainActivity.startMe(this)
-                    finish()
+                        MainActivity.startMe(this)
+                        finish()
+                    }
                 }
-            })
+            }
         viewModel.getUserMessage()
             .observe(this, Observer {
                 TPUtils.showSnackBar(this, it)

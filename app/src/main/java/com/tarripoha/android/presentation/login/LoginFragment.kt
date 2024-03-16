@@ -106,12 +106,7 @@ class LoginFragment : Fragment() {
     }
 
     private fun setupObservers() {
-        viewModel.getIsCodeSent()
-            .observe(viewLifecycleOwner) {
-                it?.let {
-                    if (it) navigateToOtpVerifyFragment()
-                }
-            }
+
         viewModel.showProgress.observe(viewLifecycleOwner, Observer {
             it.let {
                 if (it == null || !it) {

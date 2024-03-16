@@ -2,11 +2,11 @@ package com.tarripoha.android.data.datasource.word
 
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.Query
+import com.tarripoha.android.data.datasource.CloudStoreFilterParams
 import com.tarripoha.android.domain.entity.Word
 import com.tarripoha.android.domain.repository.word.WordDataSource
-import com.tarripoha.android.domain.repository.word.WordRepository.FilterParams
 import com.tarripoha.android.util.helper.FirebaseHelper.CloudStore.buildWhereEqualTo
-import com.tarripoha.android.util.helper.FirebaseHelper.CloudStore.findItems
+import com.tarripoha.android.util.helper.FirebaseHelper.CloudStore.findMany
 
 
 class FirebaseWordDataSource(private val wordRef: CollectionReference) : WordDataSource {
@@ -21,14 +21,14 @@ class FirebaseWordDataSource(private val wordRef: CollectionReference) : WordDat
 
     override suspend fun getFilteredWords(params: Any): List<Word> {
 
-        val (data, sortField, asc, cursor, limit) = (params as FilterParams)
+        val (data, sortField, asc, cursor, limit) = (params as CloudStoreFilterParams)
         val direction = if (asc == true) Query.Direction.ASCENDING else Query.Direction.DESCENDING
         var query = wordRef.buildWhereEqualTo(data)
         if (sortField != null) {
             query = query.orderBy(sortField, direction)
         }
         query = query.limit(limit)
-        return query.findItems()
+        return query.findMany()
     }
 
     override suspend fun getAllWords(): List<Word> {
@@ -37,7 +37,7 @@ class FirebaseWordDataSource(private val wordRef: CollectionReference) : WordDat
             it["approved"] = true
         }
         val query = wordRef.buildWhereEqualTo(data)
-        return query.findItems()
+        return query.findMany()
     }
 
     override suspend fun remove(word: Word) {

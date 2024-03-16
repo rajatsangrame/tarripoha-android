@@ -1,26 +1,22 @@
 package com.tarripoha.android.presentation.login
 
-import android.app.Activity
 import android.content.res.Resources
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
-import com.google.firebase.FirebaseException
-import com.google.firebase.FirebaseTooManyRequestsException
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
-import com.google.firebase.auth.PhoneAuthCredential
+import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.PhoneAuthProvider.ForceResendingToken
-import com.google.firebase.auth.PhoneAuthProvider.OnVerificationStateChangedCallbacks
-import com.google.firebase.database.DataSnapshot
 import com.tarripoha.android.R
 import com.tarripoha.android.data.datasource.user.UserUseCases
 import com.tarripoha.android.domain.entity.User
 import com.tarripoha.android.presentation.base.BaseViewModel
 import com.tarripoha.android.util.TPUtils
-import com.tarripoha.android.util.helper.LoginHelper
+import com.tarripoha.android.util.helper.UserHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.lang.Exception
 import javax.inject.Inject
 
 /**
@@ -38,59 +34,34 @@ class LoginViewModel @Inject constructor(
     var phoneNumber: String? = null
     var storedVerificationId: String? = null
     var resendToken: ForceResendingToken? = null
-    private val isCodeSent = MutableLiveData<Boolean>()
-    private val isNewUserCreated = MutableLiveData<Boolean>()
+    private val navigateToNewUserScreen = MutableLiveData<Boolean>()
     private val isDirtyAccount = MutableLiveData<Boolean>()
+    private val isUserCreated = MutableLiveData<Boolean>()
 
-    fun getIsCodeSent(): LiveData<Boolean> = isCodeSent
-
-    fun getIsNewUserCreated(): LiveData<Boolean> = isNewUserCreated
+    fun getNavigateToNewUserScreen(): LiveData<Boolean> = navigateToNewUserScreen
 
     fun getIsDirtyAccount(): LiveData<Boolean> = isDirtyAccount
 
-    fun fetchUserInfo() {
+    fun getIsUserCreated(): LiveData<Boolean> = isUserCreated
+
+    fun checkIfUserInfoExist() {
         Timber.tag(TAG).i("fetching user info: ")
         if (phoneNumber == null) {
             setUserMessage(getString(R.string.error_unknown))
-            this.showProgress.value = false
+            showProgress.value = false
             return
         }
-        repository.fetchUserInfo(
-            phone = phoneNumber!!, success = {
-                fetchUserInfoResponse(it)
-            }, failure = {
-                this.showProgress.value = false
-                setUserMessage(getString(R.string.error_unable_to_fetch))
-            }, connectionStatus = {
-                if (!it) this.showProgress.value = false
-            })
-    }
-
-    private fun fetchUserInfoResponse(
-        snapshot: DataSnapshot,
-    ) {
-        Timber.tag(TAG).i("fetchUserInfoResponse: ")
-        try {
-            if (snapshot.childrenCount > 0) {
-                if (snapshot.getValue(User::class.java) != null) {
-                    this.showProgress.value = false
-                    val user: User = snapshot.getValue(User::class.java)!!
-                    val isDirty = user.dirty
-                    if (isDirty != null && isDirty) {
-                        setUserMessage(getString(R.string.msg_user_blocked, user.name))
-                        isDirtyAccount.value = true
-                        return
-                    }
-                    Timber.tag(TAG).i("fetchUserInfoResponse: user found ${user.phone}")
-                    this.setUser(user)
-                }
-            } else {
-                this.showProgress.value = false
-                isNewUserCreated.value = true
-            }
-        } catch (e: Exception) {
-            this.showProgress.value = false
-            Timber.tag(TAG).e("fetchAllResponse: $e")
+        viewModelScope.launch(exceptionHandler) {
+            async(Dispatchers.IO) {
+                val user = userUseCases.getUser(phoneNumber!!)
+                if (user == null) {
+                    navigateToNewUserScreen.value = true
+                } else if (user.dirty == true) {
+                    setUserMessage(getString(R.string.msg_user_blocked))
+                    isDirtyAccount.value= true
+                } else UserHelper.setUser(user)
+            }.await()
+            showProgress.value = false
         }
     }
 
@@ -109,26 +80,22 @@ class LoginViewModel @Inject constructor(
             email = email,
             timestamp = System.currentTimeMillis()
         )
-        repository.createUser(
-            phone = phoneNumber!!,
-            user = user,
-            success = {
-                setUserMessage(getString(R.string.msg_user_created, user.name))
-                this.setUser(user)
-            }, failure = {
-                setUserMessage(getString(R.string.error_unable_to_fetch))
-            }, connectionStatus = {
-
-            })
+        viewModelScope.launch(exceptionHandler) {
+            async(Dispatchers.IO) {
+                userUseCases.createUser(user)
+                UserHelper.setUser(user)
+            }.await()
+            isUserCreated.value = true
+        }
     }
 
     fun resetLoginParams() {
         phoneNumber = null
         storedVerificationId = null
         resendToken = null
-        isCodeSent.value = false
-        isNewUserCreated.value = false
+        navigateToNewUserScreen.value = false
         isDirtyAccount.value = false
+        isUserCreated.value = false
         this.showProgress.value = null
     }
 

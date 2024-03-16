@@ -23,20 +23,13 @@ import com.tarripoha.android.GlobalVar
 import com.tarripoha.android.R
 import com.tarripoha.android.databinding.ActivityMainBinding
 import com.tarripoha.android.presentation.base.BaseActivity
+import com.tarripoha.android.presentation.login.LoginActivity
 import com.tarripoha.android.presentation.main.drawer.SideNavItem
 import com.tarripoha.android.presentation.main2.MainViewModel
-//import com.tarripoha.android.presentation.faq.FAQActivity
-//import com.tarripoha.android.presentation.login.LoginActivity
-//import com.tarripoha.android.util.helper.LoginHelper
-//import com.tarripoha.android.presentation.main.drawer.SideNavItem
 import com.tarripoha.android.util.*
 import com.tarripoha.android.util.helper.UserHelper
 import com.tarripoha.android.util.ktx.getPackage
 import dagger.hilt.android.AndroidEntryPoint
-//import com.tarripoha.android.util.helper.PreferenceHelper
-//import com.tarripoha.android.util.helper.UserHelper
-//import com.tarripoha.android.util.texttospeech.TextToSpeechUtil
-import java.util.concurrent.TimeUnit
 
 
 @AndroidEntryPoint
@@ -133,7 +126,7 @@ class MainActivity : BaseActivity() {
             getString(R.string.login_register) -> {
                 binding.drawerLayout.closeDrawer(GravityCompat.START)
                 performAfterDelay {
-                    //LoginActivity.startMe(this)
+                    LoginActivity.startMe(this)
                 }
             }
 

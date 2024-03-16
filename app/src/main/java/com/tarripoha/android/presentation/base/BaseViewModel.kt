@@ -20,9 +20,8 @@ abstract class BaseViewModel(private val resources: Resources) : ViewModel() {
     private val userMessage: MutableLiveData<String> = MutableLiveData()
     private val errorMessage: MutableLiveData<String> = MutableLiveData()
 
-    private val isRefreshing: MutableLiveData<Boolean> = MutableLiveData()
+    protected val isRefreshing: MutableLiveData<Boolean> = MutableLiveData()
     val showProgress = MutableLiveData<Boolean>()
-    private val user = MutableLiveData<User>()
 
     protected val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
         val error = AppError.parse(throwable)
@@ -46,13 +45,6 @@ abstract class BaseViewModel(private val resources: Resources) : ViewModel() {
         resId: Int,
         value: String
     ) = resources.getString(resId, value)
-
-
-    fun setUser(user: User?) {
-        this.user.value = user
-    }
-
-    fun getUser() = user
 
     fun getPrefUser() = UserHelper.getUser()
 

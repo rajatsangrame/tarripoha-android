@@ -1,5 +1,6 @@
 package com.tarripoha.android.domain.repository.word
 
+import com.tarripoha.android.data.datasource.CloudStoreFilterParams
 import com.tarripoha.android.domain.entity.Word
 
 class WordRepository(private val dataSource: WordDataSource) {
@@ -7,14 +8,8 @@ class WordRepository(private val dataSource: WordDataSource) {
     suspend fun getWordDetail(id: Long) = dataSource.getWordDetail(id)
     suspend fun getAll() = dataSource.getAllWords()
 
-    suspend fun getFilteredWords(params: FilterParams) = dataSource.getFilteredWords(params)
-    suspend fun removeWord(word: Word) = dataSource.remove(word)
+    suspend fun getFilteredWords(params: CloudStoreFilterParams) =
+        dataSource.getFilteredWords(params)
 
-    data class FilterParams(
-        val data: Map<String, Any>,
-        var sortField: String? = null,
-        var asc: Boolean? = null,
-        var cursor: String? = null,
-        val limit: Long = 20
-    )
+    suspend fun removeWord(word: Word) = dataSource.remove(word)
 }
