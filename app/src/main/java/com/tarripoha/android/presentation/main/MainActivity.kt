@@ -267,10 +267,10 @@ class MainActivity : BaseActivity() {
     }
 
     private fun setupObservers() {
-//        viewModel.getUserMessage()
-//            .observe(this, Observer {
-//                TPUtils.showSnackBar(this, it)
-//            })
+        mainViewModel.getErrorMessage()
+            .observe(this, Observer {
+                TPUtils.showSnackBar(this, it)
+            })
 //
 //        viewModel.getChar()
 //            .observe(this, Observer { it ->

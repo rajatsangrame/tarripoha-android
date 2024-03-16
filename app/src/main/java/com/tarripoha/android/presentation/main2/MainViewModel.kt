@@ -12,7 +12,6 @@ import com.tarripoha.android.data.datasource.home.HomeUseCase
 import com.tarripoha.android.domain.entity.Word
 import com.tarripoha.android.domain.repository.word.WordRepository
 import com.tarripoha.android.presentation.base.BaseViewModel
-import com.tarripoha.android.util.errorhandler.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
@@ -89,28 +88,20 @@ class MainViewModel @Inject constructor(
                 homeUseCase.dashboardData()
             }.await()
 
-            when (dashboardResult) {
-                is Result.Success -> {
-                    val deferred: List<Deferred<Unit>> =
-                        dashboardResult.data.labeledViews.filter {
-                            it.type == DashboardViewType.TYPE_WORD.value
-                        }.map {
-                            async(Dispatchers.IO) {
-                                val key = "${it.lang!!}_${it.category!!}"
-                                val lang = Constants.getLanguageName(it.lang)!!
-                                map[key] = fetchWords(it.category, lang)
-                            }
-                        }
-
-                    deferred.awaitAll()
-                    val dashBoardInfo = DashBoardInfo(dashboardResult.data, map)
-                    dashBoardInfoLiveData.value = dashBoardInfo
+            val deferred: List<Deferred<Unit>> =
+                dashboardResult.labeledViews.filter {
+                    it.type == DashboardViewType.TYPE_WORD.value
+                }.map {
+                    async(Dispatchers.IO) {
+                        val key = "${it.lang!!}_${it.category!!}"
+                        val lang = Constants.getLanguageName(it.lang)!!
+                        map[key] = fetchWords(it.category, lang)
+                    }
                 }
 
-                is Result.Error -> {
-                    Timber.e(getString(dashboardResult.message))
-                }
-            }
+            deferred.awaitAll()
+            val dashBoardInfo = DashBoardInfo(dashboardResult, map)
+            dashBoardInfoLiveData.value = dashBoardInfo
             isRefreshing.value = false
         }
     }

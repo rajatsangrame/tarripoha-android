@@ -37,7 +37,9 @@ abstract class BaseViewModel(private val resources: Resources) : ViewModel() {
         Timber.tag(TAG).i("setUserMessage: $msg")
     }
 
-    fun getUserMessage() = userMessage
+    fun getErrorMessage(): LiveData<String> = userMessage
+
+    fun getUserMessage(): LiveData<String> = userMessage
 
     fun getShowProgress(): LiveData<Boolean> = showProgress
 
