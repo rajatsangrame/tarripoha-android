@@ -10,6 +10,7 @@ import android.view.inputmethod.EditorInfo
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.tarripoha.android.R
 import com.tarripoha.android.databinding.FragmentCreateUserBinding
 import com.tarripoha.android.util.TPUtils
@@ -52,12 +53,19 @@ class CreateUserFragment : Fragment() {
     // region Helper Methods
 
     private fun setupUI() {
+        setupToolbar()
         setupEditText()
         setupListeners()
         setupObservers()
         showKeyboard()
         binding.apply {
             actionBtn.setText(R.string.submit)
+        }
+    }
+
+    private fun setupToolbar() {
+        binding.toolbarLayout.btnBack.setOnClickListener {
+            findNavController().popBackStack()
         }
     }
 

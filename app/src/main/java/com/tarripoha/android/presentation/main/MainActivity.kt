@@ -2,31 +2,21 @@ package com.tarripoha.android.presentation.main
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
 import androidx.activity.viewModels
-import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
-import androidx.core.widget.doAfterTextChanged
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.*
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.tarripoha.android.GlobalVar
 import com.tarripoha.android.R
 import com.tarripoha.android.databinding.ActivityMainBinding
 import com.tarripoha.android.presentation.base.BaseActivity
 import com.tarripoha.android.presentation.login.LoginActivity
 import com.tarripoha.android.presentation.main.drawer.SideNavItem
-import com.tarripoha.android.presentation.main2.MainViewModel
 import com.tarripoha.android.util.*
+import com.tarripoha.android.Constants
 import com.tarripoha.android.util.helper.UserHelper
 import com.tarripoha.android.util.ktx.getPackage
 import dagger.hilt.android.AndroidEntryPoint
@@ -141,10 +131,10 @@ class MainActivity : BaseActivity() {
                 }
                 binding.drawerLayout.closeDrawer(GravityCompat.START)
                 performAfterDelay {
-//                    navigateToWordListFragment(
-//                        category = GlobalVar.CATEGORY_SAVED,
-//                        heading = getString(R.string.saved)
-//                    )
+                    navigateToWordListFragment(
+                        category = Constants.CATEGORY_SAVED,
+                        heading = getString(R.string.saved)
+                    )
                 }
             }
 
@@ -155,10 +145,10 @@ class MainActivity : BaseActivity() {
                 }
                 binding.drawerLayout.closeDrawer(GravityCompat.START)
                 performAfterDelay {
-//                    navigateToWordListFragment(
-//                        category = GlobalVar.CATEGORY_USER_LIKED,
-//                        heading = getString(R.string.liked_words)
-//                    )
+                    navigateToWordListFragment(
+                        category = Constants.CATEGORY_USER_LIKED,
+                        heading = getString(R.string.liked_words)
+                    )
                 }
             }
 
@@ -169,10 +159,10 @@ class MainActivity : BaseActivity() {
                 }
                 binding.drawerLayout.closeDrawer(GravityCompat.START)
                 performAfterDelay {
-//                    navigateToWordListFragment(
-//                        category = GlobalVar.CATEGORY_USER_REQUESTED,
-//                        heading = getString(R.string.requested_words)
-//                    )
+                    navigateToWordListFragment(
+                        category = Constants.CATEGORY_USER_REQUESTED,
+                        heading = getString(R.string.requested_words)
+                    )
                 }
             }
 
@@ -183,10 +173,10 @@ class MainActivity : BaseActivity() {
                 }
                 binding.drawerLayout.closeDrawer(GravityCompat.START)
                 performAfterDelay {
-//                    navigateToWordListFragment(
-//                        category = GlobalVar.CATEGORY_PENDING_APPROVALS,
-//                        heading = getString(R.string.pending_approvals)
-//                    )
+                    navigateToWordListFragment(
+                        category = Constants.CATEGORY_PENDING_APPROVALS,
+                        heading = getString(R.string.pending_approvals)
+                    )
                 }
             }
 
@@ -297,28 +287,22 @@ class MainActivity : BaseActivity() {
 //                }
 //            })
 //
-//        mainViewModel.getToolbarHeading()
-//            .observe(this, Observer {
-//                it?.let {
-//                    binding.container.toolbarLayout.heading.text = it
-//                }
-//            })
     }
 
-    /*private fun navigateToWordListFragment(
-        lang: String = GlobalVar.LANG_ANY,
+    private fun navigateToWordListFragment(
+        lang: String = Constants.LANG_ANY,
         category: String,
         heading: String
     ) {
         mainViewModel.resetWordListParams()
         val param = WordListFragment.WordListFragmentParam(
+            heading = heading,
             lang = lang,
             category = category
         )
-        mainViewModel.setWordListParam(param)
-        mainViewModel.setToolbarHeading(heading)
+        mainViewModel.wordListParam = param
         navController.navigate(R.id.action_HomeFragment_to_WordListFragment)
-    }*/
+    }
 
     private fun setupSearchEditText() {
 

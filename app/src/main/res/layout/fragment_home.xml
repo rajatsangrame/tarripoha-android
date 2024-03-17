@@ -128,9 +128,9 @@
 
                 </LinearLayout>
 
-                <include layout="@layout/layout_item_shimmer" />
+                <include layout="@layout/layout_home_shimmer" />
 
-                <include layout="@layout/layout_item_shimmer" />
+                <include layout="@layout/layout_home_shimmer" />
 
 
             </LinearLayout>

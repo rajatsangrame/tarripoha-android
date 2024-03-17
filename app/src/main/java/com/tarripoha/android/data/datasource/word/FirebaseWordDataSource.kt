@@ -2,7 +2,7 @@ package com.tarripoha.android.data.datasource.word
 
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.Query
-import com.tarripoha.android.data.datasource.CloudStoreFilterParams
+import com.tarripoha.android.data.datasource.params.CloudStoreFilterParams
 import com.tarripoha.android.domain.entity.Word
 import com.tarripoha.android.domain.repository.word.WordDataSource
 import com.tarripoha.android.util.helper.FirebaseHelper.CloudStore.buildWhereEqualTo

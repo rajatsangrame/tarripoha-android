@@ -2,6 +2,7 @@ package com.tarripoha.android.domain.entity
 
 import com.google.firebase.database.DatabaseException
 
+
 data class Word(
     var id: String,
     val name: String,

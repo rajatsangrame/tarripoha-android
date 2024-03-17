@@ -11,7 +11,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.*
-import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
@@ -25,12 +25,13 @@ import com.tarripoha.android.data.model.DashboardResponse
 import com.tarripoha.android.data.model.LabeledView
 import com.tarripoha.android.databinding.FragmentHomeBinding
 import com.tarripoha.android.domain.entity.Word
-import com.tarripoha.android.presentation.main2.MainViewModel
 import com.tarripoha.android.util.ItemClickListener
 import com.tarripoha.android.util.helper.PreferenceHelper
 import com.tarripoha.android.util.ktx.showDialog
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.concurrent.TimeUnit
 
+@AndroidEntryPoint
 class HomeFragment : Fragment() {
 
     // region Variables
@@ -39,7 +40,6 @@ class HomeFragment : Fragment() {
         const val UPDATE_REQUEST_CODE = 101
     }
 
-    private lateinit var factory: ViewModelProvider.Factory
     private lateinit var binding: FragmentHomeBinding
     private val viewModel: MainViewModel by activityViewModels()
     private val adapterMap: MutableMap<String, DashboardHelper> = mutableMapOf()
@@ -153,14 +153,14 @@ class HomeFragment : Fragment() {
     }
 
     private fun navigateToWordListFragment(lang: String, category: String, heading: String) {
-        /*viewModel.resetWordListParams()
+        viewModel.resetWordListParams()
         val param = WordListFragment.WordListFragmentParam(
+            heading = heading,
             lang = lang,
             category = category
         )
-        viewModel.setWordListParam(param)
-        viewModel.setToolbarHeading(heading)
-        findNavController().navigate(R.id.action_HomeFragment_to_WordListFragment)*/
+        viewModel.wordListParam = param
+        findNavController().navigate(R.id.action_HomeFragment_to_WordListFragment)
     }
 
     private fun setupObservers() {

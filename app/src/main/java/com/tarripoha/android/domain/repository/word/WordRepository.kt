@@ -1,6 +1,6 @@
 package com.tarripoha.android.domain.repository.word
 
-import com.tarripoha.android.data.datasource.CloudStoreFilterParams
+import com.tarripoha.android.data.datasource.params.CloudStoreFilterParams
 import com.tarripoha.android.domain.entity.Word
 
 class WordRepository(private val dataSource: WordDataSource) {

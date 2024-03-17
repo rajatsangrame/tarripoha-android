@@ -1,4 +1,4 @@
-package com.tarripoha.android.data.datasource
+package com.tarripoha.android.data.datasource.params
 
 data class CloudStoreFilterParams(
     val data: Map<String, Any>,

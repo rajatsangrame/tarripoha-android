@@ -60,12 +60,20 @@ class OtpVerifyFragment : Fragment() {
     // region Helper Methods
 
     private fun setupUI() {
+        setupToolbar()
         setupEditText()
         setupListeners()
         setupObservers()
         showKeyboard()
         binding.apply {
             textInputLayout.hint = getString(R.string.otp)
+        }
+    }
+
+    private fun setupToolbar() {
+        binding.toolbarLayout.title.text = getString(R.string.verify_otp)
+        binding.toolbarLayout.btnBack.setOnClickListener {
+            findNavController().popBackStack()
         }
     }
 

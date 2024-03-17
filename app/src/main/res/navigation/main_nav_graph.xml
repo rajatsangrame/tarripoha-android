@@ -21,16 +21,16 @@
 
     </fragment>
 
-    <!--<fragment
-        android:id="@+id/nav_search"
-        android:name="com.tarripoha.android.ui.main.SearchFragment"
-        android:label="SearchFragment"
-        tools:layout="@layout/fragment_search" />
+<!--    <fragment-->
+<!--        android:id="@+id/nav_search"-->
+<!--        android:name="com.tarripoha.android.ui.main.SearchFragment"-->
+<!--        android:label="SearchFragment"-->
+<!--        tools:layout="@layout/fragment_search" />-->
 
     <fragment
         android:id="@+id/nav_wordList"
-        android:name="com.tarripoha.android.ui.main.WordListFragment"
+        android:name="com.tarripoha.android.presentation.main.WordListFragment"
         android:label="WordListFragment"
-        tools:layout="@layout/layout_rv_with_swipe" />-->
+        tools:layout="@layout/fragment_word_list" />
 
 </navigation>
