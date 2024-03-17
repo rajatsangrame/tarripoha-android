@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <color name="colorPrimary">#424242</color>
+    <color name="colorPrimaryDark">#1b1b1b</color>
+    <color name="colorPrimaryLight">#6d6d6d</color>
+    <color name="colorAccent">#6d6d6d</color>
+    <color name="colorWhite">#F5F5F5</color>
+    <color name="colorPureWhite">#FFFFFF</color>
+    <color name="colorToolbarWhite">#00F5F5F5</color>
+    <color name="colorBlack">#000000</color>
+    <color name="cardBackground">#ddd</color>
+    <color name="gradientStart">#7f000000</color>
+    <color name="gradientEnd">#00000000</color>
+    <color name="optionItemTintColor">#ad000000</color>
+    <color name="colorGrey">#9E9E9E</color>
+    <color name="colorLightGrey">#EEEEEE</color>
+    <color name="colorGrey500">#C8C8C8</color>
+    <color name="colorGrey300">#E4E4E4</color>
+    <color name="colorRed">#ef5350</color>
+    <color name="colorGreen">#66bb6a</color>
+    <color name="colorShimmer">#C2C2C2</color>
+    <color name="ic_launcher_background">#3c9d10</color>
+</resources>
